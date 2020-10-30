@@ -32,7 +32,8 @@
 #define APP_SIGNATURE "application/x-vnd.stlviewer"
 
 #define MSG_FILE_OPEN					'OPEN'
-#define MSG_FILE_SAVE					'SAVE'
+#define MSG_FILE_SAVE					'SVFL'
+#define MSG_FILE_SAVE_AS				'SVAS'
 #define MSG_FILE_CLOSE					'CLOS'
 #define MSG_VIEWMODE_SOLID				'MOD1'
 #define MSG_VIEWMODE_WIREFRAME			'MOD2'

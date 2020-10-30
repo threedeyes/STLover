@@ -63,9 +63,11 @@ class STLWindow : public BWindow {
 		BMenu *fMenuHelp;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
+		BMenuItem *fMenuItemSaveAs;
 		BMenuItem *fMenuItemSolid;
 		BMenuItem *fMenuItemWireframe;
 		BFilePanel	*fOpenFilePanel;
+		BFilePanel	*fSaveFilePanel;
 		BString fOpenedFileName;
 
 		STLView *stlView;

@@ -23,6 +23,7 @@
 STLWindow::STLWindow(BRect frame, uint32 type)
 	: BWindow(frame, "STLover - Simple STL Viewer", B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
+	fSaveFilePanel(NULL),
 	stlModified(false),
 	stlValid(false),
 	stlObject(NULL),
@@ -43,6 +44,8 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	fMenuFile->AddSeparatorItem();
 	fMenuItemSave = new BMenuItem("Save", new BMessage(MSG_FILE_SAVE), 'S');
 	fMenuFile->AddItem(fMenuItemSave);
+	fMenuItemSaveAs = new BMenuItem("Save as...", new BMessage(MSG_FILE_SAVE_AS));
+	fMenuFile->AddItem(fMenuItemSaveAs);
 	fMenuFile->AddSeparatorItem();
 	fMenuFile->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
 	fMenuBar->AddItem(fMenuFile);
@@ -140,6 +143,16 @@ STLWindow::MessageReceived(BMessage *message)
 			EnableMenuItems(true);
 			break;
 		}
+		case MSG_FILE_SAVE_AS:
+		{
+			if (!fSaveFilePanel) {
+				fSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
+					B_FILE_NODE, true, NULL, NULL, false, true);
+				fSaveFilePanel->SetTarget(this);
+			}
+			fSaveFilePanel->Show();
+			break;
+		}
 		case MSG_FILE_CLOSE:
 		{
 			CloseFile();
@@ -150,6 +163,25 @@ STLWindow::MessageReceived(BMessage *message)
 			if (errorTimeCounter > 0) {
 				errorTimeCounter--;
 				stlView->RenderUpdate();
+			}
+			break;
+		}
+		case B_SAVE_REQUESTED:
+		{
+			entry_ref ref;
+			if (message->FindRef("directory", 0, &ref) == B_OK) {
+				BEntry entry = BEntry(&ref);
+				BPath path;
+				entry.GetPath(&path);
+				BString filename = message->FindString("name");
+				path.Append(filename);
+
+				stl_write_binary(stlObject, path.Path(), path.Leaf());
+				BNode node(path.Path());
+				BNodeInfo nodeInfo(&node);
+				nodeInfo.SetType("application/sla");
+				stlModified = false;
+				EnableMenuItems(true);
 			}
 			break;
 		}
@@ -278,6 +310,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuItemClose->SetEnabled(show);
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
+	fMenuItemSaveAs->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
 }
 
