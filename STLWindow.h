@@ -24,6 +24,7 @@
 #include <Menu.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
+#include <String.h>
 #include <FilePanel.h>
 
 #include <private/interface/AboutWindow.h>
