@@ -22,7 +22,8 @@
 
 STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED, type),
-	needUpdate(true)
+	needUpdate(true),
+	showBox(false)
 {
 	appIcon = GetIconFromApp(164);
 }
@@ -59,7 +60,7 @@ STLView::AttachedToWindow(void)
 	LockGL();
 	BGLView::AttachedToWindow();
 
-	glClearColor(0.12f, 0.12f, 0.2f, 0.0f);
+	glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 	glClearDepth(1.0);
 	glDepthFunc(GL_LESS);
 	glEnable(GL_DEPTH_TEST);
@@ -71,7 +72,6 @@ STLView::AttachedToWindow(void)
 		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
 
 	glMatrixMode(GL_MODELVIEW);
-	glEnable(GL_LIGHTING);
 
 	float Light_Ambient[]=  { 0.0f, 0.0f, 0.0f, 1.0f };
 	float Light_Diffuse[]=  { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -81,7 +81,7 @@ STLView::AttachedToWindow(void)
 	glLightfv(GL_LIGHT1, GL_AMBIENT,  Light_Ambient);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE,  Light_Diffuse);
 	glEnable (GL_LIGHT1);
-	
+
 	glPolygonMode(GL_FRONT, GL_FILL);
 	glPolygonMode(GL_BACK, GL_FILL);
 
@@ -226,6 +226,59 @@ STLView::SetSTL(stl_file *_stl)
 }
 
 void
+STLView::DrawBox(stl_vertex min, stl_vertex size)
+{
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glEnable(GL_LINE_SMOOTH);
+
+	glLineWidth(1);
+	glColor4f (0.9, 0.25, 0.6, 1);
+
+	for (float x = min.x + 10; x < min.x + size.x; x += 10.0) {
+		glBegin(GL_LINES);
+		glVertex3f(x, min.y, min.z);
+		glVertex3f(x, min.y + size.y, min.z);
+		glEnd();
+	}
+	for (float y = min.y + 10; y < min.y + size.y; y += 10.0) {
+		glBegin(GL_LINES);
+		glVertex3f(min.x, y, min.z);
+		glVertex3f(min.x + size.x, y, min.z);
+		glEnd();
+	}
+
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(min.x + size.x, min.y, min.z);
+	glVertex3f(min.x + size.x, min.y + size.y, min.z);
+	glVertex3f(min.x, min.y + size.y, min.z);
+	glEnd();
+
+	glBegin(GL_LINE_LOOP);
+	glVertex3f(min.x, min.y, min.z + size.z);
+	glVertex3f(min.x + size.x, min.y, min.z + size.z);
+	glVertex3f(min.x + size.x, min.y + size.y, min.z + size.z);
+	glVertex3f(min.x, min.y + size.y, min.z + size.z);
+	glEnd();
+
+	glBegin(GL_LINES);
+	glVertex3f(min.x, min.y, min.z);
+	glVertex3f(min.x, min.y, min.z + size.z);
+	glVertex3f(min.x + size.x, min.y, min.z);
+	glVertex3f(min.x + size.x, min.y, min.z + size.z);
+	glVertex3f(min.x + size.x, min.y + size.y, min.z);
+	glVertex3f(min.x + size.x, min.y + size.y, min.z + size.z);
+	glVertex3f(min.x, min.y + size.y, min.z);
+	glVertex3f(min.x, min.y + size.y, min.z + size.z);
+	glEnd();
+
+	glDisable(GL_LINE_SMOOTH);
+	glDisable(GL_BLEND);
+}
+
+void
 STLView::Render(void)
 {
 	if (!needUpdate)
@@ -234,11 +287,15 @@ STLView::Render(void)
 	if (stlWindow->IsLoaded()) {
 		LockGL();
 		needUpdate = false;
+
+		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
 		glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
+
+		glEnable(GL_LIGHTING);
 
 		for(size_t i = 0 ; i < stlObject->stats.number_of_facets ; i++) {
 			glBegin(GL_POLYGON);
@@ -248,7 +305,12 @@ STLView::Render(void)
 			glVertex3f(stlObject->facet_start[i].vertex[2].x, stlObject->facet_start[i].vertex[2].y, stlObject->facet_start[i].vertex[2].z);
 			glEnd();
 		}
-	
+
+		glDisable(GL_LIGHTING);
+
+		if (showBox)
+			DrawBox(stlObject->stats.min, stlObject->stats.size);
+
 		SwapBuffers();	
 		UnlockGL();
 	} else {

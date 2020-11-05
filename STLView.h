@@ -42,11 +42,14 @@ class STLView : public BGLView {
 		virtual void Draw(BRect rect);
 
 		void SetSTL(stl_file *stl);
+		void ShowBoundingBox(bool show) { showBox = show; }
 		void Render(void);
 		void RenderUpdate() { needUpdate = true; }
 
 	private:
 		BBitmap* GetIconFromApp(int size);
+		void DrawBox(stl_vertex min, stl_vertex size);
+
 		BBitmap *appIcon;
 		BPoint lastMousePos;
 		uint32 lastMouseButtons;
@@ -62,6 +65,7 @@ class STLView : public BGLView {
 		float scaleFactor;
 		
 		bool needUpdate;
+		bool showBox;
 };
 
 #endif

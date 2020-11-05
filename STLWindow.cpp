@@ -57,6 +57,9 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));	
 	fMenuView->AddItem(fMenuItemWireframe);
 	fMenuView->AddSeparatorItem();
+	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
+	fMenuView->AddItem(fMenuItemShowBox);
+	fMenuView->AddSeparatorItem();
 	fMenuView->AddItem(new BMenuItem("Reload", new BMessage(MSG_VIEWMODE_RESETPOS)));
 
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
@@ -210,6 +213,14 @@ STLWindow::MessageReceived(BMessage *message)
 			wind->Show();
 			break;
 		}
+		case MSG_VIEWMODE_BOUNDING_BOX:
+		{
+			showBoundingBox = !showBoundingBox;
+			stlView->ShowBoundingBox(showBoundingBox);
+			EnableMenuItems(true);
+			stlView->RenderUpdate();
+			break;
+		}
 		case MSG_VIEWMODE_RESETPOS:
 		{
 			OpenFile(fOpenedFileName.String());
@@ -323,6 +334,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuTools->SetEnabled(show);
 	fMenuItemSaveAs->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
+	fMenuItemShowBox->SetMarked(showBoundingBox);
 }
 
 void
