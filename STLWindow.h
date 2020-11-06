@@ -58,13 +58,13 @@ class STLWindow : public BWindow {
 
 		BMenuBar *fMenuBar;
 		BMenu *fMenuFile;
+		BMenu *fMenuFileSaveAs;
 		BMenu *fMenuView;
 		BMenu *fMenuTools;
 		BMenu *fMenuToolsMirror;
 		BMenu *fMenuHelp;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
-		BMenuItem *fMenuItemSaveAs;
 		BMenuItem *fMenuItemSolid;
 		BMenuItem *fMenuItemWireframe;
 		BMenuItem *fMenuItemShowBox;

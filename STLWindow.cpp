@@ -33,10 +33,18 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 {
 	fMenuBar = new BMenuBar(BRect(0, 0, Bounds().Width(), 22), "menubar");
 	fMenuFile = new BMenu("File");
+	fMenuFileSaveAs = new BMenu("Save as...");
 	fMenuView = new BMenu("View");
 	fMenuTools = new BMenu("Tools");
 	fMenuToolsMirror = new BMenu("Mirror");
 	fMenuHelp = new BMenu("Help");
+
+	fMenuFileSaveAs->AddItem(new BMenuItem("STL (ASCII)", new BMessage(MSG_FILE_EXPORT_STLA)));
+	fMenuFileSaveAs->AddItem(new BMenuItem("STL (Binary)", new BMessage(MSG_FILE_EXPORT_STLB)));
+	fMenuFileSaveAs->AddItem(new BMenuItem("Geomview OFF", new BMessage(MSG_FILE_EXPORT_OFF)));
+	fMenuFileSaveAs->AddItem(new BMenuItem("Autodesk DXF", new BMessage(MSG_FILE_EXPORT_DXF)));
+	fMenuFileSaveAs->AddItem(new BMenuItem("Wavefront OBJ", new BMessage(MSG_FILE_EXPORT_OBJ)));
+	fMenuFileSaveAs->AddItem(new BMenuItem("VRML", new BMessage(MSG_FILE_EXPORT_VRML)));
 
 	fMenuFile->AddItem(new BMenuItem("Open...", new BMessage(MSG_FILE_OPEN), 'O'));
 	fMenuItemClose = new BMenuItem("Close", new BMessage(MSG_FILE_CLOSE));
@@ -44,8 +52,8 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	fMenuFile->AddSeparatorItem();
 	fMenuItemSave = new BMenuItem("Save", new BMessage(MSG_FILE_SAVE), 'S');
 	fMenuFile->AddItem(fMenuItemSave);
-	fMenuItemSaveAs = new BMenuItem("Save as...", new BMessage(MSG_FILE_SAVE_AS));
-	fMenuFile->AddItem(fMenuItemSaveAs);
+	fMenuFile->AddItem(fMenuFileSaveAs);
+	fMenuFileSaveAs->SetTargetForItems(this);
 	fMenuFile->AddSeparatorItem();
 	fMenuFile->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
 	fMenuBar->AddItem(fMenuFile);
@@ -146,12 +154,24 @@ STLWindow::MessageReceived(BMessage *message)
 			EnableMenuItems(true);
 			break;
 		}
-		case MSG_FILE_SAVE_AS:
+		case MSG_FILE_EXPORT_STLA:
+		case MSG_FILE_EXPORT_STLB:
+		case MSG_FILE_EXPORT_DXF:
+		case MSG_FILE_EXPORT_VRML:
+		case MSG_FILE_EXPORT_OFF:
+		case MSG_FILE_EXPORT_OBJ:
 		{
+			BMessage *fileMsg = new BMessage(*message);
+			fileMsg->AddInt32("format", message->what);
+			fileMsg->what = B_SAVE_REQUESTED;
+
 			if (!fSaveFilePanel) {
 				fSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
-					B_FILE_NODE, true, NULL, NULL, false, true);
+					B_FILE_NODE, true, fileMsg, NULL, false, true);
 				fSaveFilePanel->SetTarget(this);
+			} else {
+				fSaveFilePanel->SetMessage(fileMsg);
+				fSaveFilePanel->SetSaveText("");
 			}
 			fSaveFilePanel->Show();
 			break;
@@ -178,11 +198,42 @@ STLWindow::MessageReceived(BMessage *message)
 				entry.GetPath(&path);
 				BString filename = message->FindString("name");
 				path.Append(filename);
-
-				stl_write_binary(stlObject, path.Path(), path.Leaf());
+				uint32 format = message->FindInt32("format");
+				BString mime("application/sla");
+				switch (format) {
+					case MSG_FILE_EXPORT_STLA:
+						stl_write_ascii(stlObject, path.Path(), path.Leaf());
+						break;
+					case MSG_FILE_EXPORT_STLB:
+						stl_write_binary(stlObject, path.Path(), path.Leaf());
+						break;
+					case MSG_FILE_EXPORT_DXF:
+						stl_write_dxf(stlObject, (char*)path.Path(), (char*)path.Leaf());
+						mime.SetTo("application/dxf");
+						break;
+					case MSG_FILE_EXPORT_VRML:
+						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(stlObject);
+						stl_write_vrml(stlObject, (char*)path.Path());
+						mime.SetTo("text/plain");
+						break;
+					case MSG_FILE_EXPORT_OFF:
+						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(stlObject);
+						stl_write_off(stlObject, (char*)path.Path());
+						mime.SetTo("text/plain");
+						break;
+					case MSG_FILE_EXPORT_OBJ:
+						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(stlObject);
+						stl_write_obj(stlObject, (char*)path.Path());
+						mime.SetTo("text/plain");
+						break;
+				}
 				BNode node(path.Path());
 				BNodeInfo nodeInfo(&node);
-				nodeInfo.SetType("application/sla");
+				nodeInfo.SetType(mime.String());
+
 				stlModified = false;
 				EnableMenuItems(true);
 			}
@@ -332,7 +383,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuItemClose->SetEnabled(show);
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
-	fMenuItemSaveAs->SetEnabled(show);
+	fMenuFileSaveAs->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
 	fMenuItemShowBox->SetMarked(showBoundingBox);
 }
