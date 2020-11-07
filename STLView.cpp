@@ -180,7 +180,7 @@ void
 STLView::Draw(BRect rect)
 {
 	if (!stlWindow->IsLoaded()) {
-		char drop[] = {"Drop a STL file here"};
+		char drop[] = {"Drop an STL file here"};
 		char error[] = {"Unknown file format!"};
 		
 		bool stl_error = ((STLWindow*)Window())->GetErrorTimer() > 0;
