@@ -626,6 +626,6 @@ STLWindow::RenderFunction(void *data)
 	STLView *view = (STLView*)data;
 	for(;;) {
 		view->Render();
-		snooze(1000000/100);
+		snooze(1000000 / FPS_LIMIT);
 	}
 }

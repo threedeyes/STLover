@@ -62,6 +62,7 @@
 #define MSG_APPEND_REFS_RECIEVED		'APRR'
 
 #define FOV	30
+#define FPS_LIMIT 100
 
 class STLWindow;
 
