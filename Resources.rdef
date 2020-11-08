@@ -4,11 +4,11 @@ resource app_signature "application/x-vnd.stlviewer";
 
 resource app_version {
 	major  = 0,
-	middle = 1,
+	middle = 2,
 	minor  = 0,
 	variety = 0,
 	internal = 0,
-	short_info = "0.1.0",
+	short_info = "0.2.0",
 	long_info = "STLover"
 };
 
