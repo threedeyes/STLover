@@ -22,7 +22,7 @@
 #include "STLStatWindow.h"
 
 STLWindow::STLWindow(BRect frame)
-	: BWindow(frame, "STLover - Simple STL Viewer", B_TITLED_WINDOW, 0),
+	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	stlModified(false),
@@ -283,7 +283,7 @@ STLWindow::MessageReceived(BMessage *message)
 			break;
 		case B_ABOUT_REQUESTED:
 		{
-			BAboutWindow* wind = new BAboutWindow("STLover - Simple STL Viewer", APP_SIGNATURE);
+			BAboutWindow* wind = new BAboutWindow(MAIN_WIN_TITLE, APP_SIGNATURE);
 			wind->AddCopyright(2020, "Gerasim Troeglazov (3dEyes**)");
 			wind->AddDescription(
 				"This program is free software; you can redistribute it and/or modify "
@@ -530,7 +530,7 @@ void
 STLWindow::CloseFile(void)
 {
 	if (IsLoaded()) {
-		SetTitle("STLover - Simple STL Viewer");
+		SetTitle(MAIN_WIN_TITLE);
 		stlValid = false;
 
 		stl_file* stl = stlObject;

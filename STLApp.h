@@ -31,6 +31,8 @@
 
 #define APP_SIGNATURE "application/x-vnd.stlviewer"
 
+#define MAIN_WIN_TITLE "STLover"
+
 #define MSG_FILE_OPEN					'OPEN'
 #define MSG_FILE_APPEND					'APND'
 #define MSG_FILE_SAVE					'SVFL'
