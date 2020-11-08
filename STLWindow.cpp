@@ -19,14 +19,19 @@
 #include "STLApp.h"
 #include "STLView.h"
 #include "STLWindow.h"
+#include "STLStatWindow.h"
 
 STLWindow::STLWindow(BRect frame, uint32 type)
 	: BWindow(frame, "STLover - Simple STL Viewer", B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	stlModified(false),
-	stlValid(false),
+	showBoundingBox(false),
+	statWindow(NULL),
+	stlValid(false),	
 	stlObject(NULL),
+	stlObjectView(NULL),
+	stlObjectAppend(NULL),
 	errorTimeCounter(0),
 	zDepth(-5),
 	maxExtent(10)
@@ -47,14 +52,16 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	fMenuFileSaveAs->AddItem(new BMenuItem("VRML", new BMessage(MSG_FILE_EXPORT_VRML)));
 
 	fMenuFile->AddItem(new BMenuItem("Open...", new BMessage(MSG_FILE_OPEN), 'O'));
-	fMenuItemClose = new BMenuItem("Close", new BMessage(MSG_FILE_CLOSE));
-	fMenuFile->AddItem(fMenuItemClose);
+//	fMenuItemAppend = new BMenuItem("Append...", new BMessage(MSG_FILE_APPEND));
+//	fMenuFile->AddItem(fMenuItemAppend);
 	fMenuFile->AddSeparatorItem();
 	fMenuItemSave = new BMenuItem("Save", new BMessage(MSG_FILE_SAVE), 'S');
 	fMenuFile->AddItem(fMenuItemSave);
 	fMenuFile->AddItem(fMenuFileSaveAs);
 	fMenuFileSaveAs->SetTargetForItems(this);
 	fMenuFile->AddSeparatorItem();
+	fMenuItemClose = new BMenuItem("Close", new BMessage(MSG_FILE_CLOSE));
+	fMenuFile->AddItem(fMenuItemClose);
 	fMenuFile->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
 	fMenuBar->AddItem(fMenuFile);
 	fMenuFile->SetTargetForItems(this);
@@ -67,6 +74,9 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	fMenuView->AddSeparatorItem();
 	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
+	fMenuView->AddSeparatorItem();
+	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW));
+	fMenuView->AddItem(fMenuItemStatWin);
 	fMenuView->AddSeparatorItem();
 	fMenuView->AddItem(new BMenuItem("Reload", new BMessage(MSG_VIEWMODE_RESETPOS)));
 
@@ -113,6 +123,10 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 
 STLWindow::~STLWindow()
 {
+	if (statWindow != NULL) {
+		statWindow->Lock();
+		statWindow->Quit();
+	}
 	kill_thread(rendererThread);
 	CloseFile();
 }
@@ -133,6 +147,7 @@ STLWindow::MessageReceived(BMessage *message)
 		return;
 	}
 	switch (message->what) {
+		case MSG_FILE_APPEND:
 		case MSG_FILE_OPEN:
 		{
 			if (!fOpenFilePanel) {
@@ -140,6 +155,11 @@ STLWindow::MessageReceived(BMessage *message)
 					B_FILE_NODE, true, NULL, NULL, false, true);
 				fOpenFilePanel->SetTarget(this);
 			}
+
+			BMessage *openMsg = new BMessage(message->what == MSG_FILE_APPEND ? MSG_APPEND_REFS_RECIEVED : B_REFS_RECEIVED);
+			fOpenFilePanel->SetMessage(openMsg);
+			delete openMsg;
+
 			fOpenFilePanel->Show();
 			break;
 		}
@@ -174,6 +194,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fSaveFilePanel->SetSaveText("");
 			}
 			fSaveFilePanel->Show();
+			delete fileMsg;
 			break;
 		}
 		case MSG_FILE_CLOSE:
@@ -239,9 +260,24 @@ STLWindow::MessageReceived(BMessage *message)
 			}
 			break;
 		}
+		case MSG_APPEND_REFS_RECIEVED:
+		{
+			entry_ref ref;
+
+			if (message->FindRef("refs", 0, &ref) == B_OK) {
+				BEntry entry = BEntry(&ref);
+				BPath path;
+				entry.GetPath(&path);
+				stl_open_merge(stlObject, (char*)path.Path());
+				stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+				stlModified = true;
+				EnableMenuItems(true);
+				stlView->RenderUpdate();
+			}
+			break;
+		}
 		case B_REFS_RECEIVED:
 			DetachCurrentMessage();
-			message->what = B_REFS_RECEIVED;
 			BMessenger(be_app).SendMessage(message);
 		case B_CANCEL:
 			break;
@@ -277,75 +313,114 @@ STLWindow::MessageReceived(BMessage *message)
 			OpenFile(fOpenedFileName.String());
 			break;
 		}
+		case MSG_VIEWMODE_STAT_WINDOW:
+		{
+			if (statWindow == NULL) {
+				BScreen screen(B_MAIN_SCREEN_ID);
+				BRect rect(Frame().right + 12, Frame().top, Frame().right + 250, Frame().bottom);
+
+				if (rect.right >= screen.Frame().Width())
+					rect.OffsetTo(screen.Frame().right - rect.Width(), rect.top);
+
+				statWindow = new STLStatWindow(rect, this);				
+				statWindow->Show();	
+			} else {
+				if (statWindow->IsHidden())
+					statWindow->Show();
+				else
+					statWindow->Hide();
+			}
+			UpdateStats();
+			fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
+			break;
+		}
 		case MSG_TOOLS_MIRROR_XY:
 		{
 			stl_mirror_xy(stlObject);
+			stl_mirror_xy(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_YZ:
 		{
 			stl_mirror_yz(stlObject);
+			stl_mirror_yz(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XZ:
 		{
 			stl_mirror_xz(stlObject);
+			stl_mirror_xz(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_FILL_HOLES:
 		{
 			stl_fill_holes(stlObject);
+			stl_fill_holes(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_REMOVE_UNCONNECTED:
 		{
 			stl_remove_unconnected_facets(stlObject);
+			stl_remove_unconnected_facets(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_CHECK_DIRECT:
 		{
 			stl_fix_normal_directions(stlObject);
+			stl_fix_normal_directions(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_CHECK_NORMALS:
 		{
 			stl_fix_normal_values(stlObject);
+			stl_fix_normal_values(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_CHECK_NEARBY:
 		{
 			stl_check_facets_nearby(stlObject, 0);
+			stl_check_facets_nearby(stlObjectView, 0);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_REVERSE:
 		{
 			stl_reverse_all_facets(stlObject);
+			stl_reverse_all_facets(stlObjectView);
 			stlModified = true;
 			EnableMenuItems(true);
+			UpdateStats();
 			stlView->RenderUpdate();
 			break;
 		}
@@ -381,11 +456,16 @@ void
 STLWindow::EnableMenuItems(bool show)
 {
 	fMenuItemClose->SetEnabled(show);
+//	fMenuItemAppend->SetEnabled(show);
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
 	fMenuFileSaveAs->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
 	fMenuItemShowBox->SetMarked(showBoundingBox);
+	if (statWindow != NULL)
+		fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
+	else
+		fMenuItemStatWin->SetMarked(false);
 }
 
 void
@@ -394,21 +474,26 @@ STLWindow::OpenFile(const char *filename)
 	CloseFile();
 
 	stlObject = (stl_file*)malloc(sizeof(stl_file));
-	memset(stlObject,0,sizeof(stl_file));
+	memset(stlObject, 0, sizeof(stl_file));
+
+	stlObjectView = (stl_file*)malloc(sizeof(stl_file));
+	memset(stlObjectView, 0, sizeof(stl_file));
 
 	zDepth = -5;
 	maxExtent = 10;
 
 	stl_open(stlObject, (char*)filename);
-	stlView->SetSTL(stlObject);
+	stl_open(stlObjectView, (char*)filename);
+	stlView->SetSTL(stlObjectView);
 	
-	if (stl_get_error(stlObject)) {
+	if (stl_get_error(stlObject) || stl_get_error(stlObjectView)) {
 		CloseFile();
 		errorTimeCounter = 3;
 		return;
 	}
 	
 	stl_fix_normal_values(stlObject);
+	stl_fix_normal_values(stlObjectView);
 
 	TransformPosition();
 
@@ -438,6 +523,7 @@ STLWindow::OpenFile(const char *filename)
 	stlModified = false;
 	stlValid = true;
 	EnableMenuItems(true);
+	UpdateStats();
 }
 
 void
@@ -445,34 +531,77 @@ STLWindow::CloseFile(void)
 {
 	if (IsLoaded()) {
 		SetTitle("STLover - Simple STL Viewer");
+		stlValid = false;
+
 		stl_file* stl = stlObject;
 		stlObject = NULL;
-		stlValid = false;
 		stl_close(stl);
 		free (stl);
+
+		stl = stlObjectView;
+		stlObjectView = NULL;
+		stl_close(stl);
+		free (stl);
+
 		stlView->RenderUpdate();
 		errorTimeCounter = 0;
 		EnableMenuItems(false);
+		UpdateStats();
+	}
+}
+
+void
+STLWindow::UpdateStats(void)
+{
+	if (statWindow != NULL) {
+		bool isLoaded = IsLoaded();
+		if (isLoaded) {
+			stl_calculate_volume(stlObject);
+//			stl_calculate_surface_area(stlObject);
+		}
+		statWindow->SetFloatValue("min-x", isLoaded ? stlObject->stats.min.x : 0);
+		statWindow->SetFloatValue("min-y", isLoaded ? stlObject->stats.min.y : 0);
+		statWindow->SetFloatValue("min-z", isLoaded ? stlObject->stats.min.z : 0);
+		statWindow->SetFloatValue("max-x", isLoaded ? stlObject->stats.max.x : 0);
+		statWindow->SetFloatValue("max-y", isLoaded ? stlObject->stats.max.y : 0);
+		statWindow->SetFloatValue("max-z", isLoaded ? stlObject->stats.max.z : 0);
+		statWindow->SetFloatValue("width", isLoaded ? stlObject->stats.size.x : 0);
+		statWindow->SetFloatValue("length", isLoaded ? stlObject->stats.size.y : 0);
+		statWindow->SetFloatValue("height", isLoaded ? stlObject->stats.size.z : 0);
+		statWindow->SetFloatValue("volume", isLoaded ? stlObject->stats.volume : 0);
+//		statWindow->SetFloatValue("surface", isLoaded ? stlObject->stats.surface_area : 0);
+		statWindow->SetIntValue("num_facets", isLoaded ? stlObject->stats.number_of_facets : 0);
+		statWindow->SetIntValue("num_disconnected_facets",
+			isLoaded ? (stlObject->stats.facets_w_1_bad_edge + stlObject->stats.facets_w_2_bad_edge + 
+			stlObject->stats.facets_w_3_bad_edge) : 0);
+		statWindow->SetIntValue("parts", isLoaded ? stlObject->stats.number_of_parts : 0);
+		statWindow->SetIntValue("degenerate", isLoaded ? stlObject->stats.degenerate_facets : 0);
+		statWindow->SetIntValue("edges", isLoaded ? stlObject->stats.edges_fixed : 0);
+		statWindow->SetIntValue("removed", isLoaded ? stlObject->stats.facets_removed : 0);
+		statWindow->SetIntValue("added", isLoaded ? stlObject->stats.facets_added : 0);
+		statWindow->SetIntValue("reversed", isLoaded ? stlObject->stats.facets_reversed : 0);
+		statWindow->SetIntValue("backward", isLoaded ? stlObject->stats.backwards_edges : 0);
+		statWindow->SetIntValue("normals", isLoaded ? stlObject->stats.normals_fixed : 0);
 	}
 }
 
 void
 STLWindow::TransformPosition()
 {
-	stl_translate(stlObject, 0, 0, 0);
+	stl_translate(stlObjectView, 0, 0, 0);
 
 	float xMaxExtent = 0;
 	float yMaxExtent = 0;
 	float zMaxExtent = 0;
 
-	for (int i = 0 ; i < stlObject->stats.number_of_facets ; i++) {
+	for (int i = 0 ; i < stlObjectView->stats.number_of_facets ; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (stlObject->facet_start[i].vertex[j].x > xMaxExtent)
-				xMaxExtent = stlObject->facet_start[i].vertex[0].x;
-			if (stlObject->facet_start[i].vertex[j].y > yMaxExtent)
-				yMaxExtent = stlObject->facet_start[i].vertex[0].y;
-			if (stlObject->facet_start[i].vertex[j].z > zMaxExtent)
-				zMaxExtent = stlObject->facet_start[i].vertex[0].z;
+			if (stlObjectView->facet_start[i].vertex[j].x > xMaxExtent)
+				xMaxExtent = stlObjectView->facet_start[i].vertex[0].x;
+			if (stlObjectView->facet_start[i].vertex[j].y > yMaxExtent)
+				yMaxExtent = stlObjectView->facet_start[i].vertex[0].y;
+			if (stlObjectView->facet_start[i].vertex[j].z > zMaxExtent)
+				zMaxExtent = stlObjectView->facet_start[i].vertex[0].z;
 		}
 	}
 
@@ -488,7 +617,7 @@ STLWindow::TransformPosition()
 	if ((zMaxExtent > yMaxExtent) && (zMaxExtent > xMaxExtent))
 		maxExtent = zMaxExtent;
 
-	stl_translate_relative(stlObject, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
+	stl_translate_relative(stlObjectView, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
 }
 
 int32

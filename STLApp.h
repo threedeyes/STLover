@@ -32,6 +32,7 @@
 #define APP_SIGNATURE "application/x-vnd.stlviewer"
 
 #define MSG_FILE_OPEN					'OPEN'
+#define MSG_FILE_APPEND					'APND'
 #define MSG_FILE_SAVE					'SVFL'
 #define MSG_FILE_SAVE_AS				'SVAS'
 #define MSG_FILE_CLOSE					'CLOS'
@@ -45,6 +46,7 @@
 #define MSG_VIEWMODE_WIREFRAME			'MOD2'
 #define MSG_VIEWMODE_RESETPOS			'RSPS'
 #define MSG_VIEWMODE_BOUNDING_BOX		'BBOX'
+#define MSG_VIEWMODE_STAT_WINDOW		'SWIN'
 #define MSG_TOOLS_MIRROR_XY				'M_XY'
 #define MSG_TOOLS_MIRROR_YZ				'M_YZ'
 #define MSG_TOOLS_MIRROR_XZ				'M_XZ'
@@ -55,6 +57,7 @@
 #define MSG_TOOLS_CHECK_NEARBY			'FNRB'
 #define MSG_TOOLS_REVERSE				'RVRS'
 #define MSG_PULSE						'PULS'
+#define MSG_APPEND_REFS_RECIEVED		'APRR'
 
 #define FOV	30
 

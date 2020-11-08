@@ -25,6 +25,7 @@
 #include <MenuBar.h>
 #include <MenuItem.h>
 #include <String.h>
+#include <Screen.h>
 #include <FilePanel.h>
 
 #include <private/interface/AboutWindow.h>
@@ -32,6 +33,7 @@
 #include <admesh/stl.h>
 
 class STLView;
+class STLStatWindow;
 
 class STLWindow : public BWindow {
 	public:
@@ -42,6 +44,7 @@ class STLWindow : public BWindow {
 
 		void OpenFile(const char *file);
 		void CloseFile(void);
+		void UpdateStats(void);
 		void TransformPosition(void);
 
 		int GetErrorTimer() { return errorTimeCounter; }
@@ -63,16 +66,19 @@ class STLWindow : public BWindow {
 		BMenu *fMenuTools;
 		BMenu *fMenuToolsMirror;
 		BMenu *fMenuHelp;
+		BMenuItem *fMenuItemAppend;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
 		BMenuItem *fMenuItemSolid;
 		BMenuItem *fMenuItemWireframe;
 		BMenuItem *fMenuItemShowBox;
+		BMenuItem *fMenuItemStatWin;
 		BFilePanel	*fOpenFilePanel;
 		BFilePanel	*fSaveFilePanel;
 		BString fOpenedFileName;
 
 		STLView *stlView;
+		STLStatWindow *statWindow;
 
 		bool stlModified;
 		bool stlValid;
@@ -84,6 +90,8 @@ class STLWindow : public BWindow {
 		float maxExtent;
 
 		stl_file* stlObject;
+		stl_file* stlObjectView;
+		stl_file* stlObjectAppend;
 };
 
 #endif
