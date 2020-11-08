@@ -27,15 +27,25 @@ STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 {
 	view = new BGroupView("StatView", B_VERTICAL, 1);
 	view->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	view->GroupLayout()->SetInsets(8, 1);
+	view->GroupLayout()->SetInsets(6, 0);
 	AddChild(view);
 
-	BFont font;
 	view->GetFont(&font);
+	font.SetSize(font.Size() * 0.9);
 	font.SetFace(B_BOLD_FACE);
 
 	SetLayout(new BGroupLayout(B_VERTICAL));
-	BStringView *sizeTitle = new BStringView("size", "Size");
+
+	BStringView *fileTitle = new BStringView("file", "File");
+	fileTitle->SetAlignment(B_ALIGN_CENTER);
+	fileTitle->SetFont(&font, B_FONT_FACE);
+	view->AddChild(fileTitle);
+
+	view->AddChild(new BStringView("filename", "Name:"));
+	view->AddChild(new BStringView("type", "STL Type:"));
+	view->AddChild(new BStringView("title", "Title:"));
+
+	BStringView *sizeTitle = new BStringView("size", "Object size");
 	sizeTitle->SetAlignment(B_ALIGN_CENTER);
 	sizeTitle->SetFont(&font, B_FONT_FACE);
 	view->AddChild(sizeTitle);
@@ -73,6 +83,14 @@ STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 	view->AddChild(new BStringView("reversed", "Facets reversed:"));
 	view->AddChild(new BStringView("backward", "Backward edges:"));
 	view->AddChild(new BStringView("normals", "Normals fixed:"));
+
+	BView *child;
+	if ( child = view->ChildAt(0) ) {
+		while ( child ) {
+			child->SetFont(&font, B_FONT_SIZE);
+			child = child->NextSibling();
+		}
+	}
 }
 
 void
@@ -101,6 +119,25 @@ STLStatWindow::SetIntValue(const char *param, int value)
 			text = text.Truncate(text.FindFirst(':') + 1);
 			text << " ";
 			text << value;
+			item->SetText(text);
+			item->UnlockLooper();
+		}
+	}
+}
+
+void
+STLStatWindow::SetTextValue(const char *param, const char *value)
+{
+	BStringView *item = (BStringView*)view->FindView(param);
+	if (item != NULL) {
+		if (item->LockLooper()) {
+			BString text = item->Text();
+			text = text.Truncate(text.FindFirst(':') + 1);
+			text << " ";
+			item->SetToolTip(value);
+			BString newValue = value;
+			font.TruncateString(&newValue, B_TRUNCATE_SMART, 100);
+			text << newValue;
 			item->SetText(text);
 			item->UnlockLooper();
 		}

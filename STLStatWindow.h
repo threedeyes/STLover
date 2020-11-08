@@ -34,10 +34,12 @@ class STLStatWindow : public BWindow {
 
 		void SetFloatValue(const char *param, float value);
 		void SetIntValue(const char *param, int value);
+		void SetTextValue(const char *param, const char *value);
 
 	private:
 		BWindow *mainWindow;
 		BGroupView *view;
+		BFont font;
 };
 
 #endif

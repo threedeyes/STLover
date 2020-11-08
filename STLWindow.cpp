@@ -559,6 +559,11 @@ STLWindow::UpdateStats(void)
 			stl_calculate_volume(stlObject);
 //			stl_calculate_surface_area(stlObject);
 		}
+		BPath path(fOpenedFileName);
+		statWindow->SetTextValue("filename", isLoaded ? path.Leaf() : 0);
+		statWindow->SetTextValue("type", isLoaded ? (stlObject->stats.type == binary ? "Binary" : "ASCII") : "");
+		statWindow->SetTextValue("title", isLoaded ? stlObject->stats.header : "");
+
 		statWindow->SetFloatValue("min-x", isLoaded ? stlObject->stats.min.x : 0);
 		statWindow->SetFloatValue("min-y", isLoaded ? stlObject->stats.min.y : 0);
 		statWindow->SetFloatValue("min-z", isLoaded ? stlObject->stats.min.z : 0);
