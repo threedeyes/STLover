@@ -21,7 +21,7 @@
 #include "STLWindow.h"
 #include "STLStatWindow.h"
 
-STLWindow::STLWindow(BRect frame, uint32 type)
+STLWindow::STLWindow(BRect frame)
 	: BWindow(frame, "STLover - Simple STL Viewer", B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
@@ -105,7 +105,7 @@ STLWindow::STLWindow(BRect frame, uint32 type)
 	
 	EnableMenuItems(false);
 
-	stlView = new STLView(Bounds(), type);
+	stlView = new STLView(Bounds(), BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 	AddChild(stlView);
 
 	stlView->AddChild(fMenuBar);

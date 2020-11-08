@@ -22,7 +22,7 @@
 STLoverApplication::STLoverApplication():BApplication(APP_SIGNATURE)
 {
 	BRect windowRect(100, 100, 100 + 640, 100 + 480);
-	stlWindow = new STLWindow(windowRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
+	stlWindow = new STLWindow(windowRect);
 }
 
 void

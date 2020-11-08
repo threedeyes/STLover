@@ -37,7 +37,7 @@ class STLStatWindow;
 
 class STLWindow : public BWindow {
 	public:
-		STLWindow(BRect frame, uint32 type);
+		STLWindow(BRect frame);
 		~STLWindow();
 		virtual void MessageReceived(BMessage *message);
 		virtual bool QuitRequested();
