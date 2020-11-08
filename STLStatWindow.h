@@ -22,6 +22,7 @@
 #include <Window.h>
 #include <View.h>
 #include <GroupView.h>
+#include <String.h>
 #include <StringView.h>
 #include <Font.h>
 
