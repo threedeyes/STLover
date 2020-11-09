@@ -149,15 +149,22 @@ STLWindow::LoadSettings(void)
 
 		bool _showBoundingBox = false;
 		bool _showStatWindow = false;
+		bool _showWireframe = false;
 
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
+		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
 
 		showBoundingBox = _showBoundingBox;
 		stlView->ShowBoundingBox(showBoundingBox);
 
 		if (_showStatWindow)
 			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
+
+		if (_showWireframe)
+			this->PostMessage(MSG_VIEWMODE_WIREFRAME);
+		else
+			this->PostMessage(MSG_VIEWMODE_SOLID);
 
 		EnableMenuItems(IsLoaded());
 
@@ -177,9 +184,11 @@ STLWindow::SaveSettings(void)
 			return;
 
 		bool _showStatWindow = statWindow == NULL ? false : !statWindow->IsHidden();
+		bool _showWireframe = fMenuItemWireframe->IsMarked();
 
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
+		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
 
 		file.Sync();
 		file.Unlock();
