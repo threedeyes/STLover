@@ -212,6 +212,55 @@ STLWindow::MessageReceived(BMessage *message)
 		return;
 	}
 	switch (message->what) {
+		case B_KEY_DOWN:
+		case B_UNMAPPED_KEY_DOWN:
+		{
+			if (IsLoaded()) {
+				uint32 key = message->FindInt32("key");
+				uint32 modifiers = message->FindInt32("modifiers");
+
+				float scaleFactor = stlView->ScaleFactor();
+				float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
+				float xRotate = stlView->XRotate();
+				float yRotate = stlView->YRotate();
+				float rotateDelta = 5.0;
+
+				if (modifiers & B_SHIFT_KEY) {
+					scaleDelta /= 5.0;
+					rotateDelta /= 5.0;
+				}
+				if (modifiers & B_CONTROL_KEY) {
+					scaleDelta *= 2.0;
+					rotateDelta = 90.0;
+				}
+
+				switch (key) {
+					case 0x25: // Zoom [-]
+						scaleFactor += scaleDelta;
+						break;
+					case 0x3A: // Zoom [+]
+						scaleFactor -= scaleDelta;
+						break;
+					case 0x61: // Left
+						yRotate -= rotateDelta;
+						break;
+					case 0x63: // Right
+						yRotate += rotateDelta;
+						break;
+					case 0x57: // Up
+						xRotate -= rotateDelta;
+						break;
+					case 0x62: // Down
+						xRotate += rotateDelta;
+						break;
+				}
+
+				stlView->SetScaleFactor(scaleFactor);
+				stlView->SetXRotate(xRotate);
+				stlView->SetYRotate(yRotate);
+			}
+			break;
+		}
 		case MSG_FILE_APPEND:
 		case MSG_FILE_OPEN:
 		{

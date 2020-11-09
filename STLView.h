@@ -46,6 +46,14 @@ class STLView : public BGLView {
 		void Render(void);
 		void RenderUpdate() { needUpdate = true; }
 
+		float XRotate() { return xRotate; }
+		float YRotate() { return yRotate; }
+		float ScaleFactor() { return scaleFactor; }
+
+		void SetXRotate(float value) { xRotate = value; needUpdate = true;}
+		void SetYRotate(float value) { yRotate = value; needUpdate = true;}
+		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true;}
+
 	private:
 		BBitmap* GetIconFromApp(int size);
 		void DrawBox(stl_vertex min, stl_vertex size);
