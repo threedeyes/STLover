@@ -222,7 +222,10 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_FILE_SAVE:
 		{
 			BPath path(fOpenedFileName);
-			stl_write_binary(stlObject, path.Path(), path.Leaf());
+			if (stlObject->stats.type == binary)
+				stl_write_binary(stlObject, path.Path(), path.Leaf());
+			else
+				stl_write_ascii(stlObject, path.Path(), path.Leaf());
 			BNode node(path.Path());
 			BNodeInfo nodeInfo(&node);
 			nodeInfo.SetType("application/sla");
