@@ -111,25 +111,81 @@ STLWindow::STLWindow(BRect frame)
 	stlView->AddChild(fMenuBar);
 
 	SetSizeLimits(320, 4096, 256, 4049);
+
+	LoadSettings();
 	
 	Show();
 	stlView->RenderUpdate();
 
-	SetPulseRate(1000000);
-
 	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)stlView);
 	resume_thread(rendererThread);
+
+	SetPulseRate(1000000);
 }
 
 STLWindow::~STLWindow()
 {
+	SaveSettings();
+
 	if (statWindow != NULL) {
 		statWindow->Lock();
 		statWindow->Quit();
 	}
+
 	kill_thread(rendererThread);
 	CloseFile();
 }
+
+void
+STLWindow::LoadSettings(void)
+{
+	BPath path;
+	if (find_directory (B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
+		path.Append(APP_SETTINGS_FILENAME);
+		BFile file(path.Path(), B_READ_ONLY);
+
+		if (file.InitCheck() != B_OK || file.Lock() != B_OK)
+			return;
+
+		bool _showBoundingBox = false;
+		bool _showStatWindow = false;
+
+		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
+		file.ReadAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
+
+		showBoundingBox = _showBoundingBox;
+		stlView->ShowBoundingBox(showBoundingBox);
+
+		if (_showStatWindow)
+			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
+
+		EnableMenuItems(IsLoaded());
+
+		file.Unlock();
+	}
+}
+
+void
+STLWindow::SaveSettings(void)
+{
+	BPath path;
+	if (find_directory (B_USER_SETTINGS_DIRECTORY, &path) == B_OK) {
+		path.Append(APP_SETTINGS_FILENAME);
+
+		BFile file(path.Path(), B_CREATE_FILE | B_ERASE_FILE | B_WRITE_ONLY);
+		if (file.InitCheck() != B_OK || file.Lock() != B_OK)
+			return;
+
+		bool _showStatWindow = statWindow == NULL ? false : !statWindow->IsHidden();
+
+		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
+		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
+
+		file.Sync();
+		file.Unlock();
+	}
+}
+
 
 bool
 STLWindow::QuitRequested() {
@@ -323,7 +379,8 @@ STLWindow::MessageReceived(BMessage *message)
 					rect.OffsetTo(screen.Frame().right - rect.Width(), rect.top);
 
 				statWindow = new STLStatWindow(rect, this);				
-				statWindow->Show();	
+				statWindow->Show();
+				Activate();
 			} else {
 				if (statWindow->IsHidden())
 					statWindow->Show();

@@ -27,6 +27,7 @@
 #include <String.h>
 #include <Screen.h>
 #include <FilePanel.h>
+#include <FindDirectory.h>
 
 #include <private/interface/AboutWindow.h>
 
@@ -56,6 +57,8 @@ class STLWindow : public BWindow {
 
 	private:
 		void EnableMenuItems(bool show);
+		void LoadSettings(void);
+		void SaveSettings(void);
 	
 		thread_id 	rendererThread;
 
