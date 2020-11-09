@@ -41,7 +41,8 @@ class STLView : public BGLView {
 		virtual void Pulse();
 		virtual void Draw(BRect rect);
 
-		void SetSTL(stl_file *stl);
+		void SetSTL(stl_file *stl, stl_file *stlView);
+		void ShowAxes(bool show) { showAxes = show; }
 		void ShowBoundingBox(bool show) { showBox = show; }
 		void Render(void);
 		void RenderUpdate() { needUpdate = true; }
@@ -57,6 +58,7 @@ class STLView : public BGLView {
 	private:
 		BBitmap *GetIconFromApp(int size);
 		void DrawBox(stl_vertex min, stl_vertex size);
+		void DrawAxis(float radius);
 
 		BBitmap *appIcon;
 		BPoint lastMousePos;
@@ -65,6 +67,7 @@ class STLView : public BGLView {
 		STLWindow *stlWindow;
 
 		stl_file* stlObject;
+		stl_file* stlObjectView;
 
 		float xRotate;
 		float yRotate;
@@ -74,6 +77,7 @@ class STLView : public BGLView {
 		
 		bool needUpdate;
 		bool showBox;
+		bool showAxes;
 };
 
 #endif

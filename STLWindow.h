@@ -75,6 +75,7 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemSolid;
 		BMenuItem *fMenuItemWireframe;
 		BMenuItem *fMenuItemShowBox;
+		BMenuItem *fMenuItemShowAxes;
 		BMenuItem *fMenuItemStatWin;
 		BFilePanel	*fOpenFilePanel;
 		BFilePanel	*fSaveFilePanel;
@@ -86,6 +87,7 @@ class STLWindow : public BWindow {
 		bool stlModified;
 		bool stlValid;
 		bool showBoundingBox;
+		bool showAxes;
 
 		int errorTimeCounter;
 		

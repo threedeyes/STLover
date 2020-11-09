@@ -28,6 +28,7 @@ STLWindow::STLWindow(BRect frame)
 	fSaveFilePanel(NULL),
 	stlModified(false),
 	showBoundingBox(false),
+	showAxes(false),
 	statWindow(NULL),
 	stlValid(false),	
 	stlObject(NULL),
@@ -73,6 +74,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));	
 	fMenuView->AddItem(fMenuItemWireframe);
 	fMenuView->AddSeparatorItem();
+	fMenuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
+	fMenuView->AddItem(fMenuItemShowAxes);
 	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
 	fMenuView->AddSeparatorItem();
@@ -151,15 +154,20 @@ STLWindow::LoadSettings(void)
 			return;
 
 		bool _showBoundingBox = false;
+		bool _showAxes = false;
 		bool _showStatWindow = false;
 		bool _showWireframe = false;
 
+		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_showAxes, sizeof(bool));
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
 
 		showBoundingBox = _showBoundingBox;
 		stlView->ShowBoundingBox(showBoundingBox);
+
+		showAxes = _showAxes;
+		stlView->ShowAxes(showAxes);
 
 		if (_showStatWindow)
 			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
@@ -189,6 +197,7 @@ STLWindow::SaveSettings(void)
 		bool _showStatWindow = statWindow == NULL ? false : !statWindow->IsHidden();
 		bool _showWireframe = fMenuItemWireframe->IsMarked();
 
+		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &showAxes, sizeof(bool));
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
@@ -420,6 +429,14 @@ STLWindow::MessageReceived(BMessage *message)
 			wind->Show();
 			break;
 		}
+		case MSG_VIEWMODE_AXES:
+		{
+			showAxes = !showAxes;
+			stlView->ShowAxes(showAxes);
+			EnableMenuItems(true);
+			stlView->RenderUpdate();
+			break;
+		}
 		case MSG_VIEWMODE_BOUNDING_BOX:
 		{
 			showBoundingBox = !showBoundingBox;
@@ -620,6 +637,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuFileSaveAs->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
 	fMenuItemShowBox->SetMarked(showBoundingBox);
+	fMenuItemShowAxes->SetMarked(showAxes);
 	if (statWindow != NULL)
 		fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
 	else
@@ -642,7 +660,7 @@ STLWindow::OpenFile(const char *filename)
 
 	stl_open(stlObject, (char*)filename);
 	stl_open(stlObjectView, (char*)filename);
-	stlView->SetSTL(stlObjectView);
+	stlView->SetSTL(stlObject, stlObjectView);
 	
 	if (stl_get_error(stlObject) || stl_get_error(stlObjectView)) {
 		CloseFile();

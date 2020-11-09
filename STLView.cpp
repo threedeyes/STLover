@@ -23,6 +23,7 @@
 STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED, type),
 	needUpdate(true),
+	showAxes(false),
 	showBox(false)
 {
 	appIcon = GetIconFromApp(164);
@@ -212,9 +213,10 @@ STLView::Draw(BRect rect)
 }
 
 void
-STLView::SetSTL(stl_file *_stl)
+STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
 {
 	stlObject = _stl;
+	stlObjectView = _stlView;
 
 	scaleFactor = 0.0;
 	xRotate = -90.0;
@@ -228,11 +230,6 @@ STLView::SetSTL(stl_file *_stl)
 void
 STLView::DrawBox(stl_vertex min, stl_vertex size)
 {
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_LINE_SMOOTH);
-
 	glLineWidth(1);
 	glColor4f (0.9, 0.25, 0.6, 1);
 
@@ -273,9 +270,55 @@ STLView::DrawBox(stl_vertex min, stl_vertex size)
 	glVertex3f(min.x, min.y + size.y, min.z);
 	glVertex3f(min.x, min.y + size.y, min.z + size.z);
 	glEnd();
+}
 
-	glDisable(GL_LINE_SMOOTH);
-	glDisable(GL_BLEND);
+void
+STLView::DrawAxis(float radius)
+{
+	glLineWidth(1);
+
+	float xShift = stlObjectView->stats.min.x - stlObject->stats.min.x;
+	float yShift = stlObjectView->stats.min.y - stlObject->stats.min.y;
+	float zShift = stlObjectView->stats.min.z - stlObject->stats.min.z;
+	glColor4f (1, 0, 0, 1);
+	glBegin(GL_LINES);
+	glVertex3f(xShift, yShift - radius, zShift);
+	glVertex3f(xShift, yShift + radius, zShift);
+	glEnd();
+	glColor4f (0, 1, 0, 1);
+	glBegin(GL_LINES);
+	glVertex3f(xShift - radius, yShift, zShift);
+	glVertex3f(xShift + radius, yShift, zShift);
+	glEnd();
+	glColor4f (1, 1, 0, 1);
+	glBegin(GL_LINES);
+	glVertex3f(xShift, yShift, zShift - radius);
+	glVertex3f(xShift, yShift, zShift + radius);
+	glEnd();
+
+	float coneSize = radius / 50.0;
+	GLUquadricObj *coneObj = gluNewQuadric();
+	glPushMatrix();
+	glColor4f (1, 0, 0, 1);
+	glTranslated(xShift, yShift + radius, zShift);
+	glRotated(270, 1, 0, 0);
+	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor4f (0, 1, 0, 1);
+	glTranslated(xShift + radius, yShift, zShift);
+	glRotated(90.0, 0, 1, 0);
+	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
+	glPopMatrix();
+
+	glPushMatrix();
+	glColor4f (1, 1, 0, 1);
+	glTranslated(xShift, yShift, zShift + radius);
+	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
+	glPopMatrix();
+
+	gluDeleteQuadric(coneObj);
 }
 
 void
@@ -297,19 +340,29 @@ STLView::Render(void)
 
 		glEnable(GL_LIGHTING);
 
-		for(size_t i = 0 ; i < stlObject->stats.number_of_facets ; i++) {
+		for(size_t i = 0 ; i < stlObjectView->stats.number_of_facets ; i++) {
 			glBegin(GL_POLYGON);
-			glNormal3f(stlObject->facet_start[i].normal.x, stlObject->facet_start[i].normal.y, stlObject->facet_start[i].normal.z);
-			glVertex3f(stlObject->facet_start[i].vertex[0].x, stlObject->facet_start[i].vertex[0].y, stlObject->facet_start[i].vertex[0].z);
-			glVertex3f(stlObject->facet_start[i].vertex[1].x, stlObject->facet_start[i].vertex[1].y, stlObject->facet_start[i].vertex[1].z);
-			glVertex3f(stlObject->facet_start[i].vertex[2].x, stlObject->facet_start[i].vertex[2].y, stlObject->facet_start[i].vertex[2].z);
+			glNormal3f(stlObjectView->facet_start[i].normal.x, stlObjectView->facet_start[i].normal.y, stlObjectView->facet_start[i].normal.z);
+			glVertex3f(stlObjectView->facet_start[i].vertex[0].x, stlObjectView->facet_start[i].vertex[0].y, stlObjectView->facet_start[i].vertex[0].z);
+			glVertex3f(stlObjectView->facet_start[i].vertex[1].x, stlObjectView->facet_start[i].vertex[1].y, stlObjectView->facet_start[i].vertex[1].z);
+			glVertex3f(stlObjectView->facet_start[i].vertex[2].x, stlObjectView->facet_start[i].vertex[2].y, stlObjectView->facet_start[i].vertex[2].z);
 			glEnd();
 		}
 
 		glDisable(GL_LIGHTING);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_LINE_SMOOTH);
+
+		if (showAxes)
+			DrawAxis(sqrt(stlObjectView->stats.size.x * stlObjectView->stats.size.x + stlObjectView->stats.size.y * stlObjectView->stats.size.x + stlObjectView->stats.size.z * stlObjectView->stats.size.z));
+
 		if (showBox)
-			DrawBox(stlObject->stats.min, stlObject->stats.size);
+			DrawBox(stlObjectView->stats.min, stlObjectView->stats.size);
+
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_BLEND);
 
 		SwapBuffers();	
 		UnlockGL();
