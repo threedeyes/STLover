@@ -23,13 +23,16 @@
 #include <Message.h>
 #include <GLView.h>
 #include <Path.h>
+#include <MimeType.h>
+#include <Resources.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
 
 #include <admesh/stl.h>
 
-#define APP_SIGNATURE "application/x-vnd.stlviewer"
+#define APP_SIGNATURE "application/x-vnd.stlover"
+#define STL_SIGNATURE "application/sla"
 
 #define MAIN_WIN_TITLE "STLover"
 #define APP_SETTINGS_FILENAME "STLover_settings"
@@ -72,6 +75,7 @@ class STLoverApplication : public BApplication {
 		STLoverApplication();
 		virtual void RefsReceived(BMessage* msg);
 	private:
+		void InstallMimeType(void);
 		STLWindow *stlWindow;
 };
 

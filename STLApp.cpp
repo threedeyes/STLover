@@ -21,6 +21,8 @@
 
 STLoverApplication::STLoverApplication():BApplication(APP_SIGNATURE)
 {
+	InstallMimeType();
+
 	BRect windowRect(100, 100, 100 + 640, 100 + 480);
 	stlWindow = new STLWindow(windowRect);
 }
@@ -35,5 +37,35 @@ STLoverApplication::RefsReceived(BMessage* msg)
 		BPath path;
 		entry.GetPath(&path);
 		stlWindow->OpenFile(path.Path());
+	}
+}
+
+void
+STLoverApplication::InstallMimeType(void)
+{
+	BMimeType mime(STL_SIGNATURE);
+	status_t ret = mime.InitCheck();
+	if (ret != B_OK)
+		return;
+
+	ret = mime.Install();
+	if (ret != B_OK && ret != B_FILE_EXISTS)
+		return;
+
+	mime.SetShortDescription("STL file");
+	mime.SetLongDescription("A file format native to the STereoLithography CAD software");
+
+	BMessage message('extn');
+	message.AddString("extensions", "stl");
+	mime.SetFileExtensions(&message);
+
+	BResources* resources = AppResources();
+	if (resources != NULL) {
+		size_t size;
+		const void* iconData = resources->LoadResource('VICN', "BEOS:" STL_SIGNATURE,
+			&size);
+		if (iconData != NULL && size > 0) {
+			mime.SetIcon(reinterpret_cast<const uint8*>(iconData), size);
+		}
 	}
 }
