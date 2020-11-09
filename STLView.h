@@ -55,7 +55,7 @@ class STLView : public BGLView {
 		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true;}
 
 	private:
-		BBitmap* GetIconFromApp(int size);
+		BBitmap *GetIconFromApp(int size);
 		void DrawBox(stl_vertex min, stl_vertex size);
 
 		BBitmap *appIcon;

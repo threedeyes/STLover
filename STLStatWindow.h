@@ -16,8 +16,8 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _STLSTAT_WINDOW_H
-#define _STLSTAT_WINDOW_H
+#ifndef STLSTAT_WINDOW
+#define STLSTAT_WINDOW
 
 #include <Window.h>
 #include <View.h>

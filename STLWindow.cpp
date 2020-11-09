@@ -20,6 +20,7 @@
 #include "STLView.h"
 #include "STLWindow.h"
 #include "STLStatWindow.h"
+#include "STLInputWindow.h"
 
 STLWindow::STLWindow(BRect frame)
 	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
@@ -84,6 +85,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XZ", new BMessage(MSG_TOOLS_MIRROR_XZ)));
 	
+	fMenuTools->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
+	fMenuTools->AddItem(new BMenuItem("Scale...", new BMessage(MSG_TOOLS_SCALE)));
 	fMenuTools->AddItem(new BMenuItem("Add facets to fill holes", new BMessage(MSG_TOOLS_FILL_HOLES)));
 	fMenuTools->AddItem(new BMenuItem("Remove unconnected facets", new BMessage(MSG_TOOLS_REMOVE_UNCONNECTED)));
 	fMenuTools->AddItem(new BMenuItem("Check and fix direction of normals", new BMessage(MSG_TOOLS_CHECK_DIRECT)));
@@ -281,9 +284,9 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			BPath path(fOpenedFileName);
 			if (stlObject->stats.type == binary)
-				stl_write_binary(stlObject, path.Path(), path.Leaf());
+				stl_write_binary(stlObject, path.Path(), stlObject->stats.header);
 			else
-				stl_write_ascii(stlObject, path.Path(), path.Leaf());
+				stl_write_ascii(stlObject, path.Path(), stlObject->stats.header);
 			BNode node(path.Path());
 			BNodeInfo nodeInfo(&node);
 			nodeInfo.SetType("application/sla");
@@ -340,13 +343,13 @@ STLWindow::MessageReceived(BMessage *message)
 				BString mime("application/sla");
 				switch (format) {
 					case MSG_FILE_EXPORT_STLA:
-						stl_write_ascii(stlObject, path.Path(), path.Leaf());
+						stl_write_ascii(stlObject, path.Path(), stlObject->stats.header);
 						break;
 					case MSG_FILE_EXPORT_STLB:
-						stl_write_binary(stlObject, path.Path(), path.Leaf());
+						stl_write_binary(stlObject, path.Path(), stlObject->stats.header);
 						break;
 					case MSG_FILE_EXPORT_DXF:
-						stl_write_dxf(stlObject, (char*)path.Path(), (char*)path.Leaf());
+						stl_write_dxf(stlObject, (char*)path.Path(), stlObject->stats.header);
 						mime.SetTo("application/dxf");
 						break;
 					case MSG_FILE_EXPORT_VRML:
@@ -450,6 +453,43 @@ STLWindow::MessageReceived(BMessage *message)
 			}
 			UpdateStats();
 			fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
+			break;
+		}
+		case MSG_TOOLS_EDIT_TITLE:
+		{
+			STLInputWindow *input = new STLInputWindow("Title:", stlObject->stats.header, this, MSG_TOOLS_TITLE_SET);
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_TITLE_SET:
+		{
+			const char *value = message->FindString("value");
+			if (value != NULL && IsLoaded()) {
+				snprintf(stlObject->stats.header, 80, value);
+				stlModified = true;
+				EnableMenuItems(true);
+				UpdateStats();
+			}
+			break;
+		}
+		case MSG_TOOLS_SCALE:
+		{
+			STLInputWindow *input = new STLInputWindow("Scale factor:", "1.0", this, MSG_TOOLS_SCALE_SET);
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_SCALE_SET:
+		{
+			const char *value = message->FindString("value");
+			if (value != NULL && IsLoaded()) {
+				float scaleFactor = atof(value);
+				stl_scale(stlObject, scaleFactor);
+				stl_scale(stlObjectView, scaleFactor);
+				stlModified = true;
+				stlView->RenderUpdate();
+				EnableMenuItems(true);
+				UpdateStats();
+			}
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XY:
