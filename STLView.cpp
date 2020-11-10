@@ -233,18 +233,16 @@ STLView::DrawBox(stl_vertex min, stl_vertex size)
 	glLineWidth(1);
 	glColor4f (0.9, 0.25, 0.6, 1);
 
+	glBegin(GL_LINES);
 	for (float x = min.x + 10; x < min.x + size.x; x += 10.0) {
-		glBegin(GL_LINES);
 		glVertex3f(x, min.y, min.z);
 		glVertex3f(x, min.y + size.y, min.z);
-		glEnd();
 	}
 	for (float y = min.y + 10; y < min.y + size.y; y += 10.0) {
-		glBegin(GL_LINES);
 		glVertex3f(min.x, y, min.z);
 		glVertex3f(min.x + size.x, y, min.z);
-		glEnd();
 	}
+	glEnd();
 
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(min.x, min.y, min.z);
