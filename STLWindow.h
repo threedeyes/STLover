@@ -93,6 +93,15 @@ class STLWindow : public BWindow {
 		bool showBoundingBox;
 		bool showAxes;
 
+		int32 exactFlag;
+		int32 nearbyFlag;
+		int32 removeUnconnectedFlag;
+		int32 fillHolesFlag;
+		int32 normalDirectionsFlag;
+		int32 normalValuesFlag;
+		int32 reverseAllFlag;
+		int32 iterationsValue;
+
 		int errorTimeCounter;
 		
 		float zDepth;

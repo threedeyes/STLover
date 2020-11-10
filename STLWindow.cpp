@@ -21,6 +21,7 @@
 #include "STLWindow.h"
 #include "STLStatWindow.h"
 #include "STLInputWindow.h"
+#include "STLRepairWindow.h"
 
 STLWindow::STLWindow(BRect frame)
 	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
@@ -29,6 +30,14 @@ STLWindow::STLWindow(BRect frame)
 	stlModified(false),
 	showBoundingBox(false),
 	showAxes(false),
+	exactFlag(false),
+	nearbyFlag(false),
+	removeUnconnectedFlag(false),
+	fillHolesFlag(false),
+	normalDirectionsFlag(false),
+	normalValuesFlag(false),
+	reverseAllFlag(false),
+	iterationsValue(2),
 	statWindow(NULL),
 	stlValid(false),	
 	stlObject(NULL),
@@ -109,12 +118,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuTools->AddItem(fMenuToolsMirror);
 	fMenuTools->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
 	fMenuTools->AddSeparatorItem();
-	fMenuTools->AddItem(new BMenuItem("Add facets to fill holes", new BMessage(MSG_TOOLS_FILL_HOLES)));
-	fMenuTools->AddItem(new BMenuItem("Remove unconnected facets", new BMessage(MSG_TOOLS_REMOVE_UNCONNECTED)));
-	fMenuTools->AddItem(new BMenuItem("Check and fix direction of normals", new BMessage(MSG_TOOLS_CHECK_DIRECT)));
-	fMenuTools->AddItem(new BMenuItem("Check and fix normal values", new BMessage(MSG_TOOLS_CHECK_NORMALS)));
-	fMenuTools->AddItem(new BMenuItem("Find and connect nearby facets", new BMessage(MSG_TOOLS_CHECK_NEARBY)));
-	fMenuTools->AddItem(new BMenuItem("Reverse the directions of all facets and normals", new BMessage(MSG_TOOLS_REVERSE)));
+	fMenuTools->AddItem(new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR)));
 
 	fMenuBar->AddItem(fMenuView);
 	fMenuView->SetTargetForItems(this);
@@ -187,6 +191,14 @@ STLWindow::LoadSettings(void)
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
+		file.ReadAttr("Exact", B_INT32_TYPE, 0, &exactFlag, sizeof(int32));
+		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &nearbyFlag, sizeof(int32));
+		file.ReadAttr("RemoveUnconnected", B_INT32_TYPE, 0, &removeUnconnectedFlag, sizeof(int32));
+		file.ReadAttr("FillHoles", B_INT32_TYPE, 0, &fillHolesFlag, sizeof(int32));
+		file.ReadAttr("NormalDirections", B_INT32_TYPE, 0, &normalDirectionsFlag, sizeof(int32));
+		file.ReadAttr("NormalValues", B_INT32_TYPE, 0, &normalValuesFlag, sizeof(int32));
+		file.ReadAttr("ReverseAll", B_INT32_TYPE, 0, &reverseAllFlag, sizeof(int32));
+		file.ReadAttr("Iterations", B_INT32_TYPE, 0, &iterationsValue, sizeof(int32));
 
 		showBoundingBox = _showBoundingBox;
 		stlView->ShowBoundingBox(showBoundingBox);
@@ -226,6 +238,15 @@ STLWindow::SaveSettings(void)
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
+
+		file.WriteAttr("Exact", B_INT32_TYPE, 0, &exactFlag, sizeof(int32));
+		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &nearbyFlag, sizeof(int32));
+		file.WriteAttr("RemoveUnconnected", B_INT32_TYPE, 0, &removeUnconnectedFlag, sizeof(int32));
+		file.WriteAttr("FillHoles", B_INT32_TYPE, 0, &fillHolesFlag, sizeof(int32));
+		file.WriteAttr("NormalDirections", B_INT32_TYPE, 0, &normalDirectionsFlag, sizeof(int32));
+		file.WriteAttr("NormalValues", B_INT32_TYPE, 0, &normalValuesFlag, sizeof(int32));
+		file.WriteAttr("ReverseAll", B_INT32_TYPE, 0, &reverseAllFlag, sizeof(int32));
+		file.WriteAttr("Iterations", B_INT32_TYPE, 0, &iterationsValue, sizeof(int32));
 
 		file.Sync();
 		file.Unlock();
@@ -494,6 +515,47 @@ STLWindow::MessageReceived(BMessage *message)
 			fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
 			break;
 		}
+		case MSG_TOOLS_REPAIR:
+		{
+			BMessage *options = new BMessage();
+			options->AddInt32("exactFlag", exactFlag);
+			options->AddInt32("nearbyFlag", nearbyFlag);
+			options->AddInt32("removeUnconnectedFlag", removeUnconnectedFlag);
+			options->AddInt32("fillHolesFlag", fillHolesFlag);
+			options->AddInt32("normalDirectionsFlag", normalDirectionsFlag);
+			options->AddInt32("normalValuesFlag", normalValuesFlag);
+			options->AddInt32("reverseAllFlag", reverseAllFlag);
+			options->AddInt32("iterationsValue", iterationsValue);
+			options->AddFloat("toleranceValue", stlObject->stats.shortest_edge);
+			options->AddFloat("incrementValue", stlObject->stats.bounding_diameter / 10000.0);
+			STLRepairWindow *repairDialog = new STLRepairWindow(this, MSG_TOOLS_REPAIR_DO, options);
+			repairDialog->Show();
+			break;
+		}
+		case MSG_TOOLS_REPAIR_DO:
+		{
+			exactFlag = message->FindInt32("exactFlag");
+			nearbyFlag = message->FindInt32("nearbyFlag");
+			removeUnconnectedFlag = message->FindInt32("removeUnconnectedFlag");
+			fillHolesFlag = message->FindInt32("fillHolesFlag");
+			normalDirectionsFlag = message->FindInt32("normalDirectionsFlag");
+			normalValuesFlag = message->FindInt32("normalValuesFlag");
+			reverseAllFlag = message->FindInt32("reverseAllFlag");
+			iterationsValue = message->FindInt32("iterationsValue");
+			float toleranceValue = message->FindInt32("toleranceValue");
+			float incrementValue = message->FindInt32("incrementValue");
+			if (IsLoaded()) {
+				stl_repair(stlObject, 0, exactFlag, 1, toleranceValue, 1, incrementValue, nearbyFlag,
+					iterationsValue, removeUnconnectedFlag, fillHolesFlag, normalDirectionsFlag,
+					normalValuesFlag, reverseAllFlag, 0);
+				stl_repair(stlObjectView, 0, exactFlag, 1, toleranceValue, 1, incrementValue, nearbyFlag,
+					iterationsValue, removeUnconnectedFlag, fillHolesFlag, normalDirectionsFlag,
+					normalValuesFlag, reverseAllFlag, 0);
+				stlModified = true;
+				UpdateUI();
+			}
+			break;
+		}
 		case MSG_TOOLS_EDIT_TITLE:
 		{
 			STLInputWindow *input = new STLInputWindow("STL Title", 1, this, MSG_TOOLS_TITLE_SET);
@@ -674,54 +736,6 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_mirror_xz(stlObject);
 			stl_mirror_xz(stlObjectView);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_FILL_HOLES:
-		{
-			stl_fill_holes(stlObject);
-			stl_fill_holes(stlObjectView);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_REMOVE_UNCONNECTED:
-		{
-			stl_remove_unconnected_facets(stlObject);
-			stl_remove_unconnected_facets(stlObjectView);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_CHECK_DIRECT:
-		{
-			stl_fix_normal_directions(stlObject);
-			stl_fix_normal_directions(stlObjectView);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_CHECK_NORMALS:
-		{
-			stl_fix_normal_values(stlObject);
-			stl_fix_normal_values(stlObjectView);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_CHECK_NEARBY:
-		{
-			stl_check_facets_nearby(stlObject, 0);
-			stl_check_facets_nearby(stlObjectView, 0);
-			stlModified = true;
-			UpdateUI();
-			break;
-		}
-		case MSG_TOOLS_REVERSE:
-		{
-			stl_reverse_all_facets(stlObject);
-			stl_reverse_all_facets(stlObjectView);
 			stlModified = true;
 			UpdateUI();
 			break;

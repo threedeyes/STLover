@@ -101,10 +101,11 @@ STLStatWindow::SetFloatValue(const char *param, float value)
 	BStringView *item = (BStringView*)view->FindView(param);
 	if (item != NULL) {
 		if (item->LockLooper()) {
+			BString valueTxt;
+			valueTxt.SetToFormat(" %g", value);
 			BString text = item->Text();
 			text = text.Truncate(text.FindFirst(':') + 1);
-			text << " ";
-			text << value;
+			text << valueTxt;
 			item->SetText(text);
 			item->UnlockLooper();
 		}
