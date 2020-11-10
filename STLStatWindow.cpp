@@ -21,7 +21,7 @@
 
 STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 	: BWindow(frame, "Statistics",
-	B_FLOATING_WINDOW_LOOK,	B_FLOATING_APP_WINDOW_FEEL,
+	B_FLOATING_WINDOW_LOOK,	B_FLOATING_SUBSET_WINDOW_FEEL,
 	B_NOT_ZOOMABLE | B_NOT_MINIMIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS),
 	mainWindow(parent)
 {
@@ -91,6 +91,8 @@ STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 			child = child->NextSibling();
 		}
 	}
+	AddToSubset(parent);
+	parent->AddToSubset(this);
 }
 
 void
