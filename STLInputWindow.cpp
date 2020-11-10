@@ -26,7 +26,7 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 	fValues(count),
 	fMessageId(messageId)
 {
-	if (fValues != 1 || fValues != 3)
+	if (fValues != 1 && fValues != 3)
 		fValues = 1;
 
 	fValueControl = new BTextControl("value", "", NULL);

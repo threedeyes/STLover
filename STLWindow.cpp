@@ -89,14 +89,21 @@ STLWindow::STLWindow(BRect frame)
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XZ", new BMessage(MSG_TOOLS_MIRROR_XZ)));
 	
 	fMenuTools->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
+	fMenuTools->AddSeparatorItem();
+	fMenuTools->AddItem(fMenuToolsMirror);
+	fMenuTools->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
 	fMenuTools->AddItem(new BMenuItem("Scale...", new BMessage(MSG_TOOLS_SCALE)));
+	fMenuTools->AddItem(new BMenuItem("Custom axis scale...", new BMessage(MSG_TOOLS_SCALE_3)));
+	fMenuTools->AddItem(new BMenuItem("Move to (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
+	fMenuTools->AddItem(new BMenuItem("Move to center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
+	fMenuTools->AddItem(new BMenuItem("Put on the middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
+	fMenuTools->AddSeparatorItem();
 	fMenuTools->AddItem(new BMenuItem("Add facets to fill holes", new BMessage(MSG_TOOLS_FILL_HOLES)));
 	fMenuTools->AddItem(new BMenuItem("Remove unconnected facets", new BMessage(MSG_TOOLS_REMOVE_UNCONNECTED)));
 	fMenuTools->AddItem(new BMenuItem("Check and fix direction of normals", new BMessage(MSG_TOOLS_CHECK_DIRECT)));
 	fMenuTools->AddItem(new BMenuItem("Check and fix normal values", new BMessage(MSG_TOOLS_CHECK_NORMALS)));
 	fMenuTools->AddItem(new BMenuItem("Find and connect nearby facets", new BMessage(MSG_TOOLS_CHECK_NEARBY)));
 	fMenuTools->AddItem(new BMenuItem("Reverse the directions of all facets and normals", new BMessage(MSG_TOOLS_REVERSE)));
-	fMenuTools->AddItem(fMenuToolsMirror);
 	fMenuToolsMirror->SetTargetForItems(this);
 
 	fMenuBar->AddItem(fMenuView);
@@ -509,6 +516,92 @@ STLWindow::MessageReceived(BMessage *message)
 				EnableMenuItems(true);
 				UpdateStats();
 			}
+			break;
+		}
+		case MSG_TOOLS_SCALE_3:
+		{
+			STLInputWindow *input = new STLInputWindow("Custom axis scale", 3, this, MSG_TOOLS_SCALE_SET_3);
+			input->SetTextValue(0, "Scale X factor:", "1.0");
+			input->SetTextValue(1, "Scale Y factor:", "1.0");
+			input->SetTextValue(2, "Scale Z factor:", "1.0");
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_SCALE_SET_3:
+		{
+			const char *scaleX = message->FindString("value");
+			const char *scaleY = message->FindString("value2");
+			const char *scaleZ = message->FindString("value3");
+			if (scaleX != NULL && scaleY != NULL && scaleZ != NULL && IsLoaded()) {
+				float scaleVersor[3];
+				scaleVersor[0] = atof(scaleX);
+				scaleVersor[1] = atof(scaleY);
+				scaleVersor[2] = atof(scaleZ);
+				stl_scale_versor(stlObject, scaleVersor);
+				stl_scale_versor(stlObjectView, scaleVersor);
+				stlModified = true;
+				stlView->RenderUpdate();
+				EnableMenuItems(true);
+				UpdateStats();
+			}
+			break;
+		}
+		case MSG_TOOLS_ROTATE:
+		{
+			STLInputWindow *input = new STLInputWindow("Rotate", 3, this, MSG_TOOLS_ROTATE_SET);
+			input->SetTextValue(0, "X-axis:", "0.0");
+			input->SetTextValue(1, "Y-axis:", "0.0");
+			input->SetTextValue(2, "Z-axis:", "0.0");
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_ROTATE_SET:
+		{
+			const char *rotateX = message->FindString("value");
+			const char *rotateY = message->FindString("value2");
+			const char *rotateZ = message->FindString("value3");
+			if (rotateX != NULL && rotateY != NULL && rotateZ != NULL && IsLoaded()) {
+				float rotateXAngle = atof(rotateX);
+				float rotateYAngle = atof(rotateY);
+				float rotateZAngle = atof(rotateZ);
+				stl_rotate_x(stlObject, rotateXAngle);
+				stl_rotate_x(stlObjectView, rotateXAngle);
+				stl_rotate_y(stlObject, rotateYAngle);
+				stl_rotate_y(stlObjectView, rotateYAngle);
+				stl_rotate_z(stlObject, rotateZAngle);
+				stl_rotate_z(stlObjectView, rotateZAngle);
+				stlModified = true;
+				stlView->RenderUpdate();
+				EnableMenuItems(true);
+				UpdateStats();
+			}
+			break;
+		}
+		case MSG_TOOLS_MOVE_CENTER:
+		{
+			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, -stlObject->stats.size.z / 2);
+			stlModified = true;
+			EnableMenuItems(true);
+			UpdateStats();
+			stlView->RenderUpdate();
+			break;
+		}
+		case MSG_TOOLS_MOVE_MIDDLE:
+		{
+			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, 0);
+			stlModified = true;
+			EnableMenuItems(true);
+			UpdateStats();
+			stlView->RenderUpdate();
+			break;
+		}
+		case MSG_TOOLS_MOVE_ZERO:
+		{
+			stl_translate(stlObject, 0, 0, 0);
+			stlModified = true;
+			EnableMenuItems(true);
+			UpdateStats();
+			stlView->RenderUpdate();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XY:
