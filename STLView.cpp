@@ -74,8 +74,8 @@ STLView::AttachedToWindow(void)
 
 	glMatrixMode(GL_MODELVIEW);
 
-	float Light_Ambient[]=  { 0.0f, 0.0f, 0.0f, 1.0f };
-	float Light_Diffuse[]=  { 1.0f, 1.0f, 1.0f, 1.0f };
+	float Light_Ambient[]=  { 1.0f, 0.9f, 1.0f, 1.0f };
+	float Light_Diffuse[]=  { 1.0f, 0.9f, 1.0f, 1.0f };
 	float Light_Position[]= { 2.0f, 2.0f, 0.0f, 1.0f };
 
 	glLightfv(GL_LIGHT1, GL_POSITION, Light_Position);

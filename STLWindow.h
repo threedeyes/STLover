@@ -53,6 +53,8 @@ class STLWindow : public BWindow {
 		int GetZDepth() { return zDepth; }
 		bool IsLoaded(void) { return (stlObject != NULL && stlValid); }
 
+		void UpdateUI(void);
+
 		static int32 RenderFunction(void *data);		
 
 	private:
@@ -68,6 +70,8 @@ class STLWindow : public BWindow {
 		BMenu *fMenuView;
 		BMenu *fMenuTools;
 		BMenu *fMenuToolsMirror;
+		BMenu *fMenuToolsScale;
+		BMenu *fMenuToolsMove;
 		BMenu *fMenuHelp;
 		BMenuItem *fMenuItemAppend;
 		BMenuItem *fMenuItemClose;

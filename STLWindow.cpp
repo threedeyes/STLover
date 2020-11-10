@@ -44,6 +44,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuView = new BMenu("View");
 	fMenuTools = new BMenu("Tools");
 	fMenuToolsMirror = new BMenu("Mirror");
+	fMenuToolsScale = new BMenu("Scale");
+	fMenuToolsMove = new BMenu("Move");
 	fMenuHelp = new BMenu("Help");
 
 	fMenuFileSaveAs->AddItem(new BMenuItem("STL (ASCII)", new BMessage(MSG_FILE_EXPORT_STLA)));
@@ -87,16 +89,25 @@ STLWindow::STLWindow(BRect frame)
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XZ", new BMessage(MSG_TOOLS_MIRROR_XZ)));
+	fMenuToolsMirror->SetTargetForItems(this);
+
+	fMenuToolsScale->AddItem(new BMenuItem("Scale...", new BMessage(MSG_TOOLS_SCALE)));
+	fMenuToolsScale->AddItem(new BMenuItem("Axis scaling...", new BMessage(MSG_TOOLS_SCALE_3)));
+	fMenuToolsScale->SetTargetForItems(this);
 	
+	fMenuToolsMove->AddItem(new BMenuItem("To...", new BMessage(MSG_TOOLS_MOVE_TO)));
+	fMenuToolsMove->AddItem(new BMenuItem("By...", new BMessage(MSG_TOOLS_MOVE_BY)));
+	fMenuToolsMove->AddItem(new BMenuItem("Center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
+	fMenuToolsMove->AddItem(new BMenuItem("To (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
+	fMenuToolsMove->AddItem(new BMenuItem("Put on the middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
+	fMenuToolsMove->SetTargetForItems(this);
+
 	fMenuTools->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
 	fMenuTools->AddSeparatorItem();
+	fMenuTools->AddItem(fMenuToolsScale);
+	fMenuTools->AddItem(fMenuToolsMove);
 	fMenuTools->AddItem(fMenuToolsMirror);
 	fMenuTools->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
-	fMenuTools->AddItem(new BMenuItem("Scale...", new BMessage(MSG_TOOLS_SCALE)));
-	fMenuTools->AddItem(new BMenuItem("Custom axis scale...", new BMessage(MSG_TOOLS_SCALE_3)));
-	fMenuTools->AddItem(new BMenuItem("Move to (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
-	fMenuTools->AddItem(new BMenuItem("Move to center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
-	fMenuTools->AddItem(new BMenuItem("Put on the middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuTools->AddSeparatorItem();
 	fMenuTools->AddItem(new BMenuItem("Add facets to fill holes", new BMessage(MSG_TOOLS_FILL_HOLES)));
 	fMenuTools->AddItem(new BMenuItem("Remove unconnected facets", new BMessage(MSG_TOOLS_REMOVE_UNCONNECTED)));
@@ -104,7 +115,6 @@ STLWindow::STLWindow(BRect frame)
 	fMenuTools->AddItem(new BMenuItem("Check and fix normal values", new BMessage(MSG_TOOLS_CHECK_NORMALS)));
 	fMenuTools->AddItem(new BMenuItem("Find and connect nearby facets", new BMessage(MSG_TOOLS_CHECK_NEARBY)));
 	fMenuTools->AddItem(new BMenuItem("Reverse the directions of all facets and normals", new BMessage(MSG_TOOLS_REVERSE)));
-	fMenuToolsMirror->SetTargetForItems(this);
 
 	fMenuBar->AddItem(fMenuView);
 	fMenuView->SetTargetForItems(this);
@@ -147,6 +157,14 @@ STLWindow::~STLWindow()
 
 	kill_thread(rendererThread);
 	CloseFile();
+}
+
+void
+STLWindow::UpdateUI(void)
+{
+	UpdateStats();
+	EnableMenuItems(IsLoaded());
+	stlView->RenderUpdate();
 }
 
 void
@@ -392,7 +410,7 @@ STLWindow::MessageReceived(BMessage *message)
 				nodeInfo.SetType(mime.String());
 
 				stlModified = false;
-				EnableMenuItems(true);
+				UpdateUI();
 			}
 			break;
 		}
@@ -407,8 +425,7 @@ STLWindow::MessageReceived(BMessage *message)
 				stl_open_merge(stlObject, (char*)path.Path());
 				stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
 				stlModified = true;
-				EnableMenuItems(true);
-				stlView->RenderUpdate();
+				UpdateUI();
 			}
 			break;
 		}
@@ -440,16 +457,14 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			showAxes = !showAxes;
 			stlView->ShowAxes(showAxes);
-			EnableMenuItems(true);
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_BOUNDING_BOX:
 		{
 			showBoundingBox = !showBoundingBox;
 			stlView->ShowBoundingBox(showBoundingBox);
-			EnableMenuItems(true);
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_RESETPOS:
@@ -492,8 +507,7 @@ STLWindow::MessageReceived(BMessage *message)
 			if (value != NULL && IsLoaded()) {
 				snprintf(stlObject->stats.header, 80, value);
 				stlModified = true;
-				EnableMenuItems(true);
-				UpdateStats();
+				UpdateUI();
 			}
 			break;
 		}
@@ -512,9 +526,7 @@ STLWindow::MessageReceived(BMessage *message)
 				stl_scale(stlObject, scaleFactor);
 				stl_scale(stlObjectView, scaleFactor);
 				stlModified = true;
-				stlView->RenderUpdate();
-				EnableMenuItems(true);
-				UpdateStats();
+				UpdateUI();
 			}
 			break;
 		}
@@ -540,9 +552,7 @@ STLWindow::MessageReceived(BMessage *message)
 				stl_scale_versor(stlObject, scaleVersor);
 				stl_scale_versor(stlObjectView, scaleVersor);
 				stlModified = true;
-				stlView->RenderUpdate();
-				EnableMenuItems(true);
-				UpdateStats();
+				UpdateUI();
 			}
 			break;
 		}
@@ -571,9 +581,7 @@ STLWindow::MessageReceived(BMessage *message)
 				stl_rotate_z(stlObject, rotateZAngle);
 				stl_rotate_z(stlObjectView, rotateZAngle);
 				stlModified = true;
-				stlView->RenderUpdate();
-				EnableMenuItems(true);
-				UpdateStats();
+				UpdateUI();
 			}
 			break;
 		}
@@ -581,27 +589,69 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, -stlObject->stats.size.z / 2);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MOVE_MIDDLE:
 		{
 			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, 0);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MOVE_ZERO:
 		{
 			stl_translate(stlObject, 0, 0, 0);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
+			break;
+		}
+		case MSG_TOOLS_MOVE_TO:
+		{
+			STLInputWindow *input = new STLInputWindow("Move to", 3, this, MSG_TOOLS_MOVE_TO_SET);
+			input->SetFloatValue(0, "X:", stlObject->stats.min.x);
+			input->SetFloatValue(1, "Y:", stlObject->stats.min.y);
+			input->SetFloatValue(2, "Z:", stlObject->stats.min.z);
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_MOVE_TO_SET:
+		{
+			const char *x = message->FindString("value");
+			const char *y = message->FindString("value2");
+			const char *z = message->FindString("value3");
+			if (x != NULL && y != NULL && z != NULL && IsLoaded()) {
+				float xValue = atof(x);
+				float yValue = atof(y);
+				float zValue = atof(z);
+				stl_translate(stlObject, xValue, yValue, zValue);
+				stlModified = true;
+				UpdateUI();
+			}
+			break;
+		}
+		case MSG_TOOLS_MOVE_BY:
+		{
+			STLInputWindow *input = new STLInputWindow("Move by", 3, this, MSG_TOOLS_MOVE_BY_SET);
+			input->SetFloatValue(0, "∆X:", 0);
+			input->SetFloatValue(1, "∆Y:", 0);
+			input->SetFloatValue(2, "∆Z:", 0);
+			input->Show();
+			break;
+		}
+		case MSG_TOOLS_MOVE_BY_SET:
+		{
+			const char *dx = message->FindString("value");
+			const char *dy = message->FindString("value2");
+			const char *dz = message->FindString("value3");
+			if (dx != NULL && dy != NULL && dz != NULL && IsLoaded()) {
+				float dxValue = atof(dx);
+				float dyValue = atof(dy);
+				float dzValue = atof(dz);
+				stl_translate_relative(stlObject, dxValue, dyValue, dzValue);
+				stlModified = true;
+				UpdateUI();
+			}
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XY:
@@ -609,9 +659,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_mirror_xy(stlObject);
 			stl_mirror_xy(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_YZ:
@@ -619,9 +667,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_mirror_yz(stlObject);
 			stl_mirror_yz(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XZ:
@@ -629,9 +675,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_mirror_xz(stlObject);
 			stl_mirror_xz(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_FILL_HOLES:
@@ -639,9 +683,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_fill_holes(stlObject);
 			stl_fill_holes(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_REMOVE_UNCONNECTED:
@@ -649,9 +691,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_remove_unconnected_facets(stlObject);
 			stl_remove_unconnected_facets(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_CHECK_DIRECT:
@@ -659,9 +699,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_fix_normal_directions(stlObject);
 			stl_fix_normal_directions(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_CHECK_NORMALS:
@@ -669,9 +707,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_fix_normal_values(stlObject);
 			stl_fix_normal_values(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_CHECK_NEARBY:
@@ -679,9 +715,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_check_facets_nearby(stlObject, 0);
 			stl_check_facets_nearby(stlObjectView, 0);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_REVERSE:
@@ -689,9 +723,7 @@ STLWindow::MessageReceived(BMessage *message)
 			stl_reverse_all_facets(stlObject);
 			stl_reverse_all_facets(stlObjectView);
 			stlModified = true;
-			EnableMenuItems(true);
-			UpdateStats();
-			stlView->RenderUpdate();
+			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_SOLID:
@@ -793,8 +825,7 @@ STLWindow::OpenFile(const char *filename)
 
 	stlModified = false;
 	stlValid = true;
-	EnableMenuItems(true);
-	UpdateStats();
+	UpdateUI();
 }
 
 void
@@ -814,10 +845,8 @@ STLWindow::CloseFile(void)
 		stl_close(stl);
 		free (stl);
 
-		stlView->RenderUpdate();
 		errorTimeCounter = 0;
-		EnableMenuItems(false);
-		UpdateStats();
+		UpdateUI();
 	}
 }
 
