@@ -474,7 +474,8 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_EDIT_TITLE:
 		{
-			STLInputWindow *input = new STLInputWindow("Title:", stlObject->stats.header, this, MSG_TOOLS_TITLE_SET);
+			STLInputWindow *input = new STLInputWindow("STL Title", 1, this, MSG_TOOLS_TITLE_SET);
+			input->SetTextValue(0, "Title:", (const char*)stlObject->stats.header);
 			input->Show();
 			break;
 		}
@@ -491,7 +492,8 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE:
 		{
-			STLInputWindow *input = new STLInputWindow("Scale factor:", "1.0", this, MSG_TOOLS_SCALE_SET);
+			STLInputWindow *input = new STLInputWindow("Scale", 1, this, MSG_TOOLS_SCALE_SET);
+			input->SetTextValue(0, "Scale factor:", "1.0");
 			input->Show();
 			break;
 		}
