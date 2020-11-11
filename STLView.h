@@ -42,6 +42,7 @@ class STLView : public BGLView {
 		virtual void Draw(BRect rect);
 
 		void SetSTL(stl_file *stl, stl_file *stlView);
+		void Reset(void);
 		void ShowAxes(bool show) { showAxes = show; }
 		void ShowBoundingBox(bool show) { showBox = show; }
 		void ShowOXY(bool show) { showOXY = show; }

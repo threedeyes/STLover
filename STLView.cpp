@@ -214,11 +214,8 @@ STLView::Draw(BRect rect)
 }
 
 void
-STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
+STLView::Reset(void)
 {
-	stlObject = _stl;
-	stlObjectView = _stlView;
-
 	scaleFactor = 0.0;
 	xRotate = -90.0;
 	yRotate = 0.0;
@@ -226,6 +223,14 @@ STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
 	yPan = 0.0;
 	lastMousePos = BPoint(0, 0);
 	lastMouseButtons = 0;
+}
+
+void
+STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
+{
+	stlObject = _stl;
+	stlObjectView = _stlView;
+	Reset();
 }
 
 void

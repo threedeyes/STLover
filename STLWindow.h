@@ -74,6 +74,7 @@ class STLWindow : public BWindow {
 		BMenu *fMenuToolsMove;
 		BMenu *fMenuHelp;
 		BMenuItem *fMenuItemAppend;
+		BMenuItem *fMenuItemReload;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
 		BMenuItem *fMenuItemSolid;

@@ -34,7 +34,7 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 	fRemoveUnconnectedCheckBox->SetValue(options->FindInt32("removeUnconnectedFlag"));
 	fAddFacetsCheckBox = new BCheckBox("Add facets to fill holes");
 	fAddFacetsCheckBox->SetValue(options->FindInt32("fillHolesFlag"));
-	fNormalDirectionsCheckBox = new BCheckBox("Check and fix direction of normals(ie cw, ccw)");
+	fNormalDirectionsCheckBox = new BCheckBox("Check and fix direction of normals");
 	fNormalDirectionsCheckBox->SetValue(options->FindInt32("normalDirectionsFlag"));
 	fNormalValuesCheckBox = new BCheckBox("Check and fix normal values");
 	fNormalValuesCheckBox->SetValue(options->FindInt32("normalValuesFlag"));

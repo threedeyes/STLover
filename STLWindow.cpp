@@ -66,6 +66,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuFileSaveAs->AddItem(new BMenuItem("VRML", new BMessage(MSG_FILE_EXPORT_VRML)));
 
 	fMenuFile->AddItem(new BMenuItem("Open...", new BMessage(MSG_FILE_OPEN), 'O'));
+	fMenuItemReload = new BMenuItem("Reload", new BMessage(MSG_FILE_RELOAD));
+	fMenuFile->AddItem(fMenuItemReload);
 //	fMenuItemAppend = new BMenuItem("Append...", new BMessage(MSG_FILE_APPEND));
 //	fMenuFile->AddItem(fMenuItemAppend);
 	fMenuFile->AddSeparatorItem();
@@ -96,7 +98,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW));
 	fMenuView->AddItem(fMenuItemStatWin);
 	fMenuView->AddSeparatorItem();
-	fMenuView->AddItem(new BMenuItem("Reload", new BMessage(MSG_VIEWMODE_RESETPOS)));
+	fMenuView->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS)));
 
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
@@ -508,6 +510,12 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_VIEWMODE_RESETPOS:
 		{
+			stlView->Reset();
+			UpdateUI();
+			break;
+		}
+		case MSG_FILE_RELOAD:
+		{
 			OpenFile(fOpenedFileName.String());
 			break;
 		}
@@ -819,6 +827,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
 	fMenuFileSaveAs->SetEnabled(show);
+	fMenuItemReload->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
 	fMenuItemShowBox->SetMarked(showBoundingBox);
 	fMenuItemShowAxes->SetMarked(showAxes);

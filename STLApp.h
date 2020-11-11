@@ -42,6 +42,7 @@
 #define MSG_FILE_SAVE					'SVFL'
 #define MSG_FILE_SAVE_AS				'SVAS'
 #define MSG_FILE_CLOSE					'CLOS'
+#define MSG_FILE_RELOAD					'RELD'
 #define MSG_FILE_EXPORT_STLA			'ESTA'
 #define MSG_FILE_EXPORT_STLB			'ESTB'
 #define MSG_FILE_EXPORT_DXF				'EDXF'
