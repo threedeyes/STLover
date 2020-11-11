@@ -381,6 +381,23 @@ STLWindow::MessageReceived(BMessage *message)
 				fSaveFilePanel->SetMessage(fileMsg);
 				fSaveFilePanel->SetSaveText("");
 			}
+			BPath openedFile(fOpenedFileName);
+			BString title("Save ");
+			title << openedFile.Leaf() << " to ";
+			if (message->what == MSG_FILE_EXPORT_STLA)
+				title << "STL (ASCII)";
+			if (message->what == MSG_FILE_EXPORT_STLB)
+				title << "STL (Binary)";
+			if (message->what == MSG_FILE_EXPORT_DXF)
+				title << "Autodesk DXF";
+			if (message->what == MSG_FILE_EXPORT_VRML)
+				title << "VRML";
+			if (message->what == MSG_FILE_EXPORT_OFF)
+				title << "Geomview OFF";
+			if (message->what == MSG_FILE_EXPORT_OBJ)
+				title << "Wavefront OBJ";
+			title << " file as...";
+			fSaveFilePanel->Window()->SetTitle(title.String());
 			fSaveFilePanel->Show();
 			delete fileMsg;
 			break;
