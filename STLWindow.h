@@ -80,6 +80,7 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemWireframe;
 		BMenuItem *fMenuItemShowBox;
 		BMenuItem *fMenuItemShowAxes;
+		BMenuItem *fMenuItemShowOXY;
 		BMenuItem *fMenuItemStatWin;
 		BFilePanel	*fOpenFilePanel;
 		BFilePanel	*fSaveFilePanel;
@@ -92,6 +93,7 @@ class STLWindow : public BWindow {
 		bool stlValid;
 		bool showBoundingBox;
 		bool showAxes;
+		bool showOXY;
 
 		int32 exactFlag;
 		int32 nearbyFlag;

@@ -30,6 +30,7 @@ STLWindow::STLWindow(BRect frame)
 	stlModified(false),
 	showBoundingBox(false),
 	showAxes(false),
+	showOXY(false),
 	exactFlag(false),
 	nearbyFlag(false),
 	removeUnconnectedFlag(false),
@@ -87,6 +88,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuView->AddSeparatorItem();
 	fMenuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
 	fMenuView->AddItem(fMenuItemShowAxes);
+	fMenuItemShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
+	fMenuView->AddItem(fMenuItemShowOXY);
 	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
 	fMenuView->AddSeparatorItem();
@@ -106,9 +109,9 @@ STLWindow::STLWindow(BRect frame)
 	
 	fMenuToolsMove->AddItem(new BMenuItem("To...", new BMessage(MSG_TOOLS_MOVE_TO)));
 	fMenuToolsMove->AddItem(new BMenuItem("By...", new BMessage(MSG_TOOLS_MOVE_BY)));
-	fMenuToolsMove->AddItem(new BMenuItem("Center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
+	fMenuToolsMove->AddItem(new BMenuItem("To Center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
 	fMenuToolsMove->AddItem(new BMenuItem("To (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
-	fMenuToolsMove->AddItem(new BMenuItem("Put on the middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
+	fMenuToolsMove->AddItem(new BMenuItem("On the Middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuToolsMove->SetTargetForItems(this);
 
 	fMenuTools->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
@@ -186,8 +189,10 @@ STLWindow::LoadSettings(void)
 		bool _showAxes = false;
 		bool _showStatWindow = false;
 		bool _showWireframe = false;
+		bool _showOXY = false;
 
 		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_showAxes, sizeof(bool));
+		file.ReadAttr("ShowOXY", B_BOOL_TYPE, 0, &_showOXY, sizeof(bool));
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
@@ -205,6 +210,9 @@ STLWindow::LoadSettings(void)
 
 		showAxes = _showAxes;
 		stlView->ShowAxes(showAxes);
+
+		showOXY = _showOXY;
+		stlView->ShowOXY(showOXY);
 
 		if (_showStatWindow)
 			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
@@ -235,6 +243,7 @@ STLWindow::SaveSettings(void)
 		bool _showWireframe = fMenuItemWireframe->IsMarked();
 
 		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &showAxes, sizeof(bool));
+		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &showOXY, sizeof(bool));
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
 		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
@@ -472,6 +481,13 @@ STLWindow::MessageReceived(BMessage *message)
  				"with this program; if not, write to the Free Software Foundation, Inc., "
  				"51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA." );
 			wind->Show();
+			break;
+		}
+		case MSG_VIEWMODE_OXY:
+		{
+			showOXY = !showOXY;
+			stlView->ShowOXY(showOXY);
+			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_AXES:
@@ -779,6 +795,7 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuItemSave->SetEnabled(show && stlModified);
 	fMenuItemShowBox->SetMarked(showBoundingBox);
 	fMenuItemShowAxes->SetMarked(showAxes);
+	fMenuItemShowOXY->SetMarked(showOXY);
 	if (statWindow != NULL)
 		fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
 	else

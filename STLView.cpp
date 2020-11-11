@@ -24,7 +24,8 @@ STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED, type),
 	needUpdate(true),
 	showAxes(false),
-	showBox(false)
+	showBox(false),
+	showOXY(false)
 {
 	appIcon = GetIconFromApp(164);
 }
@@ -228,21 +229,13 @@ STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
 }
 
 void
-STLView::DrawBox(stl_vertex min, stl_vertex size)
+STLView::DrawBox(void)
 {
+	stl_vertex min = stlObjectView->stats.min;
+	stl_vertex size = stlObjectView->stats.size;
+
 	glLineWidth(1);
 	glColor4f (0.9, 0.25, 0.6, 1);
-
-	glBegin(GL_LINES);
-	for (float x = min.x + 10; x < min.x + size.x; x += 10.0) {
-		glVertex3f(x, min.y, min.z);
-		glVertex3f(x, min.y + size.y, min.z);
-	}
-	for (float y = min.y + 10; y < min.y + size.y; y += 10.0) {
-		glVertex3f(min.x, y, min.z);
-		glVertex3f(min.x + size.x, y, min.z);
-	}
-	glEnd();
 
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(min.x, min.y, min.z);
@@ -271,13 +264,50 @@ STLView::DrawBox(stl_vertex min, stl_vertex size)
 }
 
 void
-STLView::DrawAxis(float radius)
+STLView::DrawOXY(float margin)
 {
-	glLineWidth(1);
-
 	float xShift = stlObjectView->stats.min.x - stlObject->stats.min.x;
 	float yShift = stlObjectView->stats.min.y - stlObject->stats.min.y;
 	float zShift = stlObjectView->stats.min.z - stlObject->stats.min.z;
+
+	float xMin = lroundf((stlObjectView->stats.min.x + xShift) / 10.0) * 10.0 - margin;
+	float xMax = lroundf((stlObjectView->stats.max.x + xShift) / 10.0) * 10.0 + margin;
+	float yMin = lroundf((stlObjectView->stats.min.y + yShift) / 10.0) * 10.0 - margin;
+	float yMax = lroundf((stlObjectView->stats.max.y + yShift) / 10.0) * 10.0 + margin;
+
+	glLineWidth(1);
+	glBegin(GL_LINES);
+	for (float r = xMin; r <= xMax; r += 10) {
+		if (fabs(r) < 0.0001)
+			glColor4f (1, 0, 0, 1);
+		else
+			glColor4f (1, 1, 0, 1);
+		glVertex3f(xShift - r, yShift - yMin, zShift);
+		glVertex3f(xShift - r, yShift - yMax, zShift);
+	}
+	for (float r = yMin; r <= yMax; r += 10) {
+		if (fabs(r) < 0.0001)
+			glColor4f (0, 1, 0, 1);
+		else
+			glColor4f (1, 1, 0, 1);
+		glVertex3f(xShift - xMin , yShift - r, zShift);
+		glVertex3f(xShift - xMax, yShift - r, zShift);
+	}
+	glEnd();
+}
+
+void
+STLView::DrawAxis(void)
+{
+	float xShift = stlObjectView->stats.min.x - stlObject->stats.min.x;
+	float yShift = stlObjectView->stats.min.y - stlObject->stats.min.y;
+	float zShift = stlObjectView->stats.min.z - stlObject->stats.min.z;
+	float radius = sqrt(stlObjectView->stats.size.x * stlObjectView->stats.size.x +
+			stlObjectView->stats.size.y * stlObjectView->stats.size.x +
+			stlObjectView->stats.size.z * stlObjectView->stats.size.z) * 1.2;
+	float coneSize = radius / 50.0;
+
+	glLineWidth(1);
 	glColor4f (1, 0, 0, 1);
 	glBegin(GL_LINES);
 	glVertex3f(xShift, yShift - radius, zShift);
@@ -294,7 +324,6 @@ STLView::DrawAxis(float radius)
 	glVertex3f(xShift, yShift, zShift + radius);
 	glEnd();
 
-	float coneSize = radius / 50.0;
 	GLUquadricObj *coneObj = gluNewQuadric();
 	glPushMatrix();
 	glColor4f (1, 0, 0, 1);
@@ -338,14 +367,14 @@ STLView::Render(void)
 
 		glEnable(GL_LIGHTING);
 
+		glBegin(GL_TRIANGLES);
 		for(size_t i = 0 ; i < stlObjectView->stats.number_of_facets ; i++) {
-			glBegin(GL_POLYGON);
 			glNormal3f(stlObjectView->facet_start[i].normal.x, stlObjectView->facet_start[i].normal.y, stlObjectView->facet_start[i].normal.z);
 			glVertex3f(stlObjectView->facet_start[i].vertex[0].x, stlObjectView->facet_start[i].vertex[0].y, stlObjectView->facet_start[i].vertex[0].z);
 			glVertex3f(stlObjectView->facet_start[i].vertex[1].x, stlObjectView->facet_start[i].vertex[1].y, stlObjectView->facet_start[i].vertex[1].z);
 			glVertex3f(stlObjectView->facet_start[i].vertex[2].x, stlObjectView->facet_start[i].vertex[2].y, stlObjectView->facet_start[i].vertex[2].z);
-			glEnd();
 		}
+		glEnd();
 
 		glDisable(GL_LIGHTING);
 
@@ -353,11 +382,14 @@ STLView::Render(void)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_LINE_SMOOTH);
 
+		if (showOXY)
+			DrawOXY();
+
 		if (showAxes)
-			DrawAxis(sqrt(stlObjectView->stats.size.x * stlObjectView->stats.size.x + stlObjectView->stats.size.y * stlObjectView->stats.size.x + stlObjectView->stats.size.z * stlObjectView->stats.size.z));
+			DrawAxis();
 
 		if (showBox)
-			DrawBox(stlObjectView->stats.min, stlObjectView->stats.size);
+			DrawBox();
 
 		glDisable(GL_LINE_SMOOTH);
 		glDisable(GL_BLEND);
