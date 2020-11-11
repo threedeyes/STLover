@@ -132,7 +132,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuHelp->AddItem(new BMenuItem("About", new BMessage(B_ABOUT_REQUESTED)));
 	fMenuBar->AddItem(fMenuHelp);		
 	fMenuHelp->SetTargetForItems(this);
-	
+
 	EnableMenuItems(false);
 
 	stlView = new STLView(Bounds(), BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
@@ -142,8 +142,10 @@ STLWindow::STLWindow(BRect frame)
 
 	SetSizeLimits(320, 4096, 256, 4049);
 
+	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
+
 	LoadSettings();
-	
+
 	Show();
 	stlView->RenderUpdate();
 
@@ -776,6 +778,31 @@ STLWindow::MessageReceived(BMessage *message)
    			fMenuItemSolid->SetMarked(false);
   			fMenuItemWireframe->SetMarked(true);
 			stlView->RenderUpdate();
+			break;
+		}
+		case MSG_EASTER_EGG:
+		{
+			app_info info;
+			be_app->GetAppInfo(&info);
+			BFile file(&info.ref, B_READ_ONLY);
+
+			BResources res;
+			if (res.SetTo(&file) != B_OK)
+				break;
+
+			size_t size;
+			const void* data = res.LoadResource('rSTL', "Haiku.stl", &size);
+			if (data == NULL)
+				break;
+
+			BEntry eggEntry("/tmp/Haiku");
+			BFile eggFile(&eggEntry, B_WRITE_ONLY | B_CREATE_FILE);
+			eggFile.Write(data, size);
+
+			OpenFile("/tmp/Haiku");
+
+			eggEntry.Remove();
+
 			break;
 		}
 		default:

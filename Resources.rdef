@@ -4,11 +4,11 @@ resource app_signature "application/x-vnd.stlviewer";
 
 resource app_version {
 	major  = 0,
-	middle = 2,
+	middle = 3,
 	minor  = 0,
 	variety = 0,
 	internal = 0,
-	short_info = "0.2.0",
+	short_info = "0.3.0",
 	long_info = "STLover"
 };
 
@@ -59,3 +59,5 @@ resource(0, "BEOS:application/sla") #'VICN' array {
 	$"023EB63C0000000000003ED6BF47800039F5F00A0B010C023EB63C0000000000"
 	$"003ED6BF47800039F5F0"
 };
+
+resource(1, "Haiku.stl") 			#'rSTL' import "Haiku.stl" ;
