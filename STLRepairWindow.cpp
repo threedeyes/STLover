@@ -21,7 +21,7 @@
 
 STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *options)
 	: BWindow(BRect(100, 100, 400, 400), "Repair", B_MODAL_WINDOW_LOOK, B_MODAL_ALL_WINDOW_FEEL,
-	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS),
+	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fTarget(target),
 	fMessageId(messageId),
 	fOptions(options)
