@@ -145,6 +145,12 @@ STLView::MouseDown( BPoint p )
 	lastMousePos = p;
 	lastMouseButtons = Window()->CurrentMessage()->FindInt32("buttons");
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
+	if (!stlWindow->IsLoaded()) {
+		BRect iconRect = appIcon->Bounds();
+		iconRect.OffsetTo(iconPos);
+		if (iconRect.Contains(p))
+			Window()->PostMessage(MSG_FILE_OPEN);
+	}
 }
 
 void
@@ -194,7 +200,7 @@ STLView::Draw(BRect rect)
 		FillRect(Bounds());
 
 		SetDrawingMode(B_OP_ALPHA);
-		BPoint iconPos((Bounds().Width() - appIcon->Bounds().Width()) / 2.0,
+		iconPos = BPoint((Bounds().Width() - appIcon->Bounds().Width()) / 2.0,
 			(Bounds().Height() - appIcon->Bounds().Height()) / 2.0);
 		DrawBitmap(appIcon, iconPos);
 

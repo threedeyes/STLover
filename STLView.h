@@ -64,6 +64,7 @@ class STLView : public BGLView {
 		void DrawOXY(float margin = 30.0);
 
 		BBitmap *appIcon;
+		BPoint iconPos;
 		BPoint lastMousePos;
 		uint32 lastMouseButtons;
 
