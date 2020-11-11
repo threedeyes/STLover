@@ -98,7 +98,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW));
 	fMenuView->AddItem(fMenuItemStatWin);
 	fMenuView->AddSeparatorItem();
-	fMenuView->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS)));
+	fMenuView->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
 
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
