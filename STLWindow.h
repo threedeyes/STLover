@@ -93,6 +93,7 @@ class STLWindow : public BWindow {
 		bool stlModified;
 		bool stlValid;
 		bool showBoundingBox;
+		bool showWireframe;
 		bool showAxes;
 		bool showOXY;
 

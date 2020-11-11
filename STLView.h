@@ -46,6 +46,7 @@ class STLView : public BGLView {
 		void ShowAxes(bool show) { showAxes = show; }
 		void ShowBoundingBox(bool show) { showBox = show; }
 		void ShowOXY(bool show) { showOXY = show; }
+		void SetViewMode(uint32 mode) { viewMode = mode; }
 		void Render(void);
 		void RenderUpdate() { needUpdate = true; }
 
@@ -78,7 +79,8 @@ class STLView : public BGLView {
 		float xPan;
 		float yPan;
 		float scaleFactor;
-		
+
+		uint32 viewMode;
 		bool needUpdate;
 		bool showBox;
 		bool showAxes;

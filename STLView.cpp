@@ -376,6 +376,9 @@ STLView::Render(void)
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
 
+		glPolygonMode(GL_FRONT, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
+
 		glEnable(GL_LIGHTING);
 
 		glBegin(GL_TRIANGLES);

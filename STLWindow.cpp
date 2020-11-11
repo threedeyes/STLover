@@ -218,13 +218,11 @@ STLWindow::LoadSettings(void)
 		showOXY = _showOXY;
 		stlView->ShowOXY(showOXY);
 
+		showWireframe = _showWireframe;
+		stlView->SetViewMode(_showWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
+
 		if (_showStatWindow)
 			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
-
-		if (_showWireframe)
-			this->PostMessage(MSG_VIEWMODE_WIREFRAME);
-		else
-			this->PostMessage(MSG_VIEWMODE_SOLID);
 
 		EnableMenuItems(IsLoaded());
 
@@ -244,13 +242,12 @@ STLWindow::SaveSettings(void)
 			return;
 
 		bool _showStatWindow = statWindow == NULL ? false : !statWindow->IsHidden();
-		bool _showWireframe = fMenuItemWireframe->IsMarked();
 
 		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &showAxes, sizeof(bool));
 		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &showOXY, sizeof(bool));
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStatWindow", B_BOOL_TYPE, 0, &_showStatWindow, sizeof(bool));
-		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
+		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &showWireframe, sizeof(bool));
 
 		file.WriteAttr("Exact", B_INT32_TYPE, 0, &exactFlag, sizeof(int32));
 		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &nearbyFlag, sizeof(int32));
@@ -785,24 +782,16 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_VIEWMODE_SOLID:
 		{
-			stlView->LockGL();
-   			glPolygonMode(GL_FRONT, GL_FILL);
-   			glPolygonMode(GL_BACK, GL_FILL);
-   			stlView->UnlockGL();
-   			fMenuItemSolid->SetMarked(true);
-   			fMenuItemWireframe->SetMarked(false);
-   			stlView->RenderUpdate();
+			showWireframe = false;
+			stlView->SetViewMode(MSG_VIEWMODE_SOLID);
+			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_WIREFRAME:
 		{
-			stlView->LockGL();
-			glPolygonMode(GL_FRONT, GL_LINE);
-			glPolygonMode(GL_BACK, GL_LINE);
-			stlView->UnlockGL();
-   			fMenuItemSolid->SetMarked(false);
-  			fMenuItemWireframe->SetMarked(true);
-			stlView->RenderUpdate();
+			showWireframe = true;
+			stlView->SetViewMode(MSG_VIEWMODE_WIREFRAME);
+			UpdateUI();
 			break;
 		}
 		case MSG_EASTER_EGG:
@@ -846,6 +835,8 @@ STLWindow::EnableMenuItems(bool show)
 	fMenuItemShowBox->SetMarked(showBoundingBox);
 	fMenuItemShowAxes->SetMarked(showAxes);
 	fMenuItemShowOXY->SetMarked(showOXY);
+	fMenuItemSolid->SetMarked(!showWireframe);
+	fMenuItemWireframe->SetMarked(showWireframe);
 	if (statWindow != NULL)
 		fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
 	else
