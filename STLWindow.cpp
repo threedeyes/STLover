@@ -803,13 +803,10 @@ STLWindow::MessageReceived(BMessage *message)
 			if (data == NULL)
 				break;
 
-			BEntry eggEntry("/tmp/Haiku");
-			BFile eggFile(&eggEntry, B_WRITE_ONLY | B_CREATE_FILE);
+			BFile eggFile("/tmp/Haiku", B_WRITE_ONLY | B_CREATE_FILE);
 			eggFile.Write(data, size);
 
 			OpenFile("/tmp/Haiku");
-
-			eggEntry.Remove();
 
 			break;
 		}
