@@ -22,6 +22,7 @@
 #include <View.h>
 #include <Bitmap.h>
 #include <Message.h>
+#include <Point.h>
 #include <Rect.h>
 #include <File.h>
 #include <AppFileInfo.h>

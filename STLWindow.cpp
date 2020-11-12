@@ -176,7 +176,7 @@ void
 STLWindow::UpdateUI(void)
 {
 	UpdateStats();
-	EnableMenuItems(IsLoaded());
+	UpdateMenuStates(IsLoaded());
 	stlView->RenderUpdate();
 }
 
@@ -226,7 +226,7 @@ STLWindow::LoadSettings(void)
 		if (_showStatWindow)
 			this->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
 
-		EnableMenuItems(IsLoaded());
+		UpdateMenuStates(IsLoaded());
 
 		file.Unlock();
 	}
@@ -358,7 +358,7 @@ STLWindow::MessageReceived(BMessage *message)
 			BNodeInfo nodeInfo(&node);
 			nodeInfo.SetType("application/sla");
 			stlModified = false;
-			EnableMenuItems(true);
+			UpdateMenuStates(true);
 			break;
 		}
 		case MSG_FILE_EXPORT_STLA:
@@ -868,7 +868,7 @@ STLWindow::MessageReceived(BMessage *message)
 }
 
 void
-STLWindow::EnableMenuItems(bool show)
+STLWindow::UpdateMenuStates(bool show)
 {
 	fMenuItemClose->SetEnabled(show);
 //	fMenuItemAppend->SetEnabled(show);

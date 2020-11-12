@@ -19,6 +19,7 @@
 #ifndef STLOVER_WINDOW
 #define STLOVER_WINDOW
 
+#include <File.h>
 #include <Window.h>
 #include <Message.h>
 #include <Menu.h>
@@ -59,7 +60,7 @@ class STLWindow : public BWindow {
 		static int32 RenderFunction(void *data);		
 
 	private:
-		void EnableMenuItems(bool show);
+		void UpdateMenuStates(bool show);
 		void LoadSettings(void);
 		void SaveSettings(void);
 	
