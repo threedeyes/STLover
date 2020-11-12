@@ -874,6 +874,9 @@ STLWindow::EnableMenuItems(bool show)
 //	fMenuItemAppend->SetEnabled(show);
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
+	fMenuToolsMirror->SetEnabled(show);
+	fMenuToolsScale->SetEnabled(show);
+	fMenuToolsMove->SetEnabled(show);
 	fMenuFileSaveAs->SetEnabled(show);
 	fMenuItemReload->SetEnabled(show);
 	fMenuItemSave->SetEnabled(show && stlModified);
