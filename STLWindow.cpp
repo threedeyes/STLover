@@ -28,6 +28,7 @@ STLWindow::STLWindow(BRect frame)
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	stlModified(false),
+	showWireframe(false),
 	showBoundingBox(false),
 	showAxes(false),
 	showOXY(false),
@@ -83,7 +84,6 @@ STLWindow::STLWindow(BRect frame)
 	fMenuFile->SetTargetForItems(this);
 
 	fMenuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
-	fMenuItemSolid->SetMarked(true);
 	fMenuView->AddItem(fMenuItemSolid);
 	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
 	fMenuView->AddItem(fMenuItemWireframe);
@@ -139,8 +139,6 @@ STLWindow::STLWindow(BRect frame)
 	fMenuBar->AddItem(fMenuHelp);		
 	fMenuHelp->SetTargetForItems(this);
 
-	EnableMenuItems(false);
-
 	stlView = new STLView(Bounds(), BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 	AddChild(stlView);
 
@@ -153,7 +151,7 @@ STLWindow::STLWindow(BRect frame)
 	LoadSettings();
 
 	Show();
-	stlView->RenderUpdate();
+	UpdateUI();
 
 	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)stlView);
 	resume_thread(rendererThread);
