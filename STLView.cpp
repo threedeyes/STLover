@@ -27,7 +27,7 @@ STLView::STLView(BRect frame, uint32 type)
 	showBox(false),
 	showOXY(false)
 {
-	appIcon = GetIconFromApp(164);
+	appIcon = STLoverApplication::GetIcon(NULL, 164);
 }
 
 STLView::~STLView()
@@ -169,25 +169,6 @@ void
 STLView::Pulse()
 {
 	Window()->PostMessage(MSG_PULSE);
-}
-
-BBitmap*
-STLView::GetIconFromApp(int size)
-{
-	app_info inf;
-   	be_app->GetAppInfo(&inf);
-
-	BFile file(&inf.ref, B_READ_ONLY);
-	BAppFileInfo appMime(&file);
-	if (appMime.InitCheck() != B_OK)
-		return NULL;
-
-	BBitmap* icon = new BBitmap(BRect(0.0, 0.0, size - 1, size -1), B_RGBA32);
-	if (appMime.GetIcon(icon, (icon_size)size) == B_OK)
-		return icon;
-
-	delete icon;
-	return NULL;
 }
 
 void

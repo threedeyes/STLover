@@ -46,6 +46,7 @@ STLWindow::STLWindow(BRect frame)
 	stlObjectView(NULL),
 	stlObjectAppend(NULL),
 	errorTimeCounter(0),
+	isRenderWork(true),
 	zDepth(-5),
 	maxExtent(10)
 {
@@ -144,14 +145,41 @@ STLWindow::STLWindow(BRect frame)
 
 	stlView->AddChild(fMenuBar);
 
+	BRect toolBarRect = stlView->Frame();
+	toolBarRect.top = fMenuBar->Frame().bottom + 1;
+	fToolBar = new BToolBar(toolBarRect);
+	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), "Open");
+	fToolBar->AddAction(MSG_FILE_SAVE, this, STLoverApplication::GetIcon("document-save", TOOLBAR_ICON_SIZE), "Save");
+	fToolBar->AddSeparator();
+	fToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), "Show axes");
+	fToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), "Show plane OXY");
+	fToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), "Bounding box");
+	fToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), "Reset");
+	fToolBar->AddSeparator();
+	fToolBar->AddAction(MSG_TOOLS_EDIT_TITLE, this, STLoverApplication::GetIcon("document-edit", TOOLBAR_ICON_SIZE), "Edit title");
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_XY, this, STLoverApplication::GetIcon("mirror-xy", TOOLBAR_ICON_SIZE), "Mirror XY");
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_YZ, this, STLoverApplication::GetIcon("mirror-yz", TOOLBAR_ICON_SIZE), "Mirror YZ");
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_XZ, this, STLoverApplication::GetIcon("mirror-xz", TOOLBAR_ICON_SIZE), "Mirror XZ");
+	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), "Put on the Middle");
+	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), "Move to");
+	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), "Scale");
+	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), "Rotate");
+	fToolBar->AddSeparator();
+	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), "Repair");
+	fToolBar->AddSeparator();
+	fToolBar->AddAction(MSG_VIEWMODE_STAT_WINDOW, this, STLoverApplication::GetIcon("stat", TOOLBAR_ICON_SIZE), "Statistics");
+	fToolBar->AddGlue();
+	fToolBar->ResizeTo(toolBarRect.Width(), fToolBar->MinSize().height);
+	fToolBar->GroupLayout()->SetInsets(0);
+	stlView->AddChild(fToolBar);
+
 	SetSizeLimits(320, 4096, 256, 4049);
 
 	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
 
 	LoadSettings();
-
-	Show();
 	UpdateUI();
+	Show();
 
 	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)stlView);
 	resume_thread(rendererThread);
@@ -168,7 +196,10 @@ STLWindow::~STLWindow()
 		statWindow->Quit();
 	}
 
-	kill_thread(rendererThread);
+	status_t exitValue;
+	isRenderWork = false;
+	wait_for_thread(rendererThread, &exitValue);
+
 	CloseFile();
 }
 
@@ -553,7 +584,7 @@ STLWindow::MessageReceived(BMessage *message)
 				else
 					statWindow->Hide();
 			}
-			UpdateStats();
+			UpdateUI();
 			fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
 			break;
 		}
@@ -870,6 +901,11 @@ STLWindow::MessageReceived(BMessage *message)
 void
 STLWindow::UpdateMenuStates(bool show)
 {
+	bool locked = LockWithTimeout(0) == B_OK;
+	bool statShowed = statWindow != NULL;
+	if (statShowed)
+		statShowed = !statWindow->IsHidden();
+
 	fMenuItemClose->SetEnabled(show);
 //	fMenuItemAppend->SetEnabled(show);
 	fMenuView->SetEnabled(show);
@@ -885,10 +921,29 @@ STLWindow::UpdateMenuStates(bool show)
 	fMenuItemShowOXY->SetMarked(showOXY);
 	fMenuItemSolid->SetMarked(!showWireframe);
 	fMenuItemWireframe->SetMarked(showWireframe);
-	if (statWindow != NULL)
-		fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
-	else
-		fMenuItemStatWin->SetMarked(false);
+	fMenuItemStatWin->SetMarked(statShowed);
+
+	fToolBar->SetActionEnabled(MSG_FILE_SAVE, show && stlModified);
+	fToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
+	fToolBar->SetActionPressed(MSG_VIEWMODE_AXES, showAxes);
+	fToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);
+	fToolBar->SetActionPressed(MSG_VIEWMODE_OXY, showOXY);
+	fToolBar->SetActionEnabled(MSG_VIEWMODE_BOUNDING_BOX, show);
+	fToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, showBoundingBox);
+	fToolBar->SetActionPressed(MSG_VIEWMODE_STAT_WINDOW, statShowed);
+	fToolBar->SetActionEnabled(MSG_TOOLS_EDIT_TITLE, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XY, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_YZ, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XZ, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_REPAIR, show);
+	fToolBar->SetActionEnabled(MSG_VIEWMODE_RESETPOS, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_SCALE, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_ROTATE, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_TO, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
+
+	if (locked)
+		UnlockLooper();
 }
 
 void
@@ -1049,8 +1104,12 @@ int32
 STLWindow::RenderFunction(void *data)
 {
 	STLView *view = (STLView*)data;
-	for(;;) {
+	STLWindow *window = (STLWindow*)view->Window();
+
+	while(window->isRenderWork) {
 		view->Render();
 		snooze(1000000 / FPS_LIMIT);
 	}
+
+	return 0;
 }

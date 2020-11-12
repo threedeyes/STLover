@@ -62,10 +62,44 @@ STLoverApplication::InstallMimeType(void)
 	BResources* resources = AppResources();
 	if (resources != NULL) {
 		size_t size;
-		const void* iconData = resources->LoadResource('VICN', "BEOS:" STL_SIGNATURE,
+		const void* iconData = resources->LoadResource(B_VECTOR_ICON_TYPE, "BEOS:" STL_SIGNATURE,
 			&size);
 		if (iconData != NULL && size > 0) {
 			mime.SetIcon(reinterpret_cast<const uint8*>(iconData), size);
 		}
+	}
+}
+
+BBitmap *
+STLoverApplication::GetIcon(const char *iconName, int iconSize)
+{
+	if (iconName == NULL) {
+		app_info inf;
+		be_app->GetAppInfo(&inf);
+
+		BFile file(&inf.ref, B_READ_ONLY);
+		BAppFileInfo appMime(&file);
+		if (appMime.InitCheck() != B_OK)
+			return NULL;
+	
+		BBitmap* icon = new BBitmap(BRect(0, 0, iconSize - 1, iconSize -1), B_RGBA32);
+		if (appMime.GetIcon(icon, (icon_size)iconSize) == B_OK)
+			return icon;
+
+		delete icon;
+		return NULL;
+	} else {
+		BResources* resources = AppResources();
+		if (resources != NULL) {
+			size_t size;
+			const void* iconData = resources->LoadResource(B_VECTOR_ICON_TYPE, iconName, &size);
+			if (iconData != NULL && size > 0) {
+				BBitmap* bitmap = new BBitmap(BRect(0, 0, iconSize - 1, iconSize - 1), B_RGBA32);
+				status_t status = BIconUtils::GetVectorIcon((uint8*)iconData, size, bitmap);
+				if (status == B_OK)
+					return bitmap;
+			}
+		}
+		return NULL;
 	}
 }

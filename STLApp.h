@@ -22,9 +22,12 @@
 #include <Application.h>
 #include <Message.h>
 #include <GLView.h>
+#include <File.h>
 #include <Path.h>
 #include <MimeType.h>
 #include <Resources.h>
+#include <AppFileInfo.h>
+#include <IconUtils.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -86,12 +89,17 @@
 #define FOV	30
 #define FPS_LIMIT 100
 
+#define TOOLBAR_ICON_SIZE 22
+
 class STLWindow;
 
 class STLoverApplication : public BApplication {
 	public:
 		STLoverApplication();
 		virtual void RefsReceived(BMessage* msg);
+
+		static BBitmap *GetIcon(const char *iconName, int iconSize);
+
 	private:
 		void InstallMimeType(void);
 		STLWindow *stlWindow;

@@ -31,6 +31,7 @@
 #include <FilePanel.h>
 #include <FindDirectory.h>
 
+#include <private/shared/ToolBar.h>
 #include <private/interface/AboutWindow.h>
 
 #include <admesh/stl.h>
@@ -57,7 +58,8 @@ class STLWindow : public BWindow {
 
 		void UpdateUI(void);
 
-		static int32 RenderFunction(void *data);		
+		static int32 RenderFunction(void *data);
+		bool isRenderWork;
 
 	private:
 		void UpdateMenuStates(bool show);
@@ -67,6 +69,7 @@ class STLWindow : public BWindow {
 		thread_id 	rendererThread;
 
 		BMenuBar *fMenuBar;
+		BToolBar *fToolBar;
 		BMenu *fMenuFile;
 		BMenu *fMenuFileSaveAs;
 		BMenu *fMenuView;

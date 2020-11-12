@@ -24,8 +24,6 @@
 #include <Message.h>
 #include <Point.h>
 #include <Rect.h>
-#include <File.h>
-#include <AppFileInfo.h>
 #include <OS.h>
 
 #include <admesh/stl.h>
@@ -61,7 +59,6 @@ class STLView : public BGLView {
 		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true;}
 
 	private:
-		BBitmap *GetIconFromApp(int size);
 		void DrawBox(void);
 		void DrawAxis(void);
 		void DrawOXY(float margin = 30.0);
