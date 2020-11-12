@@ -81,6 +81,7 @@
 #define MSG_INPUT_VALUE_UPDATED			'IVUP'
 #define MSG_INPUT_OK					'IWOK'
 #define MSG_EASTER_EGG					'EEGG'
+#define MSG_POPUP_MENU					'POPM'
 
 #define FOV	30
 #define FPS_LIMIT 100

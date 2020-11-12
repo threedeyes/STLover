@@ -140,12 +140,13 @@ STLView::MouseMoved(BPoint p, uint32 transit,const BMessage *message)
 }
 
 void
-STLView::MouseDown( BPoint p )
+STLView::MouseDown(BPoint p)
 {
 	lastMousePos = p;
+	lastMouseClickTime = system_time();
 	lastMouseButtons = Window()->CurrentMessage()->FindInt32("buttons");
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
-	if (!stlWindow->IsLoaded()) {
+	if (!stlWindow->IsLoaded() && (lastMouseButtons & B_PRIMARY_MOUSE_BUTTON)) {
 		BRect iconRect = appIcon->Bounds();
 		iconRect.OffsetTo(iconPos);
 		if (iconRect.Contains(p))
@@ -154,8 +155,13 @@ STLView::MouseDown( BPoint p )
 }
 
 void
-STLView::MouseUp( BPoint point )
+STLView::MouseUp(BPoint p)
 {
+	if (stlWindow->IsLoaded() &&
+		(lastMouseButtons & B_SECONDARY_MOUSE_BUTTON) &&
+		(system_time() - lastMouseClickTime) < 250000)
+		Window()->PostMessage(MSG_POPUP_MENU);
+
 	lastMouseButtons = 0;
 }
 

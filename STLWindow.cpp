@@ -85,7 +85,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
 	fMenuItemSolid->SetMarked(true);
 	fMenuView->AddItem(fMenuItemSolid);
-	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));	
+	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
 	fMenuView->AddItem(fMenuItemWireframe);
 	fMenuView->AddSeparatorItem();
 	fMenuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
@@ -98,7 +98,8 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW));
 	fMenuView->AddItem(fMenuItemStatWin);
 	fMenuView->AddSeparatorItem();
-	fMenuView->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
+	fMenuItemReset = new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R');
+	fMenuView->AddItem(fMenuItemReset);
 
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
@@ -116,14 +117,17 @@ STLWindow::STLWindow(BRect frame)
 	fMenuToolsMove->AddItem(new BMenuItem("On the Middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuToolsMove->SetTargetForItems(this);
 
-	fMenuTools->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
+	fMenuItemEditTitle = new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE));
+	fMenuTools->AddItem(fMenuItemEditTitle);
 	fMenuTools->AddSeparatorItem();
 	fMenuTools->AddItem(fMenuToolsScale);
 	fMenuTools->AddItem(fMenuToolsMove);
 	fMenuTools->AddItem(fMenuToolsMirror);
-	fMenuTools->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
+	fMenuItemRotate = new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE));
+	fMenuTools->AddItem(fMenuItemRotate);
 	fMenuTools->AddSeparatorItem();
-	fMenuTools->AddItem(new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR)));
+	fMenuItemRepair = new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR));
+	fMenuTools->AddItem(fMenuItemRepair);
 
 	fMenuBar->AddItem(fMenuView);
 	fMenuView->SetTargetForItems(this);
@@ -814,6 +818,49 @@ STLWindow::MessageReceived(BMessage *message)
 
 			OpenFile("/tmp/Haiku");
 
+			break;
+		}
+		case MSG_POPUP_MENU:
+		{
+			BPoint point;
+			uint32 buttons;
+			stlView->GetMouse(&point, &buttons);
+
+			BPopUpMenu* menu = new BPopUpMenu("PopUpMenu",false,false);
+
+			BMenuItem *_menuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
+			_menuItemSolid->SetMarked(!showWireframe);
+			BMenuItem *_menuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
+			_menuItemWireframe->SetMarked(showWireframe);
+
+			menu->AddItem(_menuItemSolid);
+			menu->AddItem(_menuItemWireframe);
+			menu->AddSeparatorItem();
+
+			BMenuItem *_menuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
+			_menuItemShowAxes->SetMarked(showAxes);
+			BMenuItem *_menuItemShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
+			_menuItemShowOXY->SetMarked(showOXY);
+			BMenuItem *_menuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
+			_menuItemShowBox->SetMarked(showBoundingBox);
+
+			menu->AddItem(_menuItemShowAxes);
+			menu->AddItem(_menuItemShowOXY);
+			menu->AddItem(_menuItemShowBox);
+			menu->AddSeparatorItem();
+			menu->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
+			menu->AddSeparatorItem();
+			menu->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
+			menu->AddSeparatorItem();
+			menu->AddItem(fMenuToolsScale);
+			menu->AddItem(fMenuToolsMove);
+			menu->AddItem(fMenuToolsMirror);
+			menu->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
+			menu->AddSeparatorItem();
+			menu->AddItem(new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR)));
+			menu->SetTargetForItems(this);
+
+			menu->Go(stlView->ConvertToScreen(point), true, false, true);
 			break;
 		}
 		default:

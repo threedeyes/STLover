@@ -24,6 +24,7 @@
 #include <Menu.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
+#include <PopUpMenu.h>
 #include <String.h>
 #include <Screen.h>
 #include <FilePanel.h>
@@ -83,6 +84,10 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemShowAxes;
 		BMenuItem *fMenuItemShowOXY;
 		BMenuItem *fMenuItemStatWin;
+		BMenuItem *fMenuItemReset;
+		BMenuItem *fMenuItemEditTitle;
+		BMenuItem *fMenuItemRotate;
+		BMenuItem *fMenuItemRepair;
 		BFilePanel	*fOpenFilePanel;
 		BFilePanel	*fSaveFilePanel;
 		BString fOpenedFileName;

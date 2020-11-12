@@ -25,6 +25,7 @@
 #include <Rect.h>
 #include <File.h>
 #include <AppFileInfo.h>
+#include <OS.h>
 
 #include <admesh/stl.h>
 
@@ -68,6 +69,7 @@ class STLView : public BGLView {
 		BPoint iconPos;
 		BPoint lastMousePos;
 		uint32 lastMouseButtons;
+		bigtime_t lastMouseClickTime;
 
 		STLWindow *stlWindow;
 
