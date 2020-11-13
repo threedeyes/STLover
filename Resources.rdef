@@ -4,11 +4,11 @@ resource app_signature "application/x-vnd.stlover";
 
 resource app_version {
 	major  = 0,
-	middle = 3,
+	middle = 4,
 	minor  = 0,
 	variety = 0,
 	internal = 0,
-	short_info = "0.3.0",
+	short_info = "0.4.0",
 	long_info = "STLover"
 };
 
