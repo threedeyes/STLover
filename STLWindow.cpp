@@ -42,7 +42,8 @@ STLWindow::STLWindow(BRect frame)
 	reverseAllFlag(false),
 	iterationsValue(2),
 	statWindow(NULL),
-	stlValid(false),	
+	stlValid(false),
+	stlLoading(false),
 	stlObject(NULL),
 	stlObjectView(NULL),
 	stlObjectAppend(NULL),
@@ -602,10 +603,12 @@ STLWindow::MessageReceived(BMessage *message)
 				if (rect.right >= screen.Frame().Width())
 					rect.OffsetTo(screen.Frame().right - rect.Width(), rect.top);
 
-				statWindow = new STLStatWindow(rect, this);				
+				statWindow = new STLStatWindow(rect, this);
+				UpdateStats();
 				statWindow->Show();
 			} else {
 				if (statWindow->IsHidden()) {
+					UpdateStats();
 					statWindow->Show();
 				} else {
 					statWindow->Hide();
@@ -979,6 +982,9 @@ void
 STLWindow::OpenFile(const char *filename)
 {	
 	CloseFile();
+	stlLoading = true;
+	stlView->RenderUpdate();
+	stlView->Render();
 
 	stlObject = (stl_file*)malloc(sizeof(stl_file));
 	memset(stlObject, 0, sizeof(stl_file));
@@ -1027,6 +1033,7 @@ STLWindow::OpenFile(const char *filename)
   	stlView->UnlockLooper();
 	stlView->UnlockGL();
 
+	stlLoading = false;
 	stlModified = false;
 	stlValid = true;
 	UpdateUI();
@@ -1049,6 +1056,7 @@ STLWindow::CloseFile(void)
 		stl_close(stl);
 		free (stl);
 
+		stlLoading = false;
 		errorTimeCounter = 0;
 		UpdateUI();
 	}

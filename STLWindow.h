@@ -56,6 +56,7 @@ class STLWindow : public BWindow {
 		int GetBigExtent() { return maxExtent; }
 		int GetZDepth() { return zDepth; }
 		bool IsLoaded(void) { return (stlObject != NULL && stlValid); }
+		bool IsLoading(void) { return stlLoading; }
 
 		void UpdateUI(void);
 
@@ -102,6 +103,7 @@ class STLWindow : public BWindow {
 
 		bool stlModified;
 		bool stlValid;
+		bool stlLoading;
 		bool showBoundingBox;
 		bool showWireframe;
 		bool showAxes;

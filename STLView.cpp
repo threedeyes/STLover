@@ -20,6 +20,10 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
+static char dropText[] = {"Drop an STL files here"};
+static char errorText[] = {"Unknown file format!"};
+static char loadingText[] = {"Loading" B_UTF8_ELLIPSIS};
+
 STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED, type),
 	needUpdate(true),
@@ -172,12 +176,10 @@ void
 STLView::Draw(BRect rect)
 {
 	if (!stlWindow->IsLoaded()) {
-		char drop[] = {"Drop an STL files here"};
-		char error[] = {"Unknown file format!"};
+		bool stlError = stlWindow->GetErrorTimer() > 0;
+		bool isLoading = stlWindow->IsLoading();
 		
-		bool stl_error = ((STLWindow*)Window())->GetErrorTimer() > 0;
-		
-		char *text = stl_error ? error : drop;
+		char *text = stlError ? errorText : (isLoading ? loadingText : dropText);
 		
 		SetDrawingMode(B_OP_OVER);
 		SetHighColor(30, 30, 51);
@@ -192,7 +194,7 @@ STLView::Draw(BRect rect)
 		BPoint textPos((Bounds().Width() - font.StringWidth(text)) / 2.0,
 			iconPos.y + appIcon->Bounds().Height() + 24);
 
-		if (stl_error)
+		if (stlError)
 			SetHighColor(255, 25, 25);
 		else
 			SetHighColor(255, 255, 255);
