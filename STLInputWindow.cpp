@@ -52,20 +52,20 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 	if (fValues == 1) {
 		BLayoutBuilder::Grid<>(this, padding, padding)
 			.SetInsets(padding, padding, padding, padding)
-			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 2)
+			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
 			.Add(BSpaceLayoutItem::CreateGlue(), 0, 1)
-			.Add(cancelButton, 1, 1)
-			.Add(fOkButton, 2, 1);
+			.Add(cancelButton, 4, 1)
+			.Add(fOkButton, 5, 1);
 	}
 	if (fValues == 3) {
 		BLayoutBuilder::Grid<>(this, padding, padding)
 			.SetInsets(padding, padding, padding, padding)
-			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 2)
-			.AddTextControl(fValueControl2, 0, 1, B_ALIGN_HORIZONTAL_UNSET, 1, 2)
-			.AddTextControl(fValueControl3, 0, 2, B_ALIGN_HORIZONTAL_UNSET, 1, 2)
+			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
+			.AddTextControl(fValueControl2, 0, 1, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
+			.AddTextControl(fValueControl3, 0, 2, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
 			.Add(BSpaceLayoutItem::CreateGlue(), 0, 3)
-			.Add(cancelButton, 1, 3)
-			.Add(fOkButton, 2, 3);
+			.Add(cancelButton, 2, 3)
+			.Add(fOkButton, 3, 3);
 	}
 
 	fOkButton->MakeDefault(true);
