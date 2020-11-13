@@ -53,7 +53,7 @@ STLWindow::STLWindow(BRect frame)
 {
 	fMenuBar = new BMenuBar(BRect(0, 0, Bounds().Width(), 22), "menubar");
 	fMenuFile = new BMenu("File");
-	fMenuFileSaveAs = new BMenu("Save as...");
+	fMenuFileSaveAs = new BMenu("Save as" B_UTF8_ELLIPSIS);
 	fMenuView = new BMenu("View");
 	fMenuTools = new BMenu("Tools");
 	fMenuToolsMirror = new BMenu("Mirror");
@@ -68,7 +68,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuFileSaveAs->AddItem(new BMenuItem("Wavefront OBJ", new BMessage(MSG_FILE_EXPORT_OBJ)));
 	fMenuFileSaveAs->AddItem(new BMenuItem("VRML", new BMessage(MSG_FILE_EXPORT_VRML)));
 
-	fMenuFile->AddItem(new BMenuItem("Open...", new BMessage(MSG_FILE_OPEN), 'O'));
+	fMenuFile->AddItem(new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(MSG_FILE_OPEN), 'O'));
 	fMenuItemReload = new BMenuItem("Reload", new BMessage(MSG_FILE_RELOAD));
 	fMenuFile->AddItem(fMenuItemReload);
 //	fMenuItemAppend = new BMenuItem("Append...", new BMessage(MSG_FILE_APPEND));
@@ -108,27 +108,27 @@ STLWindow::STLWindow(BRect frame)
 	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XZ", new BMessage(MSG_TOOLS_MIRROR_XZ)));
 	fMenuToolsMirror->SetTargetForItems(this);
 
-	fMenuToolsScale->AddItem(new BMenuItem("Scale...", new BMessage(MSG_TOOLS_SCALE)));
-	fMenuToolsScale->AddItem(new BMenuItem("Axis scaling...", new BMessage(MSG_TOOLS_SCALE_3)));
+	fMenuToolsScale->AddItem(new BMenuItem("Scale" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_SCALE)));
+	fMenuToolsScale->AddItem(new BMenuItem("Axis scaling" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_SCALE_3)));
 	fMenuToolsScale->SetTargetForItems(this);
 	
-	fMenuToolsMove->AddItem(new BMenuItem("To...", new BMessage(MSG_TOOLS_MOVE_TO)));
-	fMenuToolsMove->AddItem(new BMenuItem("By...", new BMessage(MSG_TOOLS_MOVE_BY)));
+	fMenuToolsMove->AddItem(new BMenuItem("To" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_MOVE_TO)));
+	fMenuToolsMove->AddItem(new BMenuItem("By" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_MOVE_BY)));
 	fMenuToolsMove->AddItem(new BMenuItem("To Center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
 	fMenuToolsMove->AddItem(new BMenuItem("To (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
 	fMenuToolsMove->AddItem(new BMenuItem("On the Middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuToolsMove->SetTargetForItems(this);
 
-	fMenuItemEditTitle = new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE));
+	fMenuItemEditTitle = new BMenuItem("Edit title" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_EDIT_TITLE));
 	fMenuTools->AddItem(fMenuItemEditTitle);
 	fMenuTools->AddSeparatorItem();
 	fMenuTools->AddItem(fMenuToolsScale);
 	fMenuTools->AddItem(fMenuToolsMove);
 	fMenuTools->AddItem(fMenuToolsMirror);
-	fMenuItemRotate = new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE));
+	fMenuItemRotate = new BMenuItem("Rotate" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_ROTATE));
 	fMenuTools->AddItem(fMenuItemRotate);
 	fMenuTools->AddSeparatorItem();
-	fMenuItemRepair = new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR));
+	fMenuItemRepair = new BMenuItem("Repair" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_REPAIR));
 	fMenuTools->AddItem(fMenuItemRepair);
 
 	fMenuBar->AddItem(fMenuView);
