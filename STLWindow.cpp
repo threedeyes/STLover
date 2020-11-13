@@ -356,8 +356,14 @@ STLWindow::MessageReceived(BMessage *message)
 					case 0x62: // Down
 						xRotate += rotateDelta;
 						break;
+					case 0x5E: // Reset position [Space]
+						stlView->Reset(false, true, true);
+						return;
+					case 0x64: // Reset scale [0]
+					case 0x1B:
+						stlView->Reset(true, false, false);
+						return;
 				}
-
 				stlView->SetScaleFactor(scaleFactor);
 				stlView->SetXRotate(xRotate);
 				stlView->SetYRotate(yRotate);
