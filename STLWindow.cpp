@@ -22,6 +22,7 @@
 #include "STLStatWindow.h"
 #include "STLInputWindow.h"
 #include "STLRepairWindow.h"
+#include "STLToolBar.h"
 
 STLWindow::STLWindow(BRect frame)
 	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
@@ -144,7 +145,7 @@ STLWindow::STLWindow(BRect frame)
 
 	BRect toolBarRect = Bounds();
 	toolBarRect.top = fMenuBar->Frame().bottom + 1;
-	fToolBar = new BToolBar(toolBarRect);
+	fToolBar = new STLToolBar(toolBarRect);
 	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), "Open");
 	fToolBar->AddAction(MSG_FILE_SAVE, this, STLoverApplication::GetIcon("document-save", TOOLBAR_ICON_SIZE), "Save");
 	fToolBar->AddSeparator();

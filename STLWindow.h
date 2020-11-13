@@ -32,13 +32,13 @@
 #include <FilePanel.h>
 #include <FindDirectory.h>
 
-#include <private/shared/ToolBar.h>
 #include <private/interface/AboutWindow.h>
 
 #include <admesh/stl.h>
 
 class STLView;
 class STLStatWindow;
+class STLToolBar;
 
 class STLWindow : public BWindow {
 	public:
@@ -70,7 +70,6 @@ class STLWindow : public BWindow {
 		thread_id 	rendererThread;
 
 		BMenuBar *fMenuBar;
-		BToolBar *fToolBar;
 		BMenu *fMenuFile;
 		BMenu *fMenuFileSaveAs;
 		BMenu *fMenuView;
@@ -98,6 +97,7 @@ class STLWindow : public BWindow {
 		BString fOpenedFileName;
 
 		STLView *stlView;
+		STLToolBar *fToolBar;
 		STLStatWindow *statWindow;
 
 		bool stlModified;
