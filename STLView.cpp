@@ -20,7 +20,7 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
-static char dropText[] = {"Drop an STL files here"};
+static char dropText[] = {"Drop STL files here"};
 static char errorText[] = {"Unknown file format!"};
 static char loadingText[] = {"Loading" B_UTF8_ELLIPSIS};
 
