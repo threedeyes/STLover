@@ -207,15 +207,24 @@ STLView::Draw(BRect rect)
 }
 
 void
-STLView::Reset(void)
+STLView::Reset(bool scale, bool rotate, bool pan)
 {
-	scaleFactor = 0.0;
-	xRotate = -90.0;
-	yRotate = 0.0;
-	xPan = 0.0;
-	yPan = 0.0;
+	if(scale)
+		scaleFactor = 0.0;
+
+	if(rotate) {
+		xRotate = -90.0;
+		yRotate = 0.0;
+	}
+
+	if(pan) {
+		xPan = 0.0;
+		yPan = 0.0;
+	}
+
 	lastMousePos = BPoint(0, 0);
 	lastMouseButtons = 0;
+	needUpdate = true;
 }
 
 void
