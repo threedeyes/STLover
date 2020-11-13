@@ -184,6 +184,8 @@ STLWindow::STLWindow(BRect frame)
 	UpdateUI();
 	Show();
 
+	stlView->Render();
+
 	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)stlView);
 	resume_thread(rendererThread);
 
