@@ -84,9 +84,6 @@ STLView::AttachedToWindow(void)
 	glLightfv(GL_LIGHT1, GL_DIFFUSE,  Light_Diffuse);
 	glEnable (GL_LIGHT1);
 
-	glPolygonMode(GL_FRONT, GL_FILL);
-	glPolygonMode(GL_BACK, GL_FILL);
-
 	UnlockGL();
 }
 
