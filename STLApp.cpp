@@ -23,21 +23,14 @@ STLoverApplication::STLoverApplication():BApplication(APP_SIGNATURE)
 {
 	InstallMimeType();
 
-	BRect windowRect(100, 100, 100 + 640, 100 + 480);
+	BRect windowRect(100, 100, 100 + 800, 100 + 600);
 	stlWindow = new STLWindow(windowRect);
 }
 
 void
 STLoverApplication::RefsReceived(BMessage* msg)
 {
-	entry_ref ref;
-
-	if (msg->FindRef("refs", 0, &ref) == B_OK) {
-		BEntry entry = BEntry(&ref);
-		BPath path;
-		entry.GetPath(&path);
-		stlWindow->OpenFile(path.Path());
-	}
+	stlWindow->PostMessage(msg);
 }
 
 void

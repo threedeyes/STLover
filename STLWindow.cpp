@@ -96,7 +96,7 @@ STLWindow::STLWindow(BRect frame)
 	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
 	fMenuView->AddSeparatorItem();
-	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW));
+	fMenuItemStatWin = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT_WINDOW), 'I');
 	fMenuView->AddItem(fMenuItemStatWin);
 	fMenuView->AddSeparatorItem();
 	fMenuItemReset = new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R');
@@ -140,12 +140,9 @@ STLWindow::STLWindow(BRect frame)
 	fMenuBar->AddItem(fMenuHelp);		
 	fMenuHelp->SetTargetForItems(this);
 
-	stlView = new STLView(Bounds(), BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
-	AddChild(stlView);
+	AddChild(fMenuBar);
 
-	stlView->AddChild(fMenuBar);
-
-	BRect toolBarRect = stlView->Frame();
+	BRect toolBarRect = Bounds();
 	toolBarRect.top = fMenuBar->Frame().bottom + 1;
 	fToolBar = new BToolBar(toolBarRect);
 	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), "Open");
@@ -171,9 +168,14 @@ STLWindow::STLWindow(BRect frame)
 	fToolBar->AddGlue();
 	fToolBar->ResizeTo(toolBarRect.Width(), fToolBar->MinSize().height);
 	fToolBar->GroupLayout()->SetInsets(0);
-	stlView->AddChild(fToolBar);
+	AddChild(fToolBar);
 
-	SetSizeLimits(320, 4096, 256, 4049);
+	BRect stlRect = Bounds();
+	stlRect.top = fToolBar->Frame().bottom + 1;
+	stlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
+	AddChild(stlView);
+
+	SetSizeLimits(600, 4096, 360, 4049);
 
 	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
 
@@ -306,12 +308,9 @@ STLWindow::QuitRequested() {
 void 
 STLWindow::MessageReceived(BMessage *message)
 {
-	if (message->WasDropped()) {
-		DetachCurrentMessage();
+	if (message->WasDropped())
 		message->what = B_REFS_RECEIVED;
-		BMessenger(be_app).SendMessage(message);
-		return;
-	}
+
 	switch (message->what) {
 		case B_KEY_DOWN:
 		case B_UNMAPPED_KEY_DOWN:
@@ -337,9 +336,11 @@ STLWindow::MessageReceived(BMessage *message)
 
 				switch (key) {
 					case 0x25: // Zoom [-]
+					case 0x1C:
 						scaleFactor += scaleDelta;
 						break;
 					case 0x3A: // Zoom [+]
+					case 0x1D:
 						scaleFactor -= scaleDelta;
 						break;
 					case 0x61: // Left
@@ -445,6 +446,26 @@ STLWindow::MessageReceived(BMessage *message)
 			}
 			break;
 		}
+		case B_REFS_RECEIVED:
+		{
+			entry_ref ref;
+			for (int32 i = 0; message->FindRef("refs", i, &ref) == B_OK; i++) {
+				BEntry entry(&ref, true);
+				if (!entry.Exists())
+					continue;
+				BPath path;
+				if (entry.GetPath(&path) != B_OK)
+					continue;
+				if (i==0) {
+					OpenFile(path.Path());
+				} else {
+					BMessage *msg = new BMessage(B_REFS_RECEIVED);
+					msg->AddRef("refs", &ref);
+					be_roster->Launch(APP_SIGNATURE, msg);
+				}
+			}
+			break;
+		}
 		case B_SAVE_REQUESTED:
 		{
 			entry_ref ref;
@@ -510,9 +531,6 @@ STLWindow::MessageReceived(BMessage *message)
 			}
 			break;
 		}
-		case B_REFS_RECEIVED:
-			DetachCurrentMessage();
-			BMessenger(be_app).SendMessage(message);
 		case B_CANCEL:
 			break;
 		case B_ABOUT_REQUESTED:
@@ -577,12 +595,12 @@ STLWindow::MessageReceived(BMessage *message)
 
 				statWindow = new STLStatWindow(rect, this);				
 				statWindow->Show();
-				Activate();
 			} else {
-				if (statWindow->IsHidden())
+				if (statWindow->IsHidden()) {
 					statWindow->Show();
-				else
+				} else {
 					statWindow->Hide();
+				}
 			}
 			UpdateUI();
 			fMenuItemStatWin->SetMarked(!statWindow->IsHidden());
@@ -921,6 +939,7 @@ STLWindow::UpdateMenuStates(bool show)
 	fMenuItemShowOXY->SetMarked(showOXY);
 	fMenuItemSolid->SetMarked(!showWireframe);
 	fMenuItemWireframe->SetMarked(showWireframe);
+	fMenuItemStatWin->SetEnabled(show);
 	fMenuItemStatWin->SetMarked(statShowed);
 
 	fToolBar->SetActionEnabled(MSG_FILE_SAVE, show && stlModified);
@@ -930,6 +949,7 @@ STLWindow::UpdateMenuStates(bool show)
 	fToolBar->SetActionPressed(MSG_VIEWMODE_OXY, showOXY);
 	fToolBar->SetActionEnabled(MSG_VIEWMODE_BOUNDING_BOX, show);
 	fToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, showBoundingBox);
+	fToolBar->SetActionEnabled(MSG_VIEWMODE_STAT_WINDOW, show);
 	fToolBar->SetActionPressed(MSG_VIEWMODE_STAT_WINDOW, statShowed);
 	fToolBar->SetActionEnabled(MSG_TOOLS_EDIT_TITLE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XY, show);

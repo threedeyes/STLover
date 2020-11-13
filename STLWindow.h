@@ -28,6 +28,7 @@
 #include <PopUpMenu.h>
 #include <String.h>
 #include <Screen.h>
+#include <Roster.h>
 #include <FilePanel.h>
 #include <FindDirectory.h>
 
