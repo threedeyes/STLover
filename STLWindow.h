@@ -37,6 +37,7 @@
 #include <admesh/stl.h>
 
 class STLView;
+class STLStatView;
 class STLStatWindow;
 class STLToolBar;
 
@@ -64,7 +65,7 @@ class STLWindow : public BWindow {
 		bool isRenderWork;
 
 	private:
-		void UpdateMenuStates(bool show);
+		void UpdateUIStates(bool show);
 		void LoadSettings(void);
 		void SaveSettings(void);
 	
@@ -88,7 +89,7 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemShowBox;
 		BMenuItem *fMenuItemShowAxes;
 		BMenuItem *fMenuItemShowOXY;
-		BMenuItem *fMenuItemStatWin;
+		BMenuItem *fMenuItemStat;
 		BMenuItem *fMenuItemReset;
 		BMenuItem *fMenuItemEditTitle;
 		BMenuItem *fMenuItemRotate;
@@ -100,11 +101,12 @@ class STLWindow : public BWindow {
 		STLView *stlView;
 		STLToolBar *fToolBar;
 		STLToolBar *fViewToolBar;
-		STLStatWindow *statWindow;
+		STLStatView *statView;
 
 		bool stlModified;
 		bool stlValid;
 		bool stlLoading;
+		bool showStat;
 		bool showBoundingBox;
 		bool showWireframe;
 		bool showAxes;

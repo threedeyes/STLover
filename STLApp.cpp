@@ -23,7 +23,7 @@ STLoverApplication::STLoverApplication():BApplication(APP_SIGNATURE)
 {
 	InstallMimeType();
 
-	BRect windowRect(100, 100, 100 + 800, 100 + 600);
+	BRect windowRect(100, 100, 100 + 720, 100 + 512);
 	stlWindow = new STLWindow(windowRect);
 }
 

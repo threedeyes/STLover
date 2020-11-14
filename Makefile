@@ -1,7 +1,7 @@
 NAME = STLover
 TYPE = APP
 APP_MIME_SIG = application/x-vnd.stlviewer
-SRCS = STLApp.cpp STLWindow.cpp STLToolBar.cpp STLStatWindow.cpp STLInputWindow.cpp STLRepairWindow.cpp STLView.cpp main.cpp
+SRCS = STLApp.cpp STLWindow.cpp STLToolBar.cpp STLStatView.cpp STLInputWindow.cpp STLRepairWindow.cpp STLView.cpp main.cpp
 RDEFS = Resources.rdef
 LIBS = be tracker GL GLU admesh $(STDCPPLIBS)
 OPTIMIZE := FULL
