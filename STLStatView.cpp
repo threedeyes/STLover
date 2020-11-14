@@ -17,24 +17,24 @@
  */
 
 #include "STLApp.h"
-#include "STLStatWindow.h"
+#include "STLStatView.h"
 
-STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
-	: BWindow(frame, "Statistics",
-	B_FLOATING_WINDOW_LOOK,	B_FLOATING_SUBSET_WINDOW_FEEL,
-	B_NOT_ZOOMABLE | B_NOT_MINIMIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AVOID_FRONT | B_AVOID_FOCUS | B_AUTO_UPDATE_SIZE_LIMITS),
-	mainWindow(parent)
+STLStatView::STLStatView(BRect frame)
+	: BView(frame, "statistics", B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM, B_WILL_DRAW)
 {
+	SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
 	view = new BGroupView("StatView", B_VERTICAL, 1);
 	view->SetViewUIColor(B_PANEL_BACKGROUND_COLOR);
-	view->GroupLayout()->SetInsets(6, 0);
+	view->GroupLayout()->SetInsets(4);
 	AddChild(view);
 
 	view->GetFont(&font);
 	font.SetSize(font.Size() * 0.9);
 	font.SetFace(B_BOLD_FACE);
 
-	SetLayout(new BGroupLayout(B_VERTICAL));
+	BGroupLayout *vertLayout = new BGroupLayout(B_VERTICAL);
+	vertLayout->SetInsets(1, 0, 0, 0);
+	SetLayout(vertLayout);
 
 	BStringView *fileTitle = new BStringView("file", "File");
 	fileTitle->SetAlignment(B_ALIGN_CENTER);
@@ -83,6 +83,8 @@ STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 	view->AddChild(new BStringView("reversed", "Facets reversed:"));
 	view->AddChild(new BStringView("backward", "Backward edges:"));
 	view->AddChild(new BStringView("normals", "Normals fixed:"));
+	
+	view->AddChild(BSpaceLayoutItem::CreateGlue());
 
 	BView *child;
 	if ( child = view->ChildAt(0) ) {
@@ -91,18 +93,31 @@ STLStatWindow::STLStatWindow(BRect frame, BWindow *parent)
 			child = child->NextSibling();
 		}
 	}
-	AddToSubset(parent);
-	parent->AddToSubset(this);
 }
 
 void
-STLStatWindow::SetFloatValue(const char *param, float value)
+STLStatView::Draw(BRect updateRect)
+{
+	BRect rect = Bounds();
+	rgb_color base = LowColor();
+
+	BView::Draw(rect & updateRect);
+	be_control_look->DrawBorder(this, rect, updateRect, base, B_PLAIN_BORDER, 0, BControlLook::B_LEFT_BORDER);
+}
+
+void
+STLStatView::SetFloatValue(const char *param, float value, bool exp)
 {
 	BStringView *item = (BStringView*)view->FindView(param);
 	if (item != NULL) {
 		if (item->LockLooper()) {
 			BString valueTxt;
-			valueTxt.SetToFormat(" %g", value);
+
+			if (exp)
+				valueTxt.SetToFormat(" %g", value);
+			else
+				valueTxt.SetToFormat(" %.2f", value);
+
 			BString text = item->Text();
 			text = text.Truncate(text.FindFirst(':') + 1);
 			text << valueTxt;
@@ -113,7 +128,7 @@ STLStatWindow::SetFloatValue(const char *param, float value)
 }
 
 void
-STLStatWindow::SetIntValue(const char *param, int value)
+STLStatView::SetIntValue(const char *param, int value)
 {
 	BStringView *item = (BStringView*)view->FindView(param);
 	if (item != NULL) {
@@ -129,7 +144,7 @@ STLStatWindow::SetIntValue(const char *param, int value)
 }
 
 void
-STLStatWindow::SetTextValue(const char *param, const char *value)
+STLStatView::SetTextValue(const char *param, const char *value)
 {
 	BStringView *item = (BStringView*)view->FindView(param);
 	if (item != NULL) {
@@ -145,10 +160,4 @@ STLStatWindow::SetTextValue(const char *param, const char *value)
 			item->UnlockLooper();
 		}
 	}
-}
-
-bool
-STLStatWindow::QuitRequested() {
-	mainWindow->PostMessage(MSG_VIEWMODE_STAT_WINDOW);
-	return false;
 }

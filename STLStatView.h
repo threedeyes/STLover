@@ -16,29 +16,30 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef STLSTAT_WINDOW
-#define STLSTAT_WINDOW
+#ifndef STLSTAT_VIEW
+#define STLSTAT_VIEW
 
 #include <Window.h>
 #include <View.h>
 #include <GroupView.h>
 #include <String.h>
 #include <StringView.h>
+#include <SpaceLayoutItem.h>
+#include <ControlLook.h>
 #include <Font.h>
 
-class STLStatWindow : public BWindow {
+class STLStatView : public BView {
 	public:
-		STLStatWindow(BRect rect, BWindow *parent);
-		~STLStatWindow() { };
+		STLStatView(BRect rect);
+		~STLStatView() { };
 
-		virtual bool QuitRequested();
+		virtual void Draw(BRect rect);
 
-		void SetFloatValue(const char *param, float value);
+		void SetFloatValue(const char *param, float value, bool exp = true);
 		void SetIntValue(const char *param, int value);
 		void SetTextValue(const char *param, const char *value);
 
 	private:
-		BWindow *mainWindow;
 		BGroupView *view;
 		BFont font;
 };
