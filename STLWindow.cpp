@@ -194,7 +194,7 @@ STLWindow::STLWindow(BRect frame)
 	stlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 	AddChild(stlView);
 
-	SetSizeLimits(600, 4096, 360, 4049);
+	SetSizeLimits(600, 4096, 420, 4049);
 
 	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
 
