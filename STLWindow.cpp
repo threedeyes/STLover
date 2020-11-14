@@ -156,6 +156,7 @@ STLWindow::STLWindow(BRect frame)
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_XZ, this, STLoverApplication::GetIcon("mirror-xz", TOOLBAR_ICON_SIZE), "Mirror XZ");
 	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), "Put on the Middle");
 	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), "Move to");
+	fToolBar->AddAction(MSG_TOOLS_MOVE_BY, this, STLoverApplication::GetIcon("move-by", TOOLBAR_ICON_SIZE), "Move by");
 	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), "Scale");
 	fToolBar->AddAction(MSG_TOOLS_SCALE_3, this, STLoverApplication::GetIcon("scale-axis", TOOLBAR_ICON_SIZE), "Axis scale");
 	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), "Rotate");
@@ -1008,6 +1009,7 @@ STLWindow::UpdateUIStates(bool show)
 	fToolBar->SetActionEnabled(MSG_TOOLS_SCALE_3, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_ROTATE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_TO, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_BY, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
 
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
