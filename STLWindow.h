@@ -53,16 +53,16 @@ class STLWindow : public BWindow {
 		void UpdateStats(void);
 		void TransformPosition(void);
 
-		int GetErrorTimer() { return errorTimeCounter; }
-		int GetBigExtent() { return maxExtent; }
-		int GetZDepth() { return zDepth; }
-		bool IsLoaded(void) { return (stlObject != NULL && stlValid); }
-		bool IsLoading(void) { return stlLoading; }
+		int GetErrorTimer() { return fErrorTimeCounter; }
+		int GetBigExtent() { return fMaxExtent; }
+		int GetZDepth() { return fZDepth; }
+		bool IsLoaded(void) { return (fStlObject != NULL && fStlValid); }
+		bool IsLoading(void) { return fStlLoading; }
+		bool IsRenderWork(void) {return fRenderWork; }
 
 		void UpdateUI(void);
 
 		static int32 RenderFunction(void *data);
-		bool isRenderWork;
 
 	private:
 		void UpdateUIStates(bool show);
@@ -94,41 +94,43 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemEditTitle;
 		BMenuItem *fMenuItemRotate;
 		BMenuItem *fMenuItemRepair;
-		BFilePanel	*fOpenFilePanel;
-		BFilePanel	*fSaveFilePanel;
+		BFilePanel *fOpenFilePanel;
+		BFilePanel *fSaveFilePanel;
 		BString fOpenedFileName;
 
-		STLView *stlView;
+		STLView *fStlView;
 		STLToolBar *fToolBar;
 		STLToolBar *fViewToolBar;
-		STLStatView *statView;
+		STLStatView *fStatView;
 
-		bool stlModified;
-		bool stlValid;
-		bool stlLoading;
-		bool showStat;
-		bool showBoundingBox;
-		bool showWireframe;
-		bool showAxes;
-		bool showOXY;
+		bool fRenderWork;
 
-		int32 exactFlag;
-		int32 nearbyFlag;
-		int32 removeUnconnectedFlag;
-		int32 fillHolesFlag;
-		int32 normalDirectionsFlag;
-		int32 normalValuesFlag;
-		int32 reverseAllFlag;
-		int32 iterationsValue;
+		bool fStlModified;
+		bool fStlValid;
+		bool fStlLoading;
+		bool fShowStat;
+		bool fShowBoundingBox;
+		bool fShowWireframe;
+		bool fShowAxes;
+		bool fShowOXY;
 
-		int errorTimeCounter;
+		int32 fExactFlag;
+		int32 fNearbyFlag;
+		int32 fRemoveUnconnectedFlag;
+		int32 fFillHolesFlag;
+		int32 fNormalDirectionsFlag;
+		int32 fNormalValuesFlag;
+		int32 fReverseAllFlag;
+		int32 fIterationsValue;
+
+		int fErrorTimeCounter;
 		
-		float zDepth;
-		float maxExtent;
+		float fZDepth;
+		float fMaxExtent;
 
-		stl_file* stlObject;
-		stl_file* stlObjectView;
-		stl_file* stlObjectAppend;
+		stl_file* fStlObject;
+		stl_file* fStlObjectView;
+		stl_file* fStlObjectAppend;
 };
 
 #endif

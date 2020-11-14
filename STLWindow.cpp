@@ -28,29 +28,29 @@ STLWindow::STLWindow(BRect frame)
 	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
-	stlModified(false),
-	showStat(false),
-	showWireframe(false),
-	showBoundingBox(false),
-	showAxes(false),
-	showOXY(false),
-	exactFlag(false),
-	nearbyFlag(false),
-	removeUnconnectedFlag(false),
-	fillHolesFlag(false),
-	normalDirectionsFlag(false),
-	normalValuesFlag(false),
-	reverseAllFlag(false),
-	iterationsValue(2),
-	stlValid(false),
-	stlLoading(false),
-	stlObject(NULL),
-	stlObjectView(NULL),
-	stlObjectAppend(NULL),
-	errorTimeCounter(0),
-	isRenderWork(true),
-	zDepth(-5),
-	maxExtent(10)
+	fStlModified(false),
+	fShowStat(false),
+	fShowWireframe(false),
+	fShowBoundingBox(false),
+	fShowAxes(false),
+	fShowOXY(false),
+	fExactFlag(false),
+	fNearbyFlag(false),
+	fRemoveUnconnectedFlag(false),
+	fFillHolesFlag(false),
+	fNormalDirectionsFlag(false),
+	fNormalValuesFlag(false),
+	fReverseAllFlag(false),
+	fIterationsValue(2),
+	fStlValid(false),
+	fStlLoading(false),
+	fStlObject(NULL),
+	fStlObjectView(NULL),
+	fStlObjectAppend(NULL),
+	fErrorTimeCounter(0),
+	fRenderWork(true),
+	fZDepth(-5),
+	fMaxExtent(10)
 {
 	fMenuBar = new BMenuBar(BRect(0, 0, Bounds().Width(), 22), "menubar");
 	fMenuFile = new BMenu("File");
@@ -157,6 +157,7 @@ STLWindow::STLWindow(BRect frame)
 	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), "Put on the Middle");
 	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), "Move to");
 	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), "Scale");
+	fToolBar->AddAction(MSG_TOOLS_SCALE_3, this, STLoverApplication::GetIcon("scale-axis", TOOLBAR_ICON_SIZE), "Axis scale");
 	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), "Rotate");
 	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), "Repair");
@@ -191,14 +192,14 @@ STLWindow::STLWindow(BRect frame)
 	BRect stlRect = Bounds();
 	stlRect.top = fToolBar->Frame().bottom + 1;
 	stlRect.left =fViewToolBar->Frame().right + 1;
-	stlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
-	AddChild(stlView);
+	fStlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
+	AddChild(fStlView);
 
 	BRect statRect = Bounds();
 	statRect.left = stlRect.right + 1;
 	statRect.top = stlRect.top;
-	statView = new STLStatView(statRect);
-	AddChild(statView);
+	fStatView = new STLStatView(statRect);
+	AddChild(fStatView);
 
 	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
 
@@ -206,9 +207,9 @@ STLWindow::STLWindow(BRect frame)
 	UpdateUI();
 	Show();
 
-	stlView->Render();
+	fStlView->Render();
 
-	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)stlView);
+	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)fStlView);
 	resume_thread(rendererThread);
 
 	SetPulseRate(1000000);
@@ -219,7 +220,7 @@ STLWindow::~STLWindow()
 	SaveSettings();
 
 	status_t exitValue;
-	isRenderWork = false;
+	fRenderWork = false;
 	wait_for_thread(rendererThread, &exitValue);
 
 	CloseFile();
@@ -230,7 +231,7 @@ STLWindow::UpdateUI(void)
 {
 	UpdateStats();
 	UpdateUIStates(IsLoaded());
-	stlView->RenderUpdate();
+	fStlView->RenderUpdate();
 }
 
 void
@@ -244,40 +245,40 @@ STLWindow::LoadSettings(void)
 		if (file.InitCheck() != B_OK || file.Lock() != B_OK)
 			return;
 
-		bool _showBoundingBox = false;
-		bool _showAxes = false;
+		bool _fShowBoundingBox = false;
+		bool _fShowAxes = false;
 		bool _showStat = false;
-		bool _showWireframe = false;
-		bool _showOXY = false;
+		bool _fShowWireframe = false;
+		bool _fShowOXY = false;
 
-		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_showAxes, sizeof(bool));
-		file.ReadAttr("ShowOXY", B_BOOL_TYPE, 0, &_showOXY, sizeof(bool));
-		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_showBoundingBox, sizeof(bool));
+		file.ReadAttr("fShowAxes", B_BOOL_TYPE, 0, &_fShowAxes, sizeof(bool));
+		file.ReadAttr("fShowOXY", B_BOOL_TYPE, 0, &_fShowOXY, sizeof(bool));
+		file.ReadAttr("fShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStat", B_BOOL_TYPE, 0, &_showStat, sizeof(bool));
-		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_showWireframe, sizeof(bool));
-		file.ReadAttr("Exact", B_INT32_TYPE, 0, &exactFlag, sizeof(int32));
-		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &nearbyFlag, sizeof(int32));
-		file.ReadAttr("RemoveUnconnected", B_INT32_TYPE, 0, &removeUnconnectedFlag, sizeof(int32));
-		file.ReadAttr("FillHoles", B_INT32_TYPE, 0, &fillHolesFlag, sizeof(int32));
-		file.ReadAttr("NormalDirections", B_INT32_TYPE, 0, &normalDirectionsFlag, sizeof(int32));
-		file.ReadAttr("NormalValues", B_INT32_TYPE, 0, &normalValuesFlag, sizeof(int32));
-		file.ReadAttr("ReverseAll", B_INT32_TYPE, 0, &reverseAllFlag, sizeof(int32));
-		file.ReadAttr("Iterations", B_INT32_TYPE, 0, &iterationsValue, sizeof(int32));
+		file.ReadAttr("fShowWireframe", B_BOOL_TYPE, 0, &_fShowWireframe, sizeof(bool));
+		file.ReadAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
+		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
+		file.ReadAttr("RemoveUnconnected", B_INT32_TYPE, 0, &fRemoveUnconnectedFlag, sizeof(int32));
+		file.ReadAttr("FillHoles", B_INT32_TYPE, 0, &fFillHolesFlag, sizeof(int32));
+		file.ReadAttr("NormalDirections", B_INT32_TYPE, 0, &fNormalDirectionsFlag, sizeof(int32));
+		file.ReadAttr("NormalValues", B_INT32_TYPE, 0, &fNormalValuesFlag, sizeof(int32));
+		file.ReadAttr("ReverseAll", B_INT32_TYPE, 0, &fReverseAllFlag, sizeof(int32));
+		file.ReadAttr("Iterations", B_INT32_TYPE, 0, &fIterationsValue, sizeof(int32));
 
-		showBoundingBox = _showBoundingBox;
-		stlView->ShowBoundingBox(showBoundingBox);
+		fShowBoundingBox = _fShowBoundingBox;
+		fStlView->ShowBoundingBox(fShowBoundingBox);
 
-		showAxes = _showAxes;
-		stlView->ShowAxes(showAxes);
+		fShowAxes = _fShowAxes;
+		fStlView->ShowAxes(fShowAxes);
 
-		showOXY = _showOXY;
-		stlView->ShowOXY(showOXY);
+		fShowOXY = _fShowOXY;
+		fStlView->ShowOXY(fShowOXY);
 
-		showWireframe = _showWireframe;
-		stlView->SetViewMode(_showWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
+		fShowWireframe = _fShowWireframe;
+		fStlView->SetViewMode(_fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
 
-		showStat = _showStat;
-		if (showStat)
+		fShowStat = _showStat;
+		if (fShowStat)
 			UpdateStats();
 
 		UpdateUIStates(IsLoaded());
@@ -297,20 +298,20 @@ STLWindow::SaveSettings(void)
 		if (file.InitCheck() != B_OK || file.Lock() != B_OK)
 			return;
 
-		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &showAxes, sizeof(bool));
-		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &showOXY, sizeof(bool));
-		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &showBoundingBox, sizeof(bool));
-		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &showStat, sizeof(bool));
-		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &showWireframe, sizeof(bool));
+		file.WriteAttr("fShowAxes", B_BOOL_TYPE, 0, &fShowAxes, sizeof(bool));
+		file.WriteAttr("fShowOXY", B_BOOL_TYPE, 0, &fShowOXY, sizeof(bool));
+		file.WriteAttr("fShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
+		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &fShowStat, sizeof(bool));
+		file.WriteAttr("fShowWireframe", B_BOOL_TYPE, 0, &fShowWireframe, sizeof(bool));
 
-		file.WriteAttr("Exact", B_INT32_TYPE, 0, &exactFlag, sizeof(int32));
-		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &nearbyFlag, sizeof(int32));
-		file.WriteAttr("RemoveUnconnected", B_INT32_TYPE, 0, &removeUnconnectedFlag, sizeof(int32));
-		file.WriteAttr("FillHoles", B_INT32_TYPE, 0, &fillHolesFlag, sizeof(int32));
-		file.WriteAttr("NormalDirections", B_INT32_TYPE, 0, &normalDirectionsFlag, sizeof(int32));
-		file.WriteAttr("NormalValues", B_INT32_TYPE, 0, &normalValuesFlag, sizeof(int32));
-		file.WriteAttr("ReverseAll", B_INT32_TYPE, 0, &reverseAllFlag, sizeof(int32));
-		file.WriteAttr("Iterations", B_INT32_TYPE, 0, &iterationsValue, sizeof(int32));
+		file.WriteAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
+		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
+		file.WriteAttr("RemoveUnconnected", B_INT32_TYPE, 0, &fRemoveUnconnectedFlag, sizeof(int32));
+		file.WriteAttr("FillHoles", B_INT32_TYPE, 0, &fFillHolesFlag, sizeof(int32));
+		file.WriteAttr("NormalDirections", B_INT32_TYPE, 0, &fNormalDirectionsFlag, sizeof(int32));
+		file.WriteAttr("NormalValues", B_INT32_TYPE, 0, &fNormalValuesFlag, sizeof(int32));
+		file.WriteAttr("ReverseAll", B_INT32_TYPE, 0, &fReverseAllFlag, sizeof(int32));
+		file.WriteAttr("Iterations", B_INT32_TYPE, 0, &fIterationsValue, sizeof(int32));
 
 		file.Sync();
 		file.Unlock();
@@ -338,10 +339,10 @@ STLWindow::MessageReceived(BMessage *message)
 				uint32 key = message->FindInt32("key");
 				uint32 modifiers = message->FindInt32("modifiers");
 
-				float scaleFactor = stlView->ScaleFactor();
+				float scaleFactor = fStlView->ScaleFactor();
 				float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
-				float xRotate = stlView->XRotate();
-				float yRotate = stlView->YRotate();
+				float xRotate = fStlView->XRotate();
+				float yRotate = fStlView->YRotate();
 				float rotateDelta = 5.0;
 
 				if (modifiers & B_SHIFT_KEY) {
@@ -375,16 +376,16 @@ STLWindow::MessageReceived(BMessage *message)
 						xRotate += rotateDelta;
 						break;
 					case 0x5E: // Reset position [Space]
-						stlView->Reset(false, true, true);
+						fStlView->Reset(false, true, true);
 						return;
 					case 0x64: // Reset scale [0]
 					case 0x1B:
-						stlView->Reset(true, false, false);
+						fStlView->Reset(true, false, false);
 						return;
 				}
-				stlView->SetScaleFactor(scaleFactor);
-				stlView->SetXRotate(xRotate);
-				stlView->SetYRotate(yRotate);
+				fStlView->SetScaleFactor(scaleFactor);
+				fStlView->SetXRotate(xRotate);
+				fStlView->SetYRotate(yRotate);
 			}
 			break;
 		}
@@ -407,14 +408,14 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_FILE_SAVE:
 		{
 			BPath path(fOpenedFileName);
-			if (stlObject->stats.type == binary)
-				stl_write_binary(stlObject, path.Path(), stlObject->stats.header);
+			if (fStlObject->stats.type == binary)
+				stl_write_binary(fStlObject, path.Path(), fStlObject->stats.header);
 			else
-				stl_write_ascii(stlObject, path.Path(), stlObject->stats.header);
+				stl_write_ascii(fStlObject, path.Path(), fStlObject->stats.header);
 			BNode node(path.Path());
 			BNodeInfo nodeInfo(&node);
 			nodeInfo.SetType("application/sla");
-			stlModified = false;
+			fStlModified = false;
 			UpdateUIStates(true);
 			break;
 		}
@@ -465,9 +466,9 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_PULSE:
 		{
-			if (errorTimeCounter > 0) {
-				errorTimeCounter--;
-				stlView->RenderUpdate();
+			if (fErrorTimeCounter > 0) {
+				fErrorTimeCounter--;
+				fStlView->RenderUpdate();
 			}
 			break;
 		}
@@ -504,31 +505,31 @@ STLWindow::MessageReceived(BMessage *message)
 				BString mime("application/sla");
 				switch (format) {
 					case MSG_FILE_EXPORT_STLA:
-						stl_write_ascii(stlObject, path.Path(), stlObject->stats.header);
+						stl_write_ascii(fStlObject, path.Path(), fStlObject->stats.header);
 						break;
 					case MSG_FILE_EXPORT_STLB:
-						stl_write_binary(stlObject, path.Path(), stlObject->stats.header);
+						stl_write_binary(fStlObject, path.Path(), fStlObject->stats.header);
 						break;
 					case MSG_FILE_EXPORT_DXF:
-						stl_write_dxf(stlObject, (char*)path.Path(), stlObject->stats.header);
+						stl_write_dxf(fStlObject, (char*)path.Path(), fStlObject->stats.header);
 						mime.SetTo("application/dxf");
 						break;
 					case MSG_FILE_EXPORT_VRML:
-						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
-						stl_generate_shared_vertices(stlObject);
-						stl_write_vrml(stlObject, (char*)path.Path());
+						stl_repair(fStlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(fStlObject);
+						stl_write_vrml(fStlObject, (char*)path.Path());
 						mime.SetTo("text/plain");
 						break;
 					case MSG_FILE_EXPORT_OFF:
-						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
-						stl_generate_shared_vertices(stlObject);
-						stl_write_off(stlObject, (char*)path.Path());
+						stl_repair(fStlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(fStlObject);
+						stl_write_off(fStlObject, (char*)path.Path());
 						mime.SetTo("text/plain");
 						break;
 					case MSG_FILE_EXPORT_OBJ:
-						stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
-						stl_generate_shared_vertices(stlObject);
-						stl_write_obj(stlObject, (char*)path.Path());
+						stl_repair(fStlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+						stl_generate_shared_vertices(fStlObject);
+						stl_write_obj(fStlObject, (char*)path.Path());
 						mime.SetTo("text/plain");
 						break;
 				}
@@ -536,7 +537,7 @@ STLWindow::MessageReceived(BMessage *message)
 				BNodeInfo nodeInfo(&node);
 				nodeInfo.SetType(mime.String());
 
-				stlModified = false;
+				fStlModified = false;
 				UpdateUI();
 			}
 			break;
@@ -549,9 +550,9 @@ STLWindow::MessageReceived(BMessage *message)
 				BEntry entry = BEntry(&ref);
 				BPath path;
 				entry.GetPath(&path);
-				stl_open_merge(stlObject, (char*)path.Path());
-				stl_repair(stlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
-				stlModified = true;
+				stl_open_merge(fStlObject, (char*)path.Path());
+				stl_repair(fStlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -579,74 +580,74 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_VIEWMODE_OXY:
 		{
-			showOXY = !showOXY;
-			stlView->ShowOXY(showOXY);
+			fShowOXY = !fShowOXY;
+			fStlView->ShowOXY(fShowOXY);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_AXES:
 		{
-			showAxes = !showAxes;
-			stlView->ShowAxes(showAxes);
+			fShowAxes = !fShowAxes;
+			fStlView->ShowAxes(fShowAxes);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_BOUNDING_BOX:
 		{
-			showBoundingBox = !showBoundingBox;
-			stlView->ShowBoundingBox(showBoundingBox);
+			fShowBoundingBox = !fShowBoundingBox;
+			fStlView->ShowBoundingBox(fShowBoundingBox);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_RESETPOS:
 		{
-			stlView->Reset();
+			fStlView->Reset();
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_ZOOMIN:
 		{
-			float scaleFactor = stlView->ScaleFactor();
+			float scaleFactor = fStlView->ScaleFactor();
 			float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
-			stlView->SetScaleFactor(scaleFactor - scaleDelta);
+			fStlView->SetScaleFactor(scaleFactor - scaleDelta);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_ZOOMOUT:
 		{
-			float scaleFactor = stlView->ScaleFactor();
+			float scaleFactor = fStlView->ScaleFactor();
 			float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
-			stlView->SetScaleFactor(scaleFactor + scaleDelta);
+			fStlView->SetScaleFactor(scaleFactor + scaleDelta);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_ZOOMFIT:
 		{
-			stlView->Reset(true, false, false);
+			fStlView->Reset(true, false, false);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_FRONT:
 		{
-			stlView->Reset(true, false, true);
-			stlView->SetXRotate(-90);
-			stlView->SetYRotate(0);
+			fStlView->Reset(true, false, true);
+			fStlView->SetXRotate(-90);
+			fStlView->SetYRotate(0);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_TOP:
 		{
-			stlView->Reset(true, false, true);
-			stlView->SetXRotate(0);
-			stlView->SetYRotate(0);
+			fStlView->Reset(true, false, true);
+			fStlView->SetXRotate(0);
+			fStlView->SetYRotate(0);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_RIGHT:
 		{
-			stlView->Reset(true, false, true);
-			stlView->SetXRotate(-90);
-			stlView->SetYRotate(-90);
+			fStlView->Reset(true, false, true);
+			fStlView->SetXRotate(-90);
+			fStlView->SetYRotate(-90);
 			UpdateUI();
 			break;
 		}
@@ -658,47 +659,47 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_VIEWMODE_STAT:
 		{
-			showStat = !showStat;
+			fShowStat = !fShowStat;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_REPAIR:
 		{
 			BMessage *options = new BMessage();
-			options->AddInt32("exactFlag", exactFlag);
-			options->AddInt32("nearbyFlag", nearbyFlag);
-			options->AddInt32("removeUnconnectedFlag", removeUnconnectedFlag);
-			options->AddInt32("fillHolesFlag", fillHolesFlag);
-			options->AddInt32("normalDirectionsFlag", normalDirectionsFlag);
-			options->AddInt32("normalValuesFlag", normalValuesFlag);
-			options->AddInt32("reverseAllFlag", reverseAllFlag);
-			options->AddInt32("iterationsValue", iterationsValue);
-			options->AddFloat("toleranceValue", stlObject->stats.shortest_edge);
-			options->AddFloat("incrementValue", stlObject->stats.bounding_diameter / 10000.0);
+			options->AddInt32("fExactFlag", fExactFlag);
+			options->AddInt32("fNearbyFlag", fNearbyFlag);
+			options->AddInt32("fRemoveUnconnectedFlag", fRemoveUnconnectedFlag);
+			options->AddInt32("fFillHolesFlag", fFillHolesFlag);
+			options->AddInt32("fNormalDirectionsFlag", fNormalDirectionsFlag);
+			options->AddInt32("fNormalValuesFlag", fNormalValuesFlag);
+			options->AddInt32("fReverseAllFlag", fReverseAllFlag);
+			options->AddInt32("fIterationsValue", fIterationsValue);
+			options->AddFloat("toleranceValue", fStlObject->stats.shortest_edge);
+			options->AddFloat("incrementValue", fStlObject->stats.bounding_diameter / 10000.0);
 			STLRepairWindow *repairDialog = new STLRepairWindow(this, MSG_TOOLS_REPAIR_DO, options);
 			repairDialog->Show();
 			break;
 		}
 		case MSG_TOOLS_REPAIR_DO:
 		{
-			exactFlag = message->FindInt32("exactFlag");
-			nearbyFlag = message->FindInt32("nearbyFlag");
-			removeUnconnectedFlag = message->FindInt32("removeUnconnectedFlag");
-			fillHolesFlag = message->FindInt32("fillHolesFlag");
-			normalDirectionsFlag = message->FindInt32("normalDirectionsFlag");
-			normalValuesFlag = message->FindInt32("normalValuesFlag");
-			reverseAllFlag = message->FindInt32("reverseAllFlag");
-			iterationsValue = message->FindInt32("iterationsValue");
+			fExactFlag = message->FindInt32("fExactFlag");
+			fNearbyFlag = message->FindInt32("fNearbyFlag");
+			fRemoveUnconnectedFlag = message->FindInt32("fRemoveUnconnectedFlag");
+			fFillHolesFlag = message->FindInt32("fFillHolesFlag");
+			fNormalDirectionsFlag = message->FindInt32("fNormalDirectionsFlag");
+			fNormalValuesFlag = message->FindInt32("fNormalValuesFlag");
+			fReverseAllFlag = message->FindInt32("fReverseAllFlag");
+			fIterationsValue = message->FindInt32("fIterationsValue");
 			float toleranceValue = message->FindInt32("toleranceValue");
 			float incrementValue = message->FindInt32("incrementValue");
 			if (IsLoaded()) {
-				stl_repair(stlObject, 0, exactFlag, 1, toleranceValue, 1, incrementValue, nearbyFlag,
-					iterationsValue, removeUnconnectedFlag, fillHolesFlag, normalDirectionsFlag,
-					normalValuesFlag, reverseAllFlag, 0);
-				stl_repair(stlObjectView, 0, exactFlag, 1, toleranceValue, 1, incrementValue, nearbyFlag,
-					iterationsValue, removeUnconnectedFlag, fillHolesFlag, normalDirectionsFlag,
-					normalValuesFlag, reverseAllFlag, 0);
-				stlModified = true;
+				stl_repair(fStlObject, 0, fExactFlag, 1, toleranceValue, 1, incrementValue, fNearbyFlag,
+					fIterationsValue, fRemoveUnconnectedFlag, fFillHolesFlag, fNormalDirectionsFlag,
+					fNormalValuesFlag, fReverseAllFlag, 0);
+				stl_repair(fStlObjectView, 0, fExactFlag, 1, toleranceValue, 1, incrementValue, fNearbyFlag,
+					fIterationsValue, fRemoveUnconnectedFlag, fFillHolesFlag, fNormalDirectionsFlag,
+					fNormalValuesFlag, fReverseAllFlag, 0);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -706,7 +707,7 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_EDIT_TITLE:
 		{
 			STLInputWindow *input = new STLInputWindow("STL Title", 1, this, MSG_TOOLS_TITLE_SET);
-			input->SetTextValue(0, "Title:", (const char*)stlObject->stats.header);
+			input->SetTextValue(0, "Title:", (const char*)fStlObject->stats.header);
 			input->Show();
 			break;
 		}
@@ -714,8 +715,8 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			const char *value = message->FindString("value");
 			if (value != NULL && IsLoaded()) {
-				snprintf(stlObject->stats.header, 80, value);
-				stlModified = true;
+				snprintf(fStlObject->stats.header, 80, value);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -732,9 +733,9 @@ STLWindow::MessageReceived(BMessage *message)
 			const char *value = message->FindString("value");
 			if (value != NULL && IsLoaded()) {
 				float scaleFactor = atof(value);
-				stl_scale(stlObject, scaleFactor);
-				stl_scale(stlObjectView, scaleFactor);
-				stlModified = true;
+				stl_scale(fStlObject, scaleFactor);
+				stl_scale(fStlObjectView, scaleFactor);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -758,9 +759,9 @@ STLWindow::MessageReceived(BMessage *message)
 				scaleVersor[0] = atof(scaleX);
 				scaleVersor[1] = atof(scaleY);
 				scaleVersor[2] = atof(scaleZ);
-				stl_scale_versor(stlObject, scaleVersor);
-				stl_scale_versor(stlObjectView, scaleVersor);
-				stlModified = true;
+				stl_scale_versor(fStlObject, scaleVersor);
+				stl_scale_versor(fStlObjectView, scaleVersor);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -783,44 +784,44 @@ STLWindow::MessageReceived(BMessage *message)
 				float rotateXAngle = atof(rotateX);
 				float rotateYAngle = atof(rotateY);
 				float rotateZAngle = atof(rotateZ);
-				stl_rotate_x(stlObject, rotateXAngle);
-				stl_rotate_x(stlObjectView, rotateXAngle);
-				stl_rotate_y(stlObject, rotateYAngle);
-				stl_rotate_y(stlObjectView, rotateYAngle);
-				stl_rotate_z(stlObject, rotateZAngle);
-				stl_rotate_z(stlObjectView, rotateZAngle);
-				stlModified = true;
+				stl_rotate_x(fStlObject, rotateXAngle);
+				stl_rotate_x(fStlObjectView, rotateXAngle);
+				stl_rotate_y(fStlObject, rotateYAngle);
+				stl_rotate_y(fStlObjectView, rotateYAngle);
+				stl_rotate_z(fStlObject, rotateZAngle);
+				stl_rotate_z(fStlObjectView, rotateZAngle);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
 		}
 		case MSG_TOOLS_MOVE_CENTER:
 		{
-			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, -stlObject->stats.size.z / 2);
-			stlModified = true;
+			stl_translate(fStlObject, -fStlObject->stats.size.x / 2, -fStlObject->stats.size.y / 2, -fStlObject->stats.size.z / 2);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MOVE_MIDDLE:
 		{
-			stl_translate(stlObject, -stlObject->stats.size.x / 2, -stlObject->stats.size.y / 2, 0);
-			stlModified = true;
+			stl_translate(fStlObject, -fStlObject->stats.size.x / 2, -fStlObject->stats.size.y / 2, 0);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MOVE_ZERO:
 		{
-			stl_translate(stlObject, 0, 0, 0);
-			stlModified = true;
+			stl_translate(fStlObject, 0, 0, 0);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MOVE_TO:
 		{
 			STLInputWindow *input = new STLInputWindow("Move to", 3, this, MSG_TOOLS_MOVE_TO_SET);
-			input->SetFloatValue(0, "X:", stlObject->stats.min.x);
-			input->SetFloatValue(1, "Y:", stlObject->stats.min.y);
-			input->SetFloatValue(2, "Z:", stlObject->stats.min.z);
+			input->SetFloatValue(0, "X:", fStlObject->stats.min.x);
+			input->SetFloatValue(1, "Y:", fStlObject->stats.min.y);
+			input->SetFloatValue(2, "Z:", fStlObject->stats.min.z);
 			input->Show();
 			break;
 		}
@@ -833,8 +834,8 @@ STLWindow::MessageReceived(BMessage *message)
 				float xValue = atof(x);
 				float yValue = atof(y);
 				float zValue = atof(z);
-				stl_translate(stlObject, xValue, yValue, zValue);
-				stlModified = true;
+				stl_translate(fStlObject, xValue, yValue, zValue);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -857,47 +858,47 @@ STLWindow::MessageReceived(BMessage *message)
 				float dxValue = atof(dx);
 				float dyValue = atof(dy);
 				float dzValue = atof(dz);
-				stl_translate_relative(stlObject, dxValue, dyValue, dzValue);
-				stlModified = true;
+				stl_translate_relative(fStlObject, dxValue, dyValue, dzValue);
+				fStlModified = true;
 				UpdateUI();
 			}
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XY:
 		{
-			stl_mirror_xy(stlObject);
-			stl_mirror_xy(stlObjectView);
-			stlModified = true;
+			stl_mirror_xy(fStlObject);
+			stl_mirror_xy(fStlObjectView);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_YZ:
 		{
-			stl_mirror_yz(stlObject);
-			stl_mirror_yz(stlObjectView);
-			stlModified = true;
+			stl_mirror_yz(fStlObject);
+			stl_mirror_yz(fStlObjectView);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XZ:
 		{
-			stl_mirror_xz(stlObject);
-			stl_mirror_xz(stlObjectView);
-			stlModified = true;
+			stl_mirror_xz(fStlObject);
+			stl_mirror_xz(fStlObjectView);
+			fStlModified = true;
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_SOLID:
 		{
-			showWireframe = false;
-			stlView->SetViewMode(MSG_VIEWMODE_SOLID);
+			fShowWireframe = false;
+			fStlView->SetViewMode(MSG_VIEWMODE_SOLID);
 			UpdateUI();
 			break;
 		}
 		case MSG_VIEWMODE_WIREFRAME:
 		{
-			showWireframe = true;
-			stlView->SetViewMode(MSG_VIEWMODE_WIREFRAME);
+			fShowWireframe = true;
+			fStlView->SetViewMode(MSG_VIEWMODE_WIREFRAME);
 			UpdateUI();
 			break;
 		}
@@ -927,28 +928,28 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			BPoint point;
 			uint32 buttons;
-			stlView->GetMouse(&point, &buttons);
+			fStlView->GetMouse(&point, &buttons);
 
 			BPopUpMenu* menu = new BPopUpMenu("PopUpMenu",false,false);
 
 			BMenuItem *_menuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
-			_menuItemSolid->SetMarked(!showWireframe);
+			_menuItemSolid->SetMarked(!fShowWireframe);
 			BMenuItem *_menuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
-			_menuItemWireframe->SetMarked(showWireframe);
+			_menuItemWireframe->SetMarked(fShowWireframe);
 
 			menu->AddItem(_menuItemSolid);
 			menu->AddItem(_menuItemWireframe);
 			menu->AddSeparatorItem();
 
-			BMenuItem *_menuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
-			_menuItemShowAxes->SetMarked(showAxes);
-			BMenuItem *_menuItemShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
-			_menuItemShowOXY->SetMarked(showOXY);
+			BMenuItem *_menuItemfShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
+			_menuItemfShowAxes->SetMarked(fShowAxes);
+			BMenuItem *_menuItemfShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
+			_menuItemfShowOXY->SetMarked(fShowOXY);
 			BMenuItem *_menuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
-			_menuItemShowBox->SetMarked(showBoundingBox);
+			_menuItemShowBox->SetMarked(fShowBoundingBox);
 
-			menu->AddItem(_menuItemShowAxes);
-			menu->AddItem(_menuItemShowOXY);
+			menu->AddItem(_menuItemfShowAxes);
+			menu->AddItem(_menuItemfShowOXY);
 			menu->AddItem(_menuItemShowBox);
 			menu->AddSeparatorItem();
 			menu->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
@@ -963,7 +964,7 @@ STLWindow::MessageReceived(BMessage *message)
 			menu->AddItem(new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR)));
 			menu->SetTargetForItems(this);
 
-			menu->Go(stlView->ConvertToScreen(point), true, false, true);
+			menu->Go(fStlView->ConvertToScreen(point), true, false, true);
 			break;
 		}
 		default:
@@ -986,34 +987,35 @@ STLWindow::UpdateUIStates(bool show)
 	fMenuToolsMove->SetEnabled(show);
 	fMenuFileSaveAs->SetEnabled(show);
 	fMenuItemReload->SetEnabled(show);
-	fMenuItemSave->SetEnabled(show && stlModified);
-	fMenuItemShowBox->SetMarked(showBoundingBox);
-	fMenuItemShowAxes->SetMarked(showAxes);
-	fMenuItemShowOXY->SetMarked(showOXY);
-	fMenuItemSolid->SetMarked(!showWireframe);
-	fMenuItemWireframe->SetMarked(showWireframe);
+	fMenuItemSave->SetEnabled(show && fStlModified);
+	fMenuItemShowBox->SetMarked(fShowBoundingBox);
+	fMenuItemShowAxes->SetMarked(fShowAxes);
+	fMenuItemShowOXY->SetMarked(fShowOXY);
+	fMenuItemSolid->SetMarked(!fShowWireframe);
+	fMenuItemWireframe->SetMarked(fShowWireframe);
 	fMenuItemStat->SetEnabled(show);
-	fMenuItemStat->SetMarked(showStat);
+	fMenuItemStat->SetMarked(fShowStat);
 
-	fToolBar->SetActionEnabled(MSG_FILE_SAVE, show && stlModified);
+	fToolBar->SetActionEnabled(MSG_FILE_SAVE, show && fStlModified);
 	fToolBar->SetActionEnabled(MSG_VIEWMODE_STAT, show);
-	fToolBar->SetActionPressed(MSG_VIEWMODE_STAT, showStat);
+	fToolBar->SetActionPressed(MSG_VIEWMODE_STAT, fShowStat);
 	fToolBar->SetActionEnabled(MSG_TOOLS_EDIT_TITLE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XY, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_YZ, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XZ, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_REPAIR, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_SCALE, show);
+	fToolBar->SetActionEnabled(MSG_TOOLS_SCALE_3, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_ROTATE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_TO, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
 
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
-	fViewToolBar->SetActionPressed(MSG_VIEWMODE_AXES, showAxes);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_AXES, fShowAxes);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);
-	fViewToolBar->SetActionPressed(MSG_VIEWMODE_OXY, showOXY);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_OXY, fShowOXY);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_BOUNDING_BOX, show);
-	fViewToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, showBoundingBox);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, fShowBoundingBox);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_FRONT, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_TOP, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_RIGHT, show);
@@ -1027,31 +1029,31 @@ void
 STLWindow::OpenFile(const char *filename)
 {	
 	CloseFile();
-	stlLoading = true;
-	stlView->RenderUpdate();
-	stlView->Render();
+	fStlLoading = true;
+	fStlView->RenderUpdate();
+	fStlView->Render();
 
-	stlObject = (stl_file*)malloc(sizeof(stl_file));
-	memset(stlObject, 0, sizeof(stl_file));
+	fStlObject = (stl_file*)malloc(sizeof(stl_file));
+	memset(fStlObject, 0, sizeof(stl_file));
 
-	stlObjectView = (stl_file*)malloc(sizeof(stl_file));
-	memset(stlObjectView, 0, sizeof(stl_file));
+	fStlObjectView = (stl_file*)malloc(sizeof(stl_file));
+	memset(fStlObjectView, 0, sizeof(stl_file));
 
-	zDepth = -5;
-	maxExtent = 10;
+	fZDepth = -5;
+	fMaxExtent = 10;
 
-	stl_open(stlObject, (char*)filename);
-	stl_open(stlObjectView, (char*)filename);
-	stlView->SetSTL(stlObject, stlObjectView);
+	stl_open(fStlObject, (char*)filename);
+	stl_open(fStlObjectView, (char*)filename);
+	fStlView->SetSTL(fStlObject, fStlObjectView);
 	
-	if (stl_get_error(stlObject) || stl_get_error(stlObjectView)) {
+	if (stl_get_error(fStlObject) || stl_get_error(fStlObjectView)) {
 		CloseFile();
-		errorTimeCounter = 3;
+		fErrorTimeCounter = 3;
 		return;
 	}
 	
-	stl_fix_normal_values(stlObject);
-	stl_fix_normal_values(stlObjectView);
+	stl_fix_normal_values(fStlObject);
+	stl_fix_normal_values(fStlObjectView);
 
 	TransformPosition();
 
@@ -1059,28 +1061,28 @@ STLWindow::OpenFile(const char *filename)
 	SetTitle(path.Leaf());
 	fOpenedFileName.SetTo(filename);
 
-	stlView->LockGL();
-	stlView->LockLooper();
+	fStlView->LockGL();
+	fStlView->LockLooper();
 
-	GLfloat Width = stlView->Bounds().Width() + 1;
-	GLfloat Height =  stlView->Bounds().Height() + 1;
+	GLfloat Width = fStlView->Bounds().Width() + 1;
+	GLfloat Height =  fStlView->Bounds().Height() + 1;
 	glViewport(0, 0, Width, Height);
   	glMatrixMode(GL_PROJECTION);
   	glLoadIdentity();
 
-  	gluPerspective(FOV, (GLfloat)Width/(GLfloat)Height, 0.1f, (zDepth + maxExtent));
+  	gluPerspective(FOV, (GLfloat)Width/(GLfloat)Height, 0.1f, (fZDepth + fMaxExtent));
 
   	glMatrixMode(GL_MODELVIEW);
 
-	errorTimeCounter = 0;
-	stlView->RenderUpdate();
+	fErrorTimeCounter = 0;
+	fStlView->RenderUpdate();
 
-  	stlView->UnlockLooper();
-	stlView->UnlockGL();
+  	fStlView->UnlockLooper();
+	fStlView->UnlockGL();
 
-	stlLoading = false;
-	stlModified = false;
-	stlValid = true;
+	fStlLoading = false;
+	fStlModified = false;
+	fStlValid = true;
 	UpdateUI();
 }
 
@@ -1089,20 +1091,20 @@ STLWindow::CloseFile(void)
 {
 	if (IsLoaded()) {
 		SetTitle(MAIN_WIN_TITLE);
-		stlValid = false;
+		fStlValid = false;
 
-		stl_file* stl = stlObject;
-		stlObject = NULL;
+		stl_file* stl = fStlObject;
+		fStlObject = NULL;
 		stl_close(stl);
 		free (stl);
 
-		stl = stlObjectView;
-		stlObjectView = NULL;
+		stl = fStlObjectView;
+		fStlObjectView = NULL;
 		stl_close(stl);
 		free (stl);
 
-		stlLoading = false;
-		errorTimeCounter = 0;
+		fStlLoading = false;
+		fErrorTimeCounter = 0;
 		UpdateUI();
 	}
 }
@@ -1112,78 +1114,78 @@ STLWindow::UpdateStats(void)
 {
 	bool isLoaded = IsLoaded();
 	if (isLoaded) {
-		stl_calculate_volume(stlObject);
-//			stl_calculate_surface_area(stlObject);
+		stl_calculate_volume(fStlObject);
+//			stl_calculate_surface_area(fStlObject);
 	}
 	BPath path(fOpenedFileName);
-	statView->SetTextValue("filename", isLoaded ? path.Leaf() : 0);
-	statView->SetTextValue("type", isLoaded ? (stlObject->stats.type == binary ? "Binary" : "ASCII") : "");
-	statView->SetTextValue("title", isLoaded ? stlObject->stats.header : "");
+	fStatView->SetTextValue("filename", isLoaded ? path.Leaf() : 0);
+	fStatView->SetTextValue("type", isLoaded ? (fStlObject->stats.type == binary ? "Binary" : "ASCII") : "");
+	fStatView->SetTextValue("title", isLoaded ? fStlObject->stats.header : "");
 
-	statView->SetFloatValue("min-x", isLoaded ? stlObject->stats.min.x : 0);
-	statView->SetFloatValue("min-y", isLoaded ? stlObject->stats.min.y : 0);
-	statView->SetFloatValue("min-z", isLoaded ? stlObject->stats.min.z : 0);
-	statView->SetFloatValue("max-x", isLoaded ? stlObject->stats.max.x : 0);
-	statView->SetFloatValue("max-y", isLoaded ? stlObject->stats.max.y : 0);
-	statView->SetFloatValue("max-z", isLoaded ? stlObject->stats.max.z : 0);
-	statView->SetFloatValue("width", isLoaded ? stlObject->stats.size.x : 0);
-	statView->SetFloatValue("length", isLoaded ? stlObject->stats.size.y : 0);
-	statView->SetFloatValue("height", isLoaded ? stlObject->stats.size.z : 0);
-	statView->SetFloatValue("volume", isLoaded ? stlObject->stats.volume : 0, false);
-//		statView->SetFloatValue("surface", isLoaded ? stlObject->stats.surface_area : 0);
-	statView->SetIntValue("num_facets", isLoaded ? stlObject->stats.number_of_facets : 0);
-	statView->SetIntValue("num_disconnected_facets",
-		isLoaded ? (stlObject->stats.facets_w_1_bad_edge + stlObject->stats.facets_w_2_bad_edge +
-		stlObject->stats.facets_w_3_bad_edge) : 0);
-	statView->SetIntValue("parts", isLoaded ? stlObject->stats.number_of_parts : 0);
-	statView->SetIntValue("degenerate", isLoaded ? stlObject->stats.degenerate_facets : 0);
-	statView->SetIntValue("edges", isLoaded ? stlObject->stats.edges_fixed : 0);
-	statView->SetIntValue("removed", isLoaded ? stlObject->stats.facets_removed : 0);
-	statView->SetIntValue("added", isLoaded ? stlObject->stats.facets_added : 0);
-	statView->SetIntValue("reversed", isLoaded ? stlObject->stats.facets_reversed : 0);
-	statView->SetIntValue("backward", isLoaded ? stlObject->stats.backwards_edges : 0);
-	statView->SetIntValue("normals", isLoaded ? stlObject->stats.normals_fixed : 0);
+	fStatView->SetFloatValue("min-x", isLoaded ? fStlObject->stats.min.x : 0);
+	fStatView->SetFloatValue("min-y", isLoaded ? fStlObject->stats.min.y : 0);
+	fStatView->SetFloatValue("min-z", isLoaded ? fStlObject->stats.min.z : 0);
+	fStatView->SetFloatValue("max-x", isLoaded ? fStlObject->stats.max.x : 0);
+	fStatView->SetFloatValue("max-y", isLoaded ? fStlObject->stats.max.y : 0);
+	fStatView->SetFloatValue("max-z", isLoaded ? fStlObject->stats.max.z : 0);
+	fStatView->SetFloatValue("width", isLoaded ? fStlObject->stats.size.x : 0);
+	fStatView->SetFloatValue("length", isLoaded ? fStlObject->stats.size.y : 0);
+	fStatView->SetFloatValue("height", isLoaded ? fStlObject->stats.size.z : 0);
+	fStatView->SetFloatValue("volume", isLoaded ? fStlObject->stats.volume : 0, false);
+//		fStatView->SetFloatValue("surface", isLoaded ? fStlObject->stats.surface_area : 0);
+	fStatView->SetIntValue("num_facets", isLoaded ? fStlObject->stats.number_of_facets : 0);
+	fStatView->SetIntValue("num_disconnected_facets",
+		isLoaded ? (fStlObject->stats.facets_w_1_bad_edge + fStlObject->stats.facets_w_2_bad_edge +
+		fStlObject->stats.facets_w_3_bad_edge) : 0);
+	fStatView->SetIntValue("parts", isLoaded ? fStlObject->stats.number_of_parts : 0);
+	fStatView->SetIntValue("degenerate", isLoaded ? fStlObject->stats.degenerate_facets : 0);
+	fStatView->SetIntValue("edges", isLoaded ? fStlObject->stats.edges_fixed : 0);
+	fStatView->SetIntValue("removed", isLoaded ? fStlObject->stats.facets_removed : 0);
+	fStatView->SetIntValue("added", isLoaded ? fStlObject->stats.facets_added : 0);
+	fStatView->SetIntValue("reversed", isLoaded ? fStlObject->stats.facets_reversed : 0);
+	fStatView->SetIntValue("backward", isLoaded ? fStlObject->stats.backwards_edges : 0);
+	fStatView->SetIntValue("normals", isLoaded ? fStlObject->stats.normals_fixed : 0);
 
-	float widthStatView = showStat ? statView->PreferredSize().Width() : -1;
-	statView->MoveTo(Bounds().right - widthStatView, stlView->Frame().top);
-	statView->ResizeTo(widthStatView, statView->Frame().Height());
-	stlView->ResizeTo((statView->Frame().left - stlView->Frame().left) - 1, stlView->Bounds().Height());
-	SetSizeLimits(600, 4096, statView->Frame().top + statView->PreferredSize().Height(), 4049);
+	float widthStatView = fShowStat ? fStatView->PreferredSize().Width() : -1;
+	fStatView->MoveTo(Bounds().right - widthStatView, fStlView->Frame().top);
+	fStatView->ResizeTo(widthStatView, fStatView->Frame().Height());
+	fStlView->ResizeTo((fStatView->Frame().left - fStlView->Frame().left) - 1, fStlView->Bounds().Height());
+	SetSizeLimits(600, 4096, fStatView->Frame().top + fStatView->PreferredSize().Height(), 4049);
 }
 
 void
 STLWindow::TransformPosition()
 {
-	stl_translate(stlObjectView, 0, 0, 0);
+	stl_translate(fStlObjectView, 0, 0, 0);
 
 	float xMaxExtent = 0;
 	float yMaxExtent = 0;
 	float zMaxExtent = 0;
 
-	for (int i = 0 ; i < stlObjectView->stats.number_of_facets ; i++) {
+	for (int i = 0 ; i < fStlObjectView->stats.number_of_facets ; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (stlObjectView->facet_start[i].vertex[j].x > xMaxExtent)
-				xMaxExtent = stlObjectView->facet_start[i].vertex[0].x;
-			if (stlObjectView->facet_start[i].vertex[j].y > yMaxExtent)
-				yMaxExtent = stlObjectView->facet_start[i].vertex[0].y;
-			if (stlObjectView->facet_start[i].vertex[j].z > zMaxExtent)
-				zMaxExtent = stlObjectView->facet_start[i].vertex[0].z;
+			if (fStlObjectView->facet_start[i].vertex[j].x > xMaxExtent)
+				xMaxExtent = fStlObjectView->facet_start[i].vertex[0].x;
+			if (fStlObjectView->facet_start[i].vertex[j].y > yMaxExtent)
+				yMaxExtent = fStlObjectView->facet_start[i].vertex[0].y;
+			if (fStlObjectView->facet_start[i].vertex[j].z > zMaxExtent)
+				zMaxExtent = fStlObjectView->facet_start[i].vertex[0].z;
 		}
 	}
 
 	float longerSide = xMaxExtent > yMaxExtent ? xMaxExtent : yMaxExtent;
 	longerSide += (zMaxExtent * (sin(FOV * (M_PI / 180.0)) / sin((90.0 - FOV) * (M_PI / 180.0))));
 
-	zDepth = -((longerSide / 2.0) / tanf((FOV / 2.0) * (M_PI / 180.0)));
+	fZDepth = -((longerSide / 2.0) / tanf((FOV / 2.0) * (M_PI / 180.0)));
 
 	if ((xMaxExtent > yMaxExtent) && (xMaxExtent > zMaxExtent))
-    	maxExtent = xMaxExtent;
+    	fMaxExtent = xMaxExtent;
 	if ((yMaxExtent > xMaxExtent) && (yMaxExtent > zMaxExtent))
-		maxExtent = yMaxExtent;
+		fMaxExtent = yMaxExtent;
 	if ((zMaxExtent > yMaxExtent) && (zMaxExtent > xMaxExtent))
-		maxExtent = zMaxExtent;
+		fMaxExtent = zMaxExtent;
 
-	stl_translate_relative(stlObjectView, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
+	stl_translate_relative(fStlObjectView, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
 }
 
 int32
@@ -1192,7 +1194,7 @@ STLWindow::RenderFunction(void *data)
 	STLView *view = (STLView*)data;
 	STLWindow *window = (STLWindow*)view->Window();
 
-	while(window->isRenderWork) {
+	while(window->IsRenderWork()) {
 		view->Render();
 		snooze(1000000 / FPS_LIMIT);
 	}
