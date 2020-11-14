@@ -24,8 +24,10 @@
 
 class STLToolBar : public BPrivate::BToolBar {
 public:
-	STLToolBar(BRect rect);
+	STLToolBar(BRect rect, orientation orient = B_HORIZONTAL);
 	virtual void Draw(BRect rect);
+private:
+	orientation fOrientation;
 };
 
 #endif

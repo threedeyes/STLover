@@ -20,9 +20,15 @@
 
 #include "STLToolBar.h"
 
-STLToolBar::STLToolBar(BRect rect) : BToolBar(rect, B_HORIZONTAL)
+STLToolBar::STLToolBar(BRect rect, orientation orient) : BToolBar(rect, orient),
+	fOrientation(orient)
 {
-	GroupLayout()->SetInsets(0.0f, 0.0f, B_USE_HALF_ITEM_INSETS, 1.0f);
+	if (orient == B_HORIZONTAL)
+		GroupLayout()->SetInsets(0.0f, 0.0f, 0.0f, 1.0f);
+	else {
+		SetResizingMode(B_FOLLOW_TOP_BOTTOM);
+		GroupLayout()->SetInsets(0.0f, 0.0f, 1.0f, 0.0f);
+	}
 	SetFlags(Flags() | B_WILL_DRAW);
 	SetLowColor(ui_color(B_PANEL_BACKGROUND_COLOR));
 }
@@ -32,6 +38,7 @@ STLToolBar::Draw(BRect updateRect)
 {
 	BRect rect = Bounds();
 	rgb_color base = LowColor();
-	be_control_look->DrawBorder(this, rect, updateRect, base, B_PLAIN_BORDER, 0, BControlLook::B_BOTTOM_BORDER);
+	be_control_look->DrawBorder(this, rect, updateRect, base, B_PLAIN_BORDER, 0,
+		fOrientation == B_HORIZONTAL ? BControlLook::B_BOTTOM_BORDER :  BControlLook::B_RIGHT_BORDER);
 	BToolBar::Draw(rect & updateRect);
 }
