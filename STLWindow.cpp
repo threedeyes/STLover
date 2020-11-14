@@ -178,6 +178,7 @@ STLWindow::STLWindow(BRect frame)
 	fViewToolBar->AddSeparator();
 	fViewToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), "Reset view");
 	fViewToolBar->AddSeparator();
+	fViewToolBar->AddAction(MSG_VIEWMODE_WIREFRAME_TOGGLE, this, STLoverApplication::GetIcon("wireframe", TOOLBAR_ICON_SIZE), "Wireframe");
 	fViewToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), "Show axes");
 	fViewToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), "Show plane OXY");
 	fViewToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), "Bounding box");
@@ -890,18 +891,19 @@ STLWindow::MessageReceived(BMessage *message)
 			break;
 		}
 		case MSG_VIEWMODE_SOLID:
+		case MSG_VIEWMODE_WIREFRAME:
 		{
-			fShowWireframe = false;
-			fStlView->SetViewMode(MSG_VIEWMODE_SOLID);
+			fShowWireframe = (message->what == MSG_VIEWMODE_WIREFRAME);
+			fStlView->SetViewMode(fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
 			UpdateUI();
 			break;
 		}
-		case MSG_VIEWMODE_WIREFRAME:
+		case MSG_VIEWMODE_WIREFRAME_TOGGLE:
 		{
-			fShowWireframe = true;
-			fStlView->SetViewMode(MSG_VIEWMODE_WIREFRAME);
+			fShowWireframe = !fShowWireframe;
+			fStlView->SetViewMode(fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
 			UpdateUI();
-			break;
+			break;	
 		}
 		case MSG_EASTER_EGG:
 		{
@@ -1012,6 +1014,8 @@ STLWindow::UpdateUIStates(bool show)
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_BY, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
 
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_WIREFRAME_TOGGLE, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_WIREFRAME_TOGGLE, fShowWireframe);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
 	fViewToolBar->SetActionPressed(MSG_VIEWMODE_AXES, fShowAxes);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);
