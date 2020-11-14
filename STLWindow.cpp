@@ -150,11 +150,6 @@ STLWindow::STLWindow(BRect frame)
 	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), "Open");
 	fToolBar->AddAction(MSG_FILE_SAVE, this, STLoverApplication::GetIcon("document-save", TOOLBAR_ICON_SIZE), "Save");
 	fToolBar->AddSeparator();
-	fToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), "Show axes");
-	fToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), "Show plane OXY");
-	fToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), "Bounding box");
-	fToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), "Reset");
-	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_TOOLS_EDIT_TITLE, this, STLoverApplication::GetIcon("document-edit", TOOLBAR_ICON_SIZE), "Edit title");
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_XY, this, STLoverApplication::GetIcon("mirror-xy", TOOLBAR_ICON_SIZE), "Mirror XY");
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_YZ, this, STLoverApplication::GetIcon("mirror-yz", TOOLBAR_ICON_SIZE), "Mirror YZ");
@@ -172,8 +167,30 @@ STLWindow::STLWindow(BRect frame)
 	fToolBar->GroupLayout()->SetInsets(0);
 	AddChild(fToolBar);
 
+	BRect viewToolBarRect = Bounds();
+	viewToolBarRect.top = fToolBar->Frame().bottom + 1;
+	fViewToolBar = new STLToolBar(viewToolBarRect, B_VERTICAL);
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMIN, this, STLoverApplication::GetIcon("zoom-in", TOOLBAR_ICON_SIZE), "Zoom in");
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMOUT, this, STLoverApplication::GetIcon("zoom-out", TOOLBAR_ICON_SIZE), "Zoom out");
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMFIT, this, STLoverApplication::GetIcon("zoom-fit-best", TOOLBAR_ICON_SIZE), "Best fit");
+	fViewToolBar->AddSeparator();
+	fViewToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), "Reset view");
+	fViewToolBar->AddSeparator();
+	fViewToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), "Show axes");
+	fViewToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), "Show plane OXY");
+	fViewToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), "Bounding box");
+	fViewToolBar->AddSeparator();
+	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), "Front view");
+	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), "Right view");
+	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), "Top view");
+	fViewToolBar->AddGlue();
+	fViewToolBar->ResizeTo(fViewToolBar->MinSize().width, viewToolBarRect.Height());
+	fViewToolBar->GroupLayout()->SetInsets(0);
+	AddChild(fViewToolBar);
+
 	BRect stlRect = Bounds();
 	stlRect.top = fToolBar->Frame().bottom + 1;
+	stlRect.left =fViewToolBar->Frame().right + 1;
 	stlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 	AddChild(stlView);
 
@@ -589,6 +606,53 @@ STLWindow::MessageReceived(BMessage *message)
 			UpdateUI();
 			break;
 		}
+		case MSG_VIEWMODE_ZOOMIN:
+		{
+			float scaleFactor = stlView->ScaleFactor();
+			float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
+			stlView->SetScaleFactor(scaleFactor - scaleDelta);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_ZOOMOUT:
+		{
+			float scaleFactor = stlView->ScaleFactor();
+			float scaleDelta = (GetZDepth() + scaleFactor) * 0.053589838958;
+			stlView->SetScaleFactor(scaleFactor + scaleDelta);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_ZOOMFIT:
+		{
+			stlView->Reset(true, false, false);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_FRONT:
+		{
+			stlView->Reset(true, false, true);
+			stlView->SetXRotate(-90);
+			stlView->SetYRotate(0);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_TOP:
+		{
+			stlView->Reset(true, false, true);
+			stlView->SetXRotate(0);
+			stlView->SetYRotate(0);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_RIGHT:
+		{
+			stlView->Reset(true, false, true);
+			stlView->SetXRotate(-90);
+			stlView->SetYRotate(-90);
+			UpdateUI();
+			break;
+		}
+
 		case MSG_FILE_RELOAD:
 		{
 			OpenFile(fOpenedFileName.String());
@@ -955,12 +1019,6 @@ STLWindow::UpdateMenuStates(bool show)
 	fMenuItemStatWin->SetMarked(statShowed);
 
 	fToolBar->SetActionEnabled(MSG_FILE_SAVE, show && stlModified);
-	fToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
-	fToolBar->SetActionPressed(MSG_VIEWMODE_AXES, showAxes);
-	fToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);
-	fToolBar->SetActionPressed(MSG_VIEWMODE_OXY, showOXY);
-	fToolBar->SetActionEnabled(MSG_VIEWMODE_BOUNDING_BOX, show);
-	fToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, showBoundingBox);
 	fToolBar->SetActionEnabled(MSG_VIEWMODE_STAT_WINDOW, show);
 	fToolBar->SetActionPressed(MSG_VIEWMODE_STAT_WINDOW, statShowed);
 	fToolBar->SetActionEnabled(MSG_TOOLS_EDIT_TITLE, show);
@@ -968,11 +1026,21 @@ STLWindow::UpdateMenuStates(bool show)
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_YZ, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MIRROR_XZ, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_REPAIR, show);
-	fToolBar->SetActionEnabled(MSG_VIEWMODE_RESETPOS, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_SCALE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_ROTATE, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_TO, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
+
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_AXES, showAxes);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_OXY, showOXY);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_BOUNDING_BOX, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_BOUNDING_BOX, showBoundingBox);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_FRONT, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_TOP, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_RIGHT, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_RESETPOS, show);
 
 	if (locked)
 		UnlockLooper();

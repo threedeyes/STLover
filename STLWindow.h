@@ -99,6 +99,7 @@ class STLWindow : public BWindow {
 
 		STLView *stlView;
 		STLToolBar *fToolBar;
+		STLToolBar *fViewToolBar;
 		STLStatWindow *statWindow;
 
 		bool stlModified;
