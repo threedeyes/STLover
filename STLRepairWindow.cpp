@@ -84,7 +84,11 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 		.Add(fOkButton, 3, 10);
 
 	fOkButton->MakeDefault(true);
-	CenterOnScreen();	
+
+	ResizeToPreferred();
+	BRect parentRect = target->Frame();
+	MoveTo(parentRect.left + ((parentRect.Width() - Frame().Width()) / 2.0),
+		parentRect.top + ((parentRect.Height() - Frame().Height()) / 2.0));
 }
 
 void

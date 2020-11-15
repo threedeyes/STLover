@@ -70,7 +70,11 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 
 	fOkButton->MakeDefault(true);
 	fValueControl->MakeFocus(true);
-	CenterOnScreen();
+
+	ResizeToPreferred();
+	BRect parentRect = target->Frame();
+	MoveTo(parentRect.left + ((parentRect.Width() - Frame().Width()) / 2.0),
+		parentRect.top + ((parentRect.Height() - Frame().Height()) / 2.0));
 }
 
 void
