@@ -32,6 +32,8 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <private/interface/WindowStack.h>
+
 #include <admesh/stl.h>
 
 #define APP_SIGNATURE "application/x-vnd.stlover"
@@ -105,12 +107,14 @@ class STLoverApplication : public BApplication {
 	public:
 		STLoverApplication();
 		virtual void RefsReceived(BMessage* msg);
+		virtual void ReadyToRun();
 
 		static BBitmap *GetIcon(const char *iconName, int iconSize);
+		STLWindow *NewSTLWindow(void);
 
 	private:
 		void InstallMimeType(void);
-		STLWindow *stlWindow;
+		BWindowStack *fWindowStack;
 };
 
 #endif

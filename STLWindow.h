@@ -43,7 +43,7 @@ class STLToolBar;
 
 class STLWindow : public BWindow {
 	public:
-		STLWindow(BRect frame);
+		STLWindow();
 		~STLWindow();
 		virtual void MessageReceived(BMessage *message);
 		virtual bool QuitRequested();

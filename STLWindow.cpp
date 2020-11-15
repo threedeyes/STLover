@@ -24,8 +24,8 @@
 #include "STLRepairWindow.h"
 #include "STLToolBar.h"
 
-STLWindow::STLWindow(BRect frame)
-	: BWindow(frame, MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
+STLWindow::STLWindow()
+	: BWindow(BRect(100, 100, 100 + 720, 100 + 512), MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	fStlModified(false),
@@ -252,12 +252,14 @@ STLWindow::LoadSettings(void)
 		bool _showStat = false;
 		bool _fShowWireframe = false;
 		bool _fShowOXY = false;
+		BRect _windowRect(100, 100, 100 + 720, 100 + 512);
 
-		file.ReadAttr("fShowAxes", B_BOOL_TYPE, 0, &_fShowAxes, sizeof(bool));
-		file.ReadAttr("fShowOXY", B_BOOL_TYPE, 0, &_fShowOXY, sizeof(bool));
-		file.ReadAttr("fShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
+		file.ReadAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
+		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_fShowAxes, sizeof(bool));
+		file.ReadAttr("ShowOXY", B_BOOL_TYPE, 0, &_fShowOXY, sizeof(bool));
+		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStat", B_BOOL_TYPE, 0, &_showStat, sizeof(bool));
-		file.ReadAttr("fShowWireframe", B_BOOL_TYPE, 0, &_fShowWireframe, sizeof(bool));
+		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_fShowWireframe, sizeof(bool));
 		file.ReadAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
 		file.ReadAttr("RemoveUnconnected", B_INT32_TYPE, 0, &fRemoveUnconnectedFlag, sizeof(int32));
@@ -266,6 +268,9 @@ STLWindow::LoadSettings(void)
 		file.ReadAttr("NormalValues", B_INT32_TYPE, 0, &fNormalValuesFlag, sizeof(int32));
 		file.ReadAttr("ReverseAll", B_INT32_TYPE, 0, &fReverseAllFlag, sizeof(int32));
 		file.ReadAttr("Iterations", B_INT32_TYPE, 0, &fIterationsValue, sizeof(int32));
+
+		MoveTo(_windowRect.left, _windowRect.top);
+		ResizeTo(_windowRect.Width(), _windowRect.Height());
 
 		fShowBoundingBox = _fShowBoundingBox;
 		fStlView->ShowBoundingBox(fShowBoundingBox);
@@ -300,11 +305,15 @@ STLWindow::SaveSettings(void)
 		if (file.InitCheck() != B_OK || file.Lock() != B_OK)
 			return;
 
-		file.WriteAttr("fShowAxes", B_BOOL_TYPE, 0, &fShowAxes, sizeof(bool));
-		file.WriteAttr("fShowOXY", B_BOOL_TYPE, 0, &fShowOXY, sizeof(bool));
-		file.WriteAttr("fShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
+		BRect _windowRect = Frame();
+
+		file.WriteAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
+
+		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &fShowAxes, sizeof(bool));
+		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &fShowOXY, sizeof(bool));
+		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &fShowStat, sizeof(bool));
-		file.WriteAttr("fShowWireframe", B_BOOL_TYPE, 0, &fShowWireframe, sizeof(bool));
+		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &fShowWireframe, sizeof(bool));
 
 		file.WriteAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
@@ -323,7 +332,8 @@ STLWindow::SaveSettings(void)
 
 bool
 STLWindow::QuitRequested() {
-	be_app->PostMessage(B_QUIT_REQUESTED);
+	if (be_app->CountWindows() == 1)
+		be_app->PostMessage(B_QUIT_REQUESTED);
 	return true;
 }
 
@@ -484,12 +494,12 @@ STLWindow::MessageReceived(BMessage *message)
 				BPath path;
 				if (entry.GetPath(&path) != B_OK)
 					continue;
-				if (i==0) {
+				if (i==0 && !IsLoaded()) {
 					OpenFile(path.Path());
 				} else {
 					BMessage *msg = new BMessage(B_REFS_RECEIVED);
 					msg->AddRef("refs", &ref);
-					be_roster->Launch(APP_SIGNATURE, msg);
+					be_app->PostMessage(msg);
 				}
 			}
 			break;

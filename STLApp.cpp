@@ -19,18 +19,37 @@
 #include "STLApp.h"
 #include "STLWindow.h"
 
-STLoverApplication::STLoverApplication():BApplication(APP_SIGNATURE)
+STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE),
+	fWindowStack(NULL)
 {
 	InstallMimeType();
+}
 
-	BRect windowRect(100, 100, 100 + 720, 100 + 512);
-	stlWindow = new STLWindow(windowRect);
+STLWindow*
+STLoverApplication::NewSTLWindow(void)
+{
+	STLWindow *stlWindow = new STLWindow();
+
+	if (fWindowStack == NULL)
+		fWindowStack = new BWindowStack(stlWindow);
+	else
+		fWindowStack->AddWindow(stlWindow);
+
+	return stlWindow;
 }
 
 void
 STLoverApplication::RefsReceived(BMessage* msg)
 {
+	STLWindow *stlWindow = NewSTLWindow();
 	stlWindow->PostMessage(msg);
+}
+
+void
+STLoverApplication::ReadyToRun()
+{
+	if (CountWindows() == 0)
+		NewSTLWindow();
 }
 
 void
