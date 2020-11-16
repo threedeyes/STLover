@@ -80,6 +80,16 @@ STLoverApplication::MessageReceived(BMessage *message)
 void
 STLoverApplication::RefsReceived(BMessage* message)
 {
+	for (int32 i = 0; i < CountWindows(); i++) {
+		STLWindow* window = dynamic_cast<STLWindow*>(WindowAt(i));
+		if (window != NULL) {
+			if (!window->IsLoaded()) {
+				window->PostMessage(message);
+				return;
+			}
+		}
+	}
+
 	STLWindow *stlWindow = CreateWindow();
 	stlWindow->PostMessage(message);
 }
