@@ -95,6 +95,8 @@
 #define MSG_INPUT_OK					'IWOK'
 #define MSG_EASTER_EGG					'EEGG'
 #define MSG_POPUP_MENU					'POPM'
+#define MSG_APP_QUIT					'QAPP'
+#define MSG_APP_CLOSE_WINDOW			'QAPP'
 
 #define FOV	30
 #define FPS_LIMIT 100
@@ -106,15 +108,15 @@ class STLWindow;
 class STLoverApplication : public BApplication {
 	public:
 		STLoverApplication();
-		virtual void RefsReceived(BMessage* msg);
+		virtual void RefsReceived(BMessage* message);
+		virtual	void ArgvReceived(int32 argc, char** argv);
 		virtual void ReadyToRun();
 
 		static BBitmap *GetIcon(const char *iconName, int iconSize);
-		STLWindow *NewSTLWindow(void);
 
 	private:
 		void InstallMimeType(void);
-		BWindowStack *fWindowStack;
+		STLWindow *CreateWindow(void);
 };
 
 #endif

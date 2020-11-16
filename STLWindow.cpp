@@ -204,14 +204,14 @@ STLWindow::STLWindow()
 	AddChild(fStatView);
 
 	AddShortcut('H', B_COMMAND_KEY,	new BMessage(MSG_EASTER_EGG));
+	AddShortcut('Q', B_COMMAND_KEY,	new BMessage(MSG_APP_QUIT));
 
 	LoadSettings();
 	UpdateUI();
-	Show();
 
-	fStlView->Render();
+//	fStlView->Render();
 
-	rendererThread = spawn_thread(RenderFunction, "renderThread", B_DISPLAY_PRIORITY, (void*)fStlView);
+	rendererThread = spawn_thread(RenderFunction, "renderThread", B_NORMAL_PRIORITY, (void*)fStlView);
 	resume_thread(rendererThread);
 
 	SetPulseRate(1000000);
@@ -329,11 +329,37 @@ STLWindow::SaveSettings(void)
 	}
 }
 
-
 bool
-STLWindow::QuitRequested() {
+STLWindow::QuitRequested()
+{
+	if (fStlModified) {
+		BAlert* alert = new BAlert("Save", "Save changes to current icon before closing?",
+			"Cancel", "Don't save", "Save", B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
+		alert->SetShortcut(0, B_ESCAPE);
+		int32 choice = alert->Go();
+		switch (choice) {
+			case 0:
+				return false;
+			case 1:
+				return true;
+			case 2:
+			default:
+			{
+				BPath path(fOpenedFileName);
+				if (fStlObject->stats.type == binary)
+					stl_write_binary(fStlObject, path.Path(), fStlObject->stats.header);
+				else
+					stl_write_ascii(fStlObject, path.Path(), fStlObject->stats.header);
+
+				fStlModified = false;
+				return true;
+			}
+		}
+	}
+
 	if (be_app->CountWindows() == 1)
 		be_app->PostMessage(B_QUIT_REQUESTED);
+
 	return true;
 }
 
@@ -980,6 +1006,11 @@ STLWindow::MessageReceived(BMessage *message)
 			menu->Go(fStlView->ConvertToScreen(point), true, false, true);
 			break;
 		}
+		case MSG_APP_QUIT:
+		{
+			be_app->PostMessage(B_QUIT_REQUESTED);
+			break;
+		}
 		default:
 			BWindow::MessageReceived(message);
 			break;
@@ -1036,6 +1067,9 @@ STLWindow::UpdateUIStates(bool show)
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_TOP, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_RIGHT, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_RESETPOS, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMIN, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMOUT, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMFIT, show);
 
 	if (locked)
 		UnlockLooper();

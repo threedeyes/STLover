@@ -19,6 +19,7 @@
 #ifndef STLOVER_WINDOW
 #define STLOVER_WINDOW
 
+#include <Alert.h>
 #include <File.h>
 #include <Window.h>
 #include <Message.h>

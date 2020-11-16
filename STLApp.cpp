@@ -19,37 +19,67 @@
 #include "STLApp.h"
 #include "STLWindow.h"
 
-STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE),
-	fWindowStack(NULL)
+STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE)
 {
 	InstallMimeType();
 }
 
 STLWindow*
-STLoverApplication::NewSTLWindow(void)
+STLoverApplication::CreateWindow(void)
 {
-	STLWindow *stlWindow = new STLWindow();
+	STLWindow *activeWindow = NULL;
+	for (int32 i = CountWindows(); i-- > 0;) {
+		STLWindow* window = dynamic_cast<STLWindow*>(WindowAt(i));
+		if (window != NULL) {
+			activeWindow = window;
+			break;
+		}
+	}
 
-	if (fWindowStack == NULL)
-		fWindowStack = new BWindowStack(stlWindow);
-	else
-		fWindowStack->AddWindow(stlWindow);
+	STLWindow *stlWindow = new STLWindow();
+	if (activeWindow != NULL ) {
+		BWindowStack stack(activeWindow);
+		stack.AddWindow(stlWindow);
+	}
+
+	stlWindow->Show();
 
 	return stlWindow;
 }
 
 void
-STLoverApplication::RefsReceived(BMessage* msg)
+STLoverApplication::RefsReceived(BMessage* message)
 {
-	STLWindow *stlWindow = NewSTLWindow();
-	stlWindow->PostMessage(msg);
+	STLWindow *stlWindow = CreateWindow();
+	stlWindow->PostMessage(message);
 }
 
 void
 STLoverApplication::ReadyToRun()
 {
 	if (CountWindows() == 0)
-		NewSTLWindow();
+		CreateWindow();
+}
+
+void
+STLoverApplication::ArgvReceived(int32 argc, char** argv)
+{
+	BMessage *message = NULL;
+	for (int32 i = 1; i < argc; i++) {
+		entry_ref ref;
+		status_t err = get_ref_for_path(argv[i], &ref);
+		if (err == B_OK) {
+			if (!message) {
+				message = new BMessage;
+				message->what = B_REFS_RECEIVED;
+			}
+			message->AddRef("refs", &ref);
+		}
+	}
+	if (message) {
+		RefsReceived(message);
+		delete message;
+	}
 }
 
 void
