@@ -209,8 +209,6 @@ STLWindow::STLWindow()
 	LoadSettings();
 	UpdateUI();
 
-//	fStlView->Render();
-
 	rendererThread = spawn_thread(RenderFunction, "renderThread", B_NORMAL_PRIORITY, (void*)fStlView);
 	resume_thread(rendererThread);
 
@@ -226,6 +224,8 @@ STLWindow::~STLWindow()
 	wait_for_thread(rendererThread, &exitValue);
 
 	CloseFile();
+
+	be_app->PostMessage(MSG_WINDOW_CLOSED);
 }
 
 void
@@ -326,6 +326,16 @@ STLWindow::SaveSettings(void)
 
 		file.Sync();
 		file.Unlock();
+	}
+}
+
+void
+STLWindow::WindowActivated(bool active)
+{
+	if (active) {
+		BMessage *message = new BMessage(MSG_WINDOW_ACTIVATED);
+		message->AddPointer("window", this);
+		be_app->PostMessage(message);
 	}
 }
 

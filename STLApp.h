@@ -96,7 +96,8 @@
 #define MSG_EASTER_EGG					'EEGG'
 #define MSG_POPUP_MENU					'POPM'
 #define MSG_APP_QUIT					'QAPP'
-#define MSG_APP_CLOSE_WINDOW			'QAPP'
+#define MSG_WINDOW_ACTIVATED			'AWIN'
+#define MSG_WINDOW_CLOSED				'CWIN'
 
 #define FOV	30
 #define FPS_LIMIT 100
@@ -108,6 +109,7 @@ class STLWindow;
 class STLoverApplication : public BApplication {
 	public:
 		STLoverApplication();
+		virtual void MessageReceived(BMessage *message);
 		virtual void RefsReceived(BMessage* message);
 		virtual	void ArgvReceived(int32 argc, char** argv);
 		virtual void ReadyToRun();
@@ -117,6 +119,7 @@ class STLoverApplication : public BApplication {
 	private:
 		void InstallMimeType(void);
 		STLWindow *CreateWindow(void);
+		STLWindow *lastActivatedWindow;
 };
 
 #endif

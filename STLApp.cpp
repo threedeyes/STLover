@@ -19,7 +19,8 @@
 #include "STLApp.h"
 #include "STLWindow.h"
 
-STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE)
+STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE),
+	lastActivatedWindow(NULL)
 {
 	InstallMimeType();
 }
@@ -28,11 +29,15 @@ STLWindow*
 STLoverApplication::CreateWindow(void)
 {
 	STLWindow *activeWindow = NULL;
-	for (int32 i = CountWindows(); i-- > 0;) {
+	STLWindow *lastWindow = NULL;
+	for (int32 i = 0; i < CountWindows(); i++) {
 		STLWindow* window = dynamic_cast<STLWindow*>(WindowAt(i));
 		if (window != NULL) {
-			activeWindow = window;
-			break;
+			if (window == lastActivatedWindow) {
+				activeWindow = window;
+				break;
+			}
+			lastWindow = window;
 		}
 	}
 
@@ -40,11 +45,36 @@ STLoverApplication::CreateWindow(void)
 	if (activeWindow != NULL ) {
 		BWindowStack stack(activeWindow);
 		stack.AddWindow(stlWindow);
+	} else if (lastWindow != NULL ) {
+		BWindowStack stack(lastWindow);
+		stack.AddWindow(stlWindow);
 	}
 
 	stlWindow->Show();
 
 	return stlWindow;
+}
+
+void
+STLoverApplication::MessageReceived(BMessage *message)
+{
+	switch (message->what) {
+		case MSG_WINDOW_ACTIVATED:
+		{
+			void *winPtr = NULL;
+			if (message->FindPointer("window", &winPtr) == B_OK)
+				lastActivatedWindow = static_cast<STLWindow*>(winPtr);
+			break;
+		}
+		case MSG_WINDOW_CLOSED:
+		{
+			lastActivatedWindow = NULL;
+			break;
+		}
+		default:
+			BApplication::MessageReceived(message);
+			break;
+	}
 }
 
 void

@@ -46,6 +46,7 @@ class STLWindow : public BWindow {
 	public:
 		STLWindow();
 		~STLWindow();
+		virtual void WindowActivated(bool active);
 		virtual void MessageReceived(BMessage *message);
 		virtual bool QuitRequested();
 
