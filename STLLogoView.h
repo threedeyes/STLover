@@ -23,6 +23,7 @@
 #include <Bitmap.h>
 #include <Message.h>
 #include <Point.h>
+#include <String.h>
 #include <Rect.h>
 #include <OS.h>
 
