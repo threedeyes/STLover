@@ -38,6 +38,7 @@
 #include <admesh/stl.h>
 
 class STLView;
+class STLLogoView;
 class STLStatView;
 class STLStatWindow;
 class STLToolBar;
@@ -50,28 +51,31 @@ class STLWindow : public BWindow {
 		virtual void MessageReceived(BMessage *message);
 		virtual bool QuitRequested();
 
+		void SetSTL(stl_file *stl, stl_file *stlView);
 		void OpenFile(const char *file);
 		void CloseFile(void);
 		void UpdateStats(void);
 		void TransformPosition(void);
 
-		int GetErrorTimer() { return fErrorTimeCounter; }
-		int GetBigExtent() { return fMaxExtent; }
-		int GetZDepth() { return fZDepth; }
+		int GetErrorTimer(void) { return fErrorTimeCounter; }
+		int GetBigExtent(void) { return fMaxExtent; }
+		int GetZDepth(void) { return fZDepth; }
 		bool IsLoaded(void) { return (fStlObject != NULL && fStlValid); }
-		bool IsLoading(void) { return fStlLoading; }
 		bool IsRenderWork(void) {return fRenderWork; }
+		BString Filename(void) {return fOpenedFileName; }
 
 		void UpdateUI(void);
 
-		static int32 RenderFunction(void *data);
+		static int32 _RenderFunction(void *data);
+		static int32 _FileLoaderFunction(void *data);
 
 	private:
 		void UpdateUIStates(bool show);
 		void LoadSettings(void);
 		void SaveSettings(void);
 	
-		thread_id 	rendererThread;
+		thread_id fRendererThread;
+		thread_id fFileLoaderThread;
 
 		BMenuBar *fMenuBar;
 		BMenu *fMenuFile;
@@ -82,7 +86,6 @@ class STLWindow : public BWindow {
 		BMenu *fMenuToolsScale;
 		BMenu *fMenuToolsMove;
 		BMenu *fMenuHelp;
-		BMenuItem *fMenuItemAppend;
 		BMenuItem *fMenuItemReload;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
@@ -98,9 +101,11 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemRepair;
 		BFilePanel *fOpenFilePanel;
 		BFilePanel *fSaveFilePanel;
+
 		BString fOpenedFileName;
 
 		STLView *fStlView;
+		STLLogoView *fStlLogoView;
 		STLToolBar *fToolBar;
 		STLToolBar *fViewToolBar;
 		STLStatView *fStatView;
@@ -109,7 +114,6 @@ class STLWindow : public BWindow {
 
 		bool fStlModified;
 		bool fStlValid;
-		bool fStlLoading;
 		bool fShowStat;
 		bool fShowBoundingBox;
 		bool fShowWireframe;
@@ -126,13 +130,12 @@ class STLWindow : public BWindow {
 		int32 fIterationsValue;
 
 		int fErrorTimeCounter;
-		
+
 		float fZDepth;
 		float fMaxExtent;
 
-		stl_file* fStlObject;
-		stl_file* fStlObjectView;
-		stl_file* fStlObjectAppend;
+		stl_file *fStlObject;
+		stl_file *fStlObjectView;
 };
 
 #endif

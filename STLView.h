@@ -38,8 +38,6 @@ class STLView : public BGLView {
 		virtual void MouseDown(BPoint point);
 		virtual void MouseUp(BPoint point);
 		virtual void MouseMoved(BPoint p, uint32 transit,const BMessage *message);
-		virtual void Pulse();
-		virtual void Draw(BRect rect);
 
 		void SetSTL(stl_file *stl, stl_file *stlView);
 		void Reset(bool scale = true, bool rotate = true, bool pan = true);

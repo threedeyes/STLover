@@ -19,6 +19,7 @@
 #include "STLApp.h"
 #include "STLView.h"
 #include "STLWindow.h"
+#include "STLLogoView.h"
 #include "STLStatView.h"
 #include "STLInputWindow.h"
 #include "STLRepairWindow.h"
@@ -43,10 +44,8 @@ STLWindow::STLWindow()
 	fReverseAllFlag(false),
 	fIterationsValue(2),
 	fStlValid(false),
-	fStlLoading(false),
 	fStlObject(NULL),
 	fStlObjectView(NULL),
-	fStlObjectAppend(NULL),
 	fErrorTimeCounter(0),
 	fRenderWork(true),
 	fZDepth(-5),
@@ -72,8 +71,6 @@ STLWindow::STLWindow()
 	fMenuFile->AddItem(new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(MSG_FILE_OPEN), 'O'));
 	fMenuItemReload = new BMenuItem("Reload", new BMessage(MSG_FILE_RELOAD));
 	fMenuFile->AddItem(fMenuItemReload);
-//	fMenuItemAppend = new BMenuItem("Append...", new BMessage(MSG_FILE_APPEND));
-//	fMenuFile->AddItem(fMenuItemAppend);
 	fMenuFile->AddSeparatorItem();
 	fMenuItemSave = new BMenuItem("Save", new BMessage(MSG_FILE_SAVE), 'S');
 	fMenuFile->AddItem(fMenuItemSave);
@@ -139,7 +136,7 @@ STLWindow::STLWindow()
 	fMenuTools->SetTargetForItems(this);
 
 	fMenuHelp->AddItem(new BMenuItem("About", new BMessage(B_ABOUT_REQUESTED)));
-	fMenuBar->AddItem(fMenuHelp);		
+	fMenuBar->AddItem(fMenuHelp);
 	fMenuHelp->SetTargetForItems(this);
 
 	AddChild(fMenuBar);
@@ -196,6 +193,12 @@ STLWindow::STLWindow()
 	stlRect.left =fViewToolBar->Frame().right + 1;
 	fStlView = new STLView(stlRect, BGL_RGB | BGL_DOUBLE | BGL_DEPTH);
 	AddChild(fStlView);
+	fStlView->Hide();
+
+	fStlLogoView = new STLLogoView(stlRect);
+	fStlLogoView->SetText("Drop STL files here");
+	fStlLogoView->SetTextColor(255, 255, 255);
+	AddChild(fStlLogoView);
 
 	BRect statRect = Bounds();
 	statRect.left = stlRect.right + 1;
@@ -209,8 +212,8 @@ STLWindow::STLWindow()
 	LoadSettings();
 	UpdateUI();
 
-	rendererThread = spawn_thread(RenderFunction, "renderThread", B_NORMAL_PRIORITY, (void*)fStlView);
-	resume_thread(rendererThread);
+	fRendererThread = spawn_thread(_RenderFunction, "renderThread", B_NORMAL_PRIORITY, (void*)fStlView);
+	resume_thread(fRendererThread);
 
 	SetPulseRate(1000000);
 }
@@ -221,7 +224,7 @@ STLWindow::~STLWindow()
 
 	status_t exitValue;
 	fRenderWork = false;
-	wait_for_thread(rendererThread, &exitValue);
+	wait_for_thread(fRendererThread, &exitValue);
 
 	CloseFile();
 
@@ -437,7 +440,6 @@ STLWindow::MessageReceived(BMessage *message)
 			}
 			break;
 		}
-		case MSG_FILE_APPEND:
 		case MSG_FILE_OPEN:
 		{
 			if (!fOpenFilePanel) {
@@ -446,7 +448,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fOpenFilePanel->SetTarget(this);
 			}
 
-			BMessage *openMsg = new BMessage(message->what == MSG_FILE_APPEND ? MSG_APPEND_REFS_RECIEVED : B_REFS_RECEIVED);
+			BMessage *openMsg = new BMessage(B_REFS_RECEIVED);
 			fOpenFilePanel->SetMessage(openMsg);
 			delete openMsg;
 
@@ -512,11 +514,60 @@ STLWindow::MessageReceived(BMessage *message)
 			CloseFile();
 			break;
 		}
+		case MSG_FILE_OPENED:
+		{
+			fZDepth = -5;
+			fMaxExtent = 10;
+			fStlView->SetSTL(fStlObject, fStlObjectView);
+
+			TransformPosition();
+
+			BPath path(fOpenedFileName);
+			SetTitle(path.Leaf());
+
+			fStlView->LockGL();
+			fStlView->LockLooper();
+
+			GLfloat Width = fStlView->Bounds().Width() + 1;
+			GLfloat Height =  fStlView->Bounds().Height() + 1;
+			glViewport(0, 0, Width, Height);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+
+			gluPerspective(FOV, (GLfloat)Width/(GLfloat)Height, 0.1f, (fZDepth + fMaxExtent));
+
+			glMatrixMode(GL_MODELVIEW);
+
+			fErrorTimeCounter = 0;
+
+			fStlView->UnlockLooper();
+			fStlView->UnlockGL();
+
+			fStlLogoView->Hide();
+			fStlView->Show();
+
+			fStlModified = false;
+			fStlValid = true;
+			UpdateUI();
+
+			break;
+		}
+		case MSG_FILE_OPEN_FAILED:
+		{
+			CloseFile();
+			fErrorTimeCounter = 4;
+			break;
+		}
 		case MSG_PULSE:
 		{
-			if (fErrorTimeCounter > 0) {
+			if (fErrorTimeCounter > 1) {
 				fErrorTimeCounter--;
-				fStlView->RenderUpdate();
+				fStlLogoView->SetText("Unknown file format!");
+				fStlLogoView->SetTextColor(255, 25, 25);
+			} else if (fErrorTimeCounter == 1) {
+				fErrorTimeCounter--;
+				fStlLogoView->SetText("Drop STL files here");
+				fStlLogoView->SetTextColor(255, 255, 255);
 			}
 			break;
 		}
@@ -586,21 +637,6 @@ STLWindow::MessageReceived(BMessage *message)
 				nodeInfo.SetType(mime.String());
 
 				fStlModified = false;
-				UpdateUI();
-			}
-			break;
-		}
-		case MSG_APPEND_REFS_RECIEVED:
-		{
-			entry_ref ref;
-
-			if (message->FindRef("refs", 0, &ref) == B_OK) {
-				BEntry entry = BEntry(&ref);
-				BPath path;
-				entry.GetPath(&path);
-				stl_open_merge(fStlObject, (char*)path.Path());
-				stl_repair(fStlObject, 1, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1);
-				fStlModified = true;
 				UpdateUI();
 			}
 			break;
@@ -1033,7 +1069,6 @@ STLWindow::UpdateUIStates(bool show)
 	bool locked = LockWithTimeout(0) == B_OK;
 
 	fMenuItemClose->SetEnabled(show);
-//	fMenuItemAppend->SetEnabled(show);
 	fMenuView->SetEnabled(show);
 	fMenuTools->SetEnabled(show);
 	fMenuToolsMirror->SetEnabled(show);
@@ -1086,70 +1121,32 @@ STLWindow::UpdateUIStates(bool show)
 }
 
 void
+STLWindow::SetSTL(stl_file *stl, stl_file *stlView)
+{
+	fStlObject = stl;
+	fStlObjectView = stlView;
+	fStlView->SetSTL(stl, stlView);
+}
+
+void
 STLWindow::OpenFile(const char *filename)
 {	
 	CloseFile();
-	fStlLoading = true;
-	fStlView->RenderUpdate();
-	fStlView->Render();
 
-	fStlObject = (stl_file*)malloc(sizeof(stl_file));
-	memset(fStlObject, 0, sizeof(stl_file));
-
-	fStlObjectView = (stl_file*)malloc(sizeof(stl_file));
-	memset(fStlObjectView, 0, sizeof(stl_file));
-
-	fZDepth = -5;
-	fMaxExtent = 10;
-
-	stl_open(fStlObject, (char*)filename);
-	stl_open(fStlObjectView, (char*)filename);
-	fStlView->SetSTL(fStlObject, fStlObjectView);
-	
-	if (stl_get_error(fStlObject) || stl_get_error(fStlObjectView)) {
-		CloseFile();
-		fErrorTimeCounter = 3;
-		return;
-	}
-	
-	stl_fix_normal_values(fStlObject);
-	stl_fix_normal_values(fStlObjectView);
-
-	TransformPosition();
-
-	BPath path(filename);
-	SetTitle(path.Leaf());
 	fOpenedFileName.SetTo(filename);
+	fStlLogoView->SetText("Loading" B_UTF8_ELLIPSIS);
 
-	fStlView->LockGL();
-	fStlView->LockLooper();
-
-	GLfloat Width = fStlView->Bounds().Width() + 1;
-	GLfloat Height =  fStlView->Bounds().Height() + 1;
-	glViewport(0, 0, Width, Height);
-  	glMatrixMode(GL_PROJECTION);
-  	glLoadIdentity();
-
-  	gluPerspective(FOV, (GLfloat)Width/(GLfloat)Height, 0.1f, (fZDepth + fMaxExtent));
-
-  	glMatrixMode(GL_MODELVIEW);
-
-	fErrorTimeCounter = 0;
-	fStlView->RenderUpdate();
-
-  	fStlView->UnlockLooper();
-	fStlView->UnlockGL();
-
-	fStlLoading = false;
-	fStlModified = false;
-	fStlValid = true;
-	UpdateUI();
+	fFileLoaderThread = spawn_thread(_FileLoaderFunction, "loaderThread", B_NORMAL_PRIORITY, (void*)this);
+	resume_thread(fFileLoaderThread);
 }
 
 void
 STLWindow::CloseFile(void)
 {
 	if (IsLoaded()) {
+		fStlLogoView->Show();
+		fStlView->Hide();
+
 		SetTitle(MAIN_WIN_TITLE);
 		fStlValid = false;
 
@@ -1163,7 +1160,8 @@ STLWindow::CloseFile(void)
 		stl_close(stl);
 		free (stl);
 
-		fStlLoading = false;
+		fStlLogoView->SetText("Drop STL files here");
+		fStlLogoView->SetTextColor(255, 255, 255);
 		fErrorTimeCounter = 0;
 		UpdateUI();
 	}
@@ -1173,10 +1171,9 @@ void
 STLWindow::UpdateStats(void)
 {
 	bool isLoaded = IsLoaded();
-	if (isLoaded) {
+	if (isLoaded)
 		stl_calculate_volume(fStlObject);
-//			stl_calculate_surface_area(fStlObject);
-	}
+
 	BPath path(fOpenedFileName);
 	fStatView->SetTextValue("filename", isLoaded ? path.Leaf() : 0);
 	fStatView->SetTextValue("type", isLoaded ? (fStlObject->stats.type == binary ? "Binary" : "ASCII") : "");
@@ -1192,7 +1189,6 @@ STLWindow::UpdateStats(void)
 	fStatView->SetFloatValue("length", isLoaded ? fStlObject->stats.size.y : 0);
 	fStatView->SetFloatValue("height", isLoaded ? fStlObject->stats.size.z : 0);
 	fStatView->SetFloatValue("volume", isLoaded ? fStlObject->stats.volume : 0, false);
-//		fStatView->SetFloatValue("surface", isLoaded ? fStlObject->stats.surface_area : 0);
 	fStatView->SetIntValue("num_facets", isLoaded ? fStlObject->stats.number_of_facets : 0);
 	fStatView->SetIntValue("num_disconnected_facets",
 		isLoaded ? (fStlObject->stats.facets_w_1_bad_edge + fStlObject->stats.facets_w_2_bad_edge +
@@ -1210,6 +1206,7 @@ STLWindow::UpdateStats(void)
 	fStatView->MoveTo(Bounds().right - widthStatView, fStlView->Frame().top);
 	fStatView->ResizeTo(widthStatView, fStatView->Frame().Height());
 	fStlView->ResizeTo((fStatView->Frame().left - fStlView->Frame().left) - 1, fStlView->Bounds().Height());
+	fStlLogoView->ResizeTo((fStatView->Frame().left - fStlLogoView->Frame().left) - 1, fStlLogoView->Bounds().Height());
 	SetSizeLimits(600, 4096, fStatView->Frame().top + fStatView->PreferredSize().Height(), 4049);
 }
 
@@ -1249,7 +1246,7 @@ STLWindow::TransformPosition()
 }
 
 int32
-STLWindow::RenderFunction(void *data)
+STLWindow::_RenderFunction(void *data)
 {
 	STLView *view = (STLView*)data;
 	STLWindow *window = (STLWindow*)view->Window();
@@ -1257,6 +1254,33 @@ STLWindow::RenderFunction(void *data)
 	while(window->IsRenderWork()) {
 		view->Render();
 		snooze(1000000 / FPS_LIMIT);
+	}
+
+	return 0;
+}
+
+int32
+STLWindow::_FileLoaderFunction(void *data)
+{
+	STLWindow *window = (STLWindow*)data;
+
+	stl_file *stl = (stl_file*)malloc(sizeof(stl_file));
+	memset(stl, 0, sizeof(stl_file));
+
+	stl_file *stlView = (stl_file*)malloc(sizeof(stl_file));
+	memset(stlView, 0, sizeof(stl_file));
+
+	stl_open(stl, (char*)window->Filename().String());
+	stl_open(stlView, (char*)window->Filename().String());
+
+	if (stl_get_error(stl) || stl_get_error(stlView)) {
+		window->SetSTL(NULL, NULL);
+		window->PostMessage(MSG_FILE_OPEN_FAILED);
+	} else {
+		stl_fix_normal_values(stl);
+		stl_fix_normal_values(stlView);
+		window->SetSTL(stl, stlView);
+		window->PostMessage(MSG_FILE_OPENED);
 	}
 
 	return 0;

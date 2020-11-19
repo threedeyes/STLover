@@ -20,12 +20,8 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
-static char dropText[] = {"Drop STL files here"};
-static char errorText[] = {"Unknown file format!"};
-static char loadingText[] = {"Loading" B_UTF8_ELLIPSIS};
-
 STLView::STLView(BRect frame, uint32 type)
-	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED, type),
+	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
 	needUpdate(true),
 	showAxes(false),
 	showBox(false),
@@ -94,12 +90,6 @@ STLView::AttachedToWindow(void)
 void
 STLView::FrameResized(float Width, float Height)
 {
-	if (!stlWindow->IsLoaded()) {
-		BGLView::FrameResized(Width, Height);
-		Invalidate();
-		return;
-	}
-
 	LockGL();
 	BGLView::FrameResized(Width, Height);
 
@@ -120,9 +110,6 @@ STLView::FrameResized(float Width, float Height)
 void 
 STLView::MouseMoved(BPoint p, uint32 transit,const BMessage *message)
 {
-	if (!stlWindow->IsLoaded())
-		return;
-
 	uint32 buttons = 0;
 	GetMouse(&p, &buttons, false);
 
@@ -147,62 +134,16 @@ STLView::MouseDown(BPoint p)
 	lastMouseClickTime = system_time();
 	lastMouseButtons = Window()->CurrentMessage()->FindInt32("buttons");
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
-	if (!stlWindow->IsLoaded() && (lastMouseButtons & B_PRIMARY_MOUSE_BUTTON)) {
-		BRect iconRect = appIcon->Bounds();
-		iconRect.OffsetTo(iconPos);
-		if (iconRect.Contains(p))
-			Window()->PostMessage(MSG_FILE_OPEN);
-	}
 }
 
 void
 STLView::MouseUp(BPoint p)
 {
-	if (stlWindow->IsLoaded() &&
-		(lastMouseButtons & B_SECONDARY_MOUSE_BUTTON) &&
+	if ((lastMouseButtons & B_SECONDARY_MOUSE_BUTTON) &&
 		(system_time() - lastMouseClickTime) < 250000)
 		Window()->PostMessage(MSG_POPUP_MENU);
 
 	lastMouseButtons = 0;
-}
-
-void
-STLView::Pulse()
-{
-	Window()->PostMessage(MSG_PULSE);
-}
-
-void
-STLView::Draw(BRect rect)
-{
-	if (!stlWindow->IsLoaded()) {
-		bool stlError = stlWindow->GetErrorTimer() > 0;
-		bool isLoading = stlWindow->IsLoading();
-		
-		char *text = stlError ? errorText : (isLoading ? loadingText : dropText);
-		
-		SetDrawingMode(B_OP_OVER);
-		SetHighColor(30, 30, 51);
-		FillRect(Bounds());
-
-		SetDrawingMode(B_OP_ALPHA);
-		iconPos = BPoint((Bounds().Width() - appIcon->Bounds().Width()) / 2.0,
-			(Bounds().Height() - appIcon->Bounds().Height()) / 2.0);
-		DrawBitmap(appIcon, iconPos);
-
-		BFont font(be_plain_font);
-		BPoint textPos((Bounds().Width() - font.StringWidth(text)) / 2.0,
-			iconPos.y + appIcon->Bounds().Height() + 24);
-
-		if (stlError)
-			SetHighColor(255, 25, 25);
-		else
-			SetHighColor(255, 255, 255);
-
-		DrawString(text, textPos);
-	} else {
-		BGLView::Draw(rect);
-	}
 }
 
 void
@@ -405,10 +346,5 @@ STLView::Render(void)
 
 		SwapBuffers();	
 		UnlockGL();
-	} else {
-		needUpdate = false;
-		LockLooper();
-		Draw(Bounds());
-		UnlockLooper();
 	}
 }

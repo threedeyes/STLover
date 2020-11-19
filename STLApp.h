@@ -98,6 +98,8 @@
 #define MSG_APP_QUIT					'QAPP'
 #define MSG_WINDOW_ACTIVATED			'AWIN'
 #define MSG_WINDOW_CLOSED				'CWIN'
+#define MSG_FILE_OPENED					'FOOK'
+#define MSG_FILE_OPEN_FAILED			'FOER'
 
 #define FOV	30
 #define FPS_LIMIT 100
