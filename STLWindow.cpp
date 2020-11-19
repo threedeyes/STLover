@@ -30,6 +30,7 @@ STLWindow::STLWindow()
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	fStlModified(false),
+	fStlLoading(false),
 	fShowStat(false),
 	fShowWireframe(false),
 	fShowBoundingBox(false),
@@ -518,37 +519,21 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			fZDepth = -5;
 			fMaxExtent = 10;
-			fStlView->SetSTL(fStlObject, fStlObjectView);
-
-			TransformPosition();
 
 			BPath path(fOpenedFileName);
 			SetTitle(path.Leaf());
 
-			fStlView->LockGL();
-			fStlView->LockLooper();
-
-			GLfloat Width = fStlView->Bounds().Width() + 1;
-			GLfloat Height =  fStlView->Bounds().Height() + 1;
-			glViewport(0, 0, Width, Height);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-
-			gluPerspective(FOV, (GLfloat)Width/(GLfloat)Height, 0.1f, (fZDepth + fMaxExtent));
-
-			glMatrixMode(GL_MODELVIEW);
+			TransformPosition();
+			fStlView->SetSTL(fStlObject, fStlObjectView);
 
 			fErrorTimeCounter = 0;
-
-			fStlView->UnlockLooper();
-			fStlView->UnlockGL();
-
-			fStlLogoView->Hide();
-			fStlView->Show();
-
+			fStlLoading = false;
 			fStlModified = false;
 			fStlValid = true;
 			UpdateUI();
+
+			fStlLogoView->Hide();
+			fStlView->Show();
 
 			break;
 		}
@@ -556,6 +541,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			CloseFile();
 			fErrorTimeCounter = 4;
+			fStlLoading = false;
 			break;
 		}
 		case MSG_PULSE:
@@ -581,7 +567,7 @@ STLWindow::MessageReceived(BMessage *message)
 				BPath path;
 				if (entry.GetPath(&path) != B_OK)
 					continue;
-				if (i==0 && !IsLoaded()) {
+				if (i==0 && !IsLoaded() && !IsLoading()) {
 					OpenFile(path.Path());
 				} else {
 					BMessage *msg = new BMessage(B_REFS_RECEIVED);
@@ -1136,6 +1122,7 @@ STLWindow::OpenFile(const char *filename)
 	fOpenedFileName.SetTo(filename);
 	fStlLogoView->SetText("Loading" B_UTF8_ELLIPSIS);
 
+	fStlLoading = true;
 	fFileLoaderThread = spawn_thread(_FileLoaderFunction, "loaderThread", B_NORMAL_PRIORITY, (void*)this);
 	resume_thread(fFileLoaderThread);
 }

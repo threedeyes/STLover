@@ -61,6 +61,7 @@ class STLWindow : public BWindow {
 		int GetBigExtent(void) { return fMaxExtent; }
 		int GetZDepth(void) { return fZDepth; }
 		bool IsLoaded(void) { return (fStlObject != NULL && fStlValid); }
+		bool IsLoading(void) { return fStlLoading; }
 		bool IsRenderWork(void) {return fRenderWork; }
 		BString Filename(void) {return fOpenedFileName; }
 
@@ -114,6 +115,7 @@ class STLWindow : public BWindow {
 
 		bool fStlModified;
 		bool fStlValid;
+		bool fStlLoading;
 		bool fShowStat;
 		bool fShowBoundingBox;
 		bool fShowWireframe;

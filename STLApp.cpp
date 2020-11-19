@@ -69,6 +69,14 @@ STLoverApplication::MessageReceived(BMessage *message)
 		case MSG_WINDOW_CLOSED:
 		{
 			lastActivatedWindow = NULL;
+			for (int32 i = CountWindows() - 1; i >= 0 ; i--) {
+				STLWindow* window = dynamic_cast<STLWindow*>(WindowAt(i));
+				if (window != NULL) {
+					lastActivatedWindow = window;
+					window->Activate();
+					break;
+				}
+			}
 			break;
 		}
 		default:
@@ -83,7 +91,7 @@ STLoverApplication::RefsReceived(BMessage* message)
 	for (int32 i = 0; i < CountWindows(); i++) {
 		STLWindow* window = dynamic_cast<STLWindow*>(WindowAt(i));
 		if (window != NULL) {
-			if (!window->IsLoaded()) {
+			if (!window->IsLoaded() && !window->IsLoading()) {
 				window->PostMessage(message);
 				return;
 			}

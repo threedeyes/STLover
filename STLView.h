@@ -61,6 +61,9 @@ class STLView : public BGLView {
 		void DrawAxis(void);
 		void DrawOXY(float margin = 30.0);
 
+		void SetupProjection(void);
+
+		BRect boundRect;
 		BBitmap *appIcon;
 		BPoint iconPos;
 		BPoint lastMousePos;

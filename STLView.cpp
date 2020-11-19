@@ -61,19 +61,8 @@ STLView::AttachedToWindow(void)
 
 	LockGL();
 	BGLView::AttachedToWindow();
-
-	glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
-	glClearDepth(1.0);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel(GL_SMOOTH);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	
-	gluPerspective(FOV, (GLfloat)Bounds().Width() / (GLfloat)Bounds().Height(),
-		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
-
-	glMatrixMode(GL_MODELVIEW);
+	boundRect = Bounds();
+	SetupProjection();
 
 	float Light_Ambient[]=  { 1.0f, 0.9f, 1.0f, 1.0f };
 	float Light_Diffuse[]=  { 1.0f, 0.9f, 1.0f, 1.0f };
@@ -88,21 +77,31 @@ STLView::AttachedToWindow(void)
 }
 
 void
+STLView::SetupProjection(void)
+{
+	glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
+	glClearDepth(1.0);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_DEPTH_TEST);
+	glShadeModel(GL_SMOOTH);
+	glViewport(0, 0, boundRect.Width(), boundRect.Height());
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
+		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
+
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void
 STLView::FrameResized(float Width, float Height)
 {
 	LockGL();
 	BGLView::FrameResized(Width, Height);
-
-	glViewport(0, 0, Width, Height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	gluPerspective(FOV, (GLfloat)Bounds().Width() / (GLfloat)Bounds().Height(),
-		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
-
-	glMatrixMode(GL_MODELVIEW);
+	boundRect = Bounds();
+	SetupProjection();
 	needUpdate = true;
-
 	UnlockGL();
 	Render();
 }
@@ -170,9 +169,12 @@ STLView::Reset(bool scale, bool rotate, bool pan)
 void
 STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
 {
+	LockGL();
 	stlObject = _stl;
 	stlObjectView = _stlView;
+	SetupProjection();
 	Reset();
+	UnlockGL();
 }
 
 void
