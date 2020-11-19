@@ -1,2 +1,2 @@
 # STLover
-STLover - Simple STL Viewer for Haiku
+STLover - A powerful tool for viewing and manipulating 3D STL models

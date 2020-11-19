@@ -1,4 +1,4 @@
-/*  STLover - Simple STL Viewer
+/*  STLover - A powerful tool for viewing and manipulating 3D STL models
  *  Copyright (C) 2020 Gerasim Troeglazov <3dEyes@gmail.com>
  *
  *  This program is free software; you can redistribute it and/or modify
