@@ -4,12 +4,12 @@ resource app_signature "application/x-vnd.stlover";
 
 resource app_version {
 	major  = 0,
-	middle = 4,
+	middle = 5,
 	minor  = 0,
 	variety = 0,
 	internal = 0,
-	short_info = "0.4.0",
-	long_info = "STLover"
+	short_info = "STLover",
+	long_info = "A powerful tool for viewing and manipulating 3D STL models"
 };
 
 resource file_types message {
