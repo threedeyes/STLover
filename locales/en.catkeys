@@ -1,0 +1,131 @@
+1	English	application/x-vnd.stlover	2630605460
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
+Best fit	STLoverMainWindow		Best fit
+Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
+On the Middle	STLoverMainWindow		On the Middle
+Reset view	STLoverMainWindow		Reset view
+Zoom in	STLoverMainWindow		Zoom in
+Move by	STLoverMainWindow		Move by
+Put on the Middle	STLoverMainWindow		Put on the Middle
+Reload	STLoverMainWindow		Reload
+∆Z:	STLoverMainWindow		∆Z:
+View	STLoverMainWindow		View
+Axis scale	STLoverMainWindow		Axis scale
+Add facets to fill holes	STLoverRepairWindow		Add facets to fill holes
+Y-axis:	STLoverMainWindow		Y-axis:
+Show axes	STLoverMainWindow		Show axes
+Repair	STLoverMainWindow		Repair
+∆Y:	STLoverMainWindow		∆Y:
+Right view	STLoverMainWindow		Right view
+Length:	STLoverStatView		Length:
+Axis scaling…	STLoverMainWindow		Axis scaling…
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Rotate…	STLoverMainWindow		Rotate…
+Quit	STLoverMainWindow		Quit
+Save changes to the document	STLoverMainWindow		Save changes to the document
+Rotate	STLoverMainWindow		Rotate
+Drop STL files here	STLoverMainWindow		Drop STL files here
+Scale factor:	STLoverMainWindow		Scale factor:
+∆X:	STLoverMainWindow		∆X:
+Cancel	STLoverMainWindow		Cancel
+File	STLoverStatView		File
+Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
+Scale…	STLoverMainWindow		Scale…
+STL file	STLoverApplication		STL file
+Repair…	STLoverMainWindow		Repair…
+Edges fixed:	STLoverStatView		Edges fixed:
+Min Y:	STLoverStatView		Min Y:
+Wireframe	STLoverMainWindow		Wireframe
+Unknown file format!	STLoverMainWindow		Unknown file format!
+Check and fix normal values	STLoverRepairWindow		Check and fix normal values
+Amount to increment tolerance after iteration	STLoverRepairWindow		Amount to increment tolerance after iteration
+Height:	STLoverStatView		Height:
+Close	STLoverMainWindow		Close
+Statistics	STLoverMainWindow		Statistics
+Custom axis scale	STLoverMainWindow		Custom axis scale
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Ok	STLoverRepairWindow		Ok
+Max X:	STLoverStatView		Max X:
+Move	STLoverMainWindow		Move
+Scale	STLoverMainWindow		Scale
+Repair	STLoverRepairWindow		Repair
+Edit title…	STLoverMainWindow		Edit title…
+Help	STLoverMainWindow		Help
+Show statistics	STLoverMainWindow		Show statistics
+Move to	STLoverMainWindow		Move to
+Open	STLoverMainWindow		Open
+Loading…	STLoverMainWindow		Loading…
+A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
+X-axis:	STLoverMainWindow		X-axis:
+Cancel	STLoverInputWindow		Cancel
+Binary	STLoverMainWindow		Binary
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Volume:	STLoverStatView		Volume:
+file as…	STLoverMainWindow		file as…
+Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfectly matched edges
+Min Z:	STLoverStatView		Min Z:
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+Scale X factor:	STLoverMainWindow		Scale X factor:
+About	STLoverMainWindow		About
+Bounding box	STLoverMainWindow		Bounding box
+Max Y:	STLoverStatView		Max Y:
+File	STLoverMainWindow		File
+Zoom out	STLoverMainWindow		Zoom out
+Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
+Plane OXY	STLoverMainWindow		Plane OXY
+Scale Y factor:	STLoverMainWindow		Scale Y factor:
+Width:	STLoverStatView		Width:
+Facets added:	STLoverStatView		Facets added:
+Degenerate facets:	STLoverStatView		Degenerate facets:
+Scale Z factor:	STLoverMainWindow		Scale Z factor:
+Axes	STLoverMainWindow		Axes
+Number of iterations for nearby check	STLoverRepairWindow		Number of iterations for nearby check
+Mirror XY	STLoverMainWindow		Mirror XY
+Tools	STLoverMainWindow		Tools
+STL Type:	STLoverStatView		STL Type:
+Disconnected:	STLoverStatView		Disconnected:
+Title:	STLoverMainWindow		Title:
+Facets:	STLoverStatView		Facets:
+Facets removed:	STLoverStatView		Facets removed:
+ASCII	STLoverMainWindow		ASCII
+Top view	STLoverMainWindow		Top view
+Save as…	STLoverMainWindow		Save as…
+To (0,0,0)	STLoverMainWindow		To (0,0,0)
+Max Z:	STLoverStatView		Max Z:
+STLover	System name		STLover
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Cancel	STLoverRepairWindow		Cancel
+Show plane OXY	STLoverMainWindow		Show plane OXY
+Facets reversed:	STLoverStatView		Facets reversed:
+Reset	STLoverMainWindow		Reset
+Z:	STLoverMainWindow		Z:
+VRML	STLoverMainWindow		VRML
+Parts:	STLoverStatView		Parts:
+Mirror YZ	STLoverMainWindow		Mirror YZ
+Z-axis:	STLoverMainWindow		Z-axis:
+Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerance to use for nearby check
+By…	STLoverMainWindow		By…
+Mirror	STLoverMainWindow		Mirror
+Save	STLoverMainWindow		Save
+to	STLoverMainWindow		to
+Title:	STLoverStatView		Title:
+Y:	STLoverMainWindow		Y:
+Mirror XZ	STLoverMainWindow		Mirror XZ
+Normals fixed:	STLoverStatView		Normals fixed:
+Ok	STLoverInputWindow		Ok
+Backward edges:	STLoverStatView		Backward edges:
+To…	STLoverMainWindow		To…
+Object size	STLoverStatView		Object size
+STL (Binary)	STLoverMainWindow		STL (Binary)
+Name:	STLoverStatView		Name:
+X:	STLoverMainWindow		X:
+Edit title	STLoverMainWindow		Edit title
+Open…	STLoverMainWindow		Open…
+Facet status	STLoverStatView		Facet status
+Processing	STLoverStatView		Processing
+Don't save	STLoverMainWindow		Don't save
+To Center	STLoverMainWindow		To Center
+STL Title	STLoverMainWindow		STL Title
+Solid	STLoverMainWindow		Solid
+Front view	STLoverMainWindow		Front view
+Min X:	STLoverStatView		Min X:

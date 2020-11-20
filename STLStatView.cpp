@@ -19,6 +19,9 @@
 #include "STLApp.h"
 #include "STLStatView.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverStatView"
+
 STLStatView::STLStatView(BRect frame)
 	: BView(frame, "statistics", B_FOLLOW_RIGHT | B_FOLLOW_TOP_BOTTOM, B_WILL_DRAW)
 {
@@ -36,53 +39,52 @@ STLStatView::STLStatView(BRect frame)
 	vertLayout->SetInsets(1, 0, 0, 0);
 	SetLayout(vertLayout);
 
-	BStringView *fileTitle = new BStringView("file", "File");
+	BStringView *fileTitle = new BStringView("file", B_TRANSLATE("File"));
 	fileTitle->SetAlignment(B_ALIGN_CENTER);
 	fileTitle->SetFont(&font, B_FONT_FACE);
 	view->AddChild(fileTitle);
 
-	view->AddChild(new BStringView("filename", "Name:"));
-	view->AddChild(new BStringView("type", "STL Type:"));
-	view->AddChild(new BStringView("title", "Title:"));
+	view->AddChild(new BStringView("filename", B_TRANSLATE("Name:")));
+	view->AddChild(new BStringView("type", B_TRANSLATE("STL Type:")));
+	view->AddChild(new BStringView("title", B_TRANSLATE("Title:")));
 
-	BStringView *sizeTitle = new BStringView("size", "Object size");
+	BStringView *sizeTitle = new BStringView("size", B_TRANSLATE("Object size"));
 	sizeTitle->SetAlignment(B_ALIGN_CENTER);
 	sizeTitle->SetFont(&font, B_FONT_FACE);
 	view->AddChild(sizeTitle);
 
-	view->AddChild(new BStringView("min-x", "Min X:"));
-	view->AddChild(new BStringView("min-y", "Min Y:"));
-	view->AddChild(new BStringView("min-z", "Min Z:"));
-	view->AddChild(new BStringView("max-x", "Max X:"));
-	view->AddChild(new BStringView("max-y", "Max Y:"));
-	view->AddChild(new BStringView("max-z", "Max Z:"));
-	view->AddChild(new BStringView("width", "Width:"));
-	view->AddChild(new BStringView("length", "Length:"));
-	view->AddChild(new BStringView("height", "Height:"));
-	view->AddChild(new BStringView("volume", "Volume:"));
-//	view->AddChild(new BStringView("surface", "Surface area:"));
+	view->AddChild(new BStringView("min-x", B_TRANSLATE("Min X:")));
+	view->AddChild(new BStringView("min-y", B_TRANSLATE("Min Y:")));
+	view->AddChild(new BStringView("min-z", B_TRANSLATE("Min Z:")));
+	view->AddChild(new BStringView("max-x", B_TRANSLATE("Max X:")));
+	view->AddChild(new BStringView("max-y", B_TRANSLATE("Max Y:")));
+	view->AddChild(new BStringView("max-z", B_TRANSLATE("Max Z:")));
+	view->AddChild(new BStringView("width", B_TRANSLATE("Width:")));
+	view->AddChild(new BStringView("length", B_TRANSLATE("Length:")));
+	view->AddChild(new BStringView("height", B_TRANSLATE("Height:")));
+	view->AddChild(new BStringView("volume", B_TRANSLATE("Volume:")));
 
-	BStringView *facetsTitle = new BStringView("facets", "Facet status");
+	BStringView *facetsTitle = new BStringView("facets", B_TRANSLATE("Facet status"));
 	facetsTitle->SetAlignment(B_ALIGN_CENTER);
 	facetsTitle->SetFont(&font, B_FONT_FACE);
 	view->AddChild(facetsTitle);
 
-	view->AddChild(new BStringView("num_facets", "Facets:"));
-	view->AddChild(new BStringView("num_disconnected_facets", "Disconnected:"));
+	view->AddChild(new BStringView("num_facets", B_TRANSLATE("Facets:")));
+	view->AddChild(new BStringView("num_disconnected_facets", B_TRANSLATE("Disconnected:")));
 
-	BStringView *processingTitle = new BStringView("processing", "Processing");
+	BStringView *processingTitle = new BStringView("processing", B_TRANSLATE("Processing"));
 	processingTitle->SetAlignment(B_ALIGN_CENTER);
 	processingTitle->SetFont(&font, B_FONT_FACE);
 	view->AddChild(processingTitle);
 
-	view->AddChild(new BStringView("parts", "Parts:"));
-	view->AddChild(new BStringView("degenerate", "Degenerate facets:"));
-	view->AddChild(new BStringView("edges", "Edges fixed:"));
-	view->AddChild(new BStringView("removed", "Facets removed:"));
-	view->AddChild(new BStringView("added", "Facets added:"));
-	view->AddChild(new BStringView("reversed", "Facets reversed:"));
-	view->AddChild(new BStringView("backward", "Backward edges:"));
-	view->AddChild(new BStringView("normals", "Normals fixed:"));
+	view->AddChild(new BStringView("parts", B_TRANSLATE("Parts:")));
+	view->AddChild(new BStringView("degenerate", B_TRANSLATE("Degenerate facets:")));
+	view->AddChild(new BStringView("edges", B_TRANSLATE("Edges fixed:")));
+	view->AddChild(new BStringView("removed", B_TRANSLATE("Facets removed:")));
+	view->AddChild(new BStringView("added", B_TRANSLATE("Facets added:")));
+	view->AddChild(new BStringView("reversed", B_TRANSLATE("Facets reversed:")));
+	view->AddChild(new BStringView("backward", B_TRANSLATE("Backward edges:")));
+	view->AddChild(new BStringView("normals", B_TRANSLATE("Normals fixed:")));
 	
 	view->AddChild(BSpaceLayoutItem::CreateGlue());
 

@@ -20,6 +20,9 @@
 
 #include "STLToolBar.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverToolBar"
+
 STLToolBar::STLToolBar(BRect rect, orientation orient) : BToolBar(rect, orient),
 	fOrientation(orient)
 {

@@ -20,6 +20,9 @@
 #include "STLLogoView.h"
 #include "STLWindow.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverLogoView"
+
 STLLogoView::STLLogoView(BRect frame)
 	: BView(frame, "logoview", B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_PULSE_NEEDED | B_FULL_UPDATE_ON_RESIZE)
 {

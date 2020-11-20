@@ -19,26 +19,29 @@
 #include "STLApp.h"
 #include "STLRepairWindow.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverRepairWindow"
+
 STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *options)
-	: BWindow(BRect(100, 100, 400, 400), "Repair", B_MODAL_WINDOW_LOOK, B_MODAL_ALL_WINDOW_FEEL,
+	: BWindow(BRect(100, 100, 400, 400), B_TRANSLATE("Repair"), B_MODAL_WINDOW_LOOK, B_MODAL_ALL_WINDOW_FEEL,
 	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fTarget(target),
 	fMessageId(messageId),
 	fOptions(options)
 {	
-	fExactCheckBox = new BCheckBox("Only check for perfectly matched edges");
+	fExactCheckBox = new BCheckBox(B_TRANSLATE("Only check for perfectly matched edges"));
 	fExactCheckBox->SetValue(options->FindInt32("exactFlag"));
-	fNearbyCheckBox = new BCheckBox("Find and connect nearby facets. Correct bad facets");
+	fNearbyCheckBox = new BCheckBox(B_TRANSLATE("Find and connect nearby facets. Correct bad facets"));
 	fNearbyCheckBox->SetValue(options->FindInt32("nearbyFlag"));
-	fRemoveUnconnectedCheckBox = new BCheckBox("Remove facets that have 0 neighbors");
+	fRemoveUnconnectedCheckBox = new BCheckBox(B_TRANSLATE("Remove facets that have 0 neighbors"));
 	fRemoveUnconnectedCheckBox->SetValue(options->FindInt32("removeUnconnectedFlag"));
-	fAddFacetsCheckBox = new BCheckBox("Add facets to fill holes");
+	fAddFacetsCheckBox = new BCheckBox(B_TRANSLATE("Add facets to fill holes"));
 	fAddFacetsCheckBox->SetValue(options->FindInt32("fillHolesFlag"));
-	fNormalDirectionsCheckBox = new BCheckBox("Check and fix direction of normals");
+	fNormalDirectionsCheckBox = new BCheckBox(B_TRANSLATE("Check and fix direction of normals"));
 	fNormalDirectionsCheckBox->SetValue(options->FindInt32("normalDirectionsFlag"));
-	fNormalValuesCheckBox = new BCheckBox("Check and fix normal values");
+	fNormalValuesCheckBox = new BCheckBox(B_TRANSLATE("Check and fix normal values"));
 	fNormalValuesCheckBox->SetValue(options->FindInt32("normalValuesFlag"));
-	fReverseCheckBox = new BCheckBox("Reverse the directions of all facets and normals");
+	fReverseCheckBox = new BCheckBox(B_TRANSLATE("Reverse the directions of all facets and normals"));
 	fReverseCheckBox->SetValue(options->FindInt32("reverseAllFlag"));
 
 	int32 iterations = options->FindInt32("iterationsValue");
@@ -52,19 +55,19 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 	BString incrementText;
 	incrementText.SetToFormat("%g", increment);
 
-	fIterationsTextControl = new BTextControl("Number of iterations for nearby check", iterationsText.String(), NULL);
+	fIterationsTextControl = new BTextControl(B_TRANSLATE("Number of iterations for nearby check"), iterationsText.String(), NULL);
 	fIterationsTextControl->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 
-	fIncrementTextControl = new BTextControl("Amount to increment tolerance after iteration", incrementText.String(), NULL);
+	fIncrementTextControl = new BTextControl(B_TRANSLATE("Amount to increment tolerance after iteration"), incrementText.String(), NULL);
 	fIncrementTextControl->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 
-	fToleranceTextControl = new BTextControl("Initial tolerance to use for nearby check", toleranceText.String(), NULL);
+	fToleranceTextControl = new BTextControl(B_TRANSLATE("Initial tolerance to use for nearby check"), toleranceText.String(), NULL);
 	fToleranceTextControl->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 
-	fOkButton = new BButton("Ok", new BMessage(MSG_INPUT_OK));
+	fOkButton = new BButton(B_TRANSLATE("Ok"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(true);
 
-	BButton* cancelButton = new BButton("Cancel", new BMessage(B_QUIT_REQUESTED));
+	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));
 
 	float padding = be_control_look->DefaultItemSpacing();
 	BLayoutBuilder::Grid<>(this, padding, padding)

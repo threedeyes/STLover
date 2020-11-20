@@ -19,6 +19,9 @@
 #include "STLApp.h"
 #include "STLInputWindow.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
+
 STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId)
 	: BWindow(BRect(100, 100, 400, 200), title, B_MODAL_WINDOW_LOOK, B_MODAL_ALL_WINDOW_FEEL,
 	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
@@ -43,10 +46,10 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 		fValueControl3->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 	}
 
-	fOkButton = new BButton("Ok", new BMessage(MSG_INPUT_OK));
+	fOkButton = new BButton(B_TRANSLATE("Ok"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
 
-	BButton* cancelButton = new BButton("Cancel", new BMessage(B_QUIT_REQUESTED));
+	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));
 
 	float padding = be_control_look->DefaultItemSpacing();
 	if (fValues == 1) {

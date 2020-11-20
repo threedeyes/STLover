@@ -28,6 +28,7 @@
 #include <Resources.h>
 #include <AppFileInfo.h>
 #include <IconUtils.h>
+#include <Catalog.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -39,7 +40,7 @@
 #define APP_SIGNATURE "application/x-vnd.stlover"
 #define STL_SIGNATURE "application/sla"
 
-#define MAIN_WIN_TITLE "STLover"
+#define MAIN_WIN_TITLE B_TRANSLATE_SYSTEM_NAME("STLover")
 #define APP_SETTINGS_FILENAME "STLover_settings"
 
 #define MSG_FILE_OPEN					'OPEN'

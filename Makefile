@@ -1,9 +1,10 @@
 NAME = STLover
 TYPE = APP
-APP_MIME_SIG = application/x-vnd.stlviewer
+APP_MIME_SIG = application/x-vnd.stlover
 SRCS = STLApp.cpp STLWindow.cpp STLToolBar.cpp STLStatView.cpp STLInputWindow.cpp STLRepairWindow.cpp STLLogoView.cpp STLView.cpp main.cpp
 RDEFS = Resources.rdef
-LIBS = be tracker GL GLU admesh $(STDCPPLIBS)
+LIBS = be tracker localestub GL GLU admesh $(STDCPPLIBS)
+LOCALES = en ru
 OPTIMIZE := FULL
 SYMBOLS := FLASE
 DEBUGGER := FALSE

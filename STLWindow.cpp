@@ -25,6 +25,9 @@
 #include "STLRepairWindow.h"
 #include "STLToolBar.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverMainWindow"
+
 STLWindow::STLWindow()
 	: BWindow(BRect(100, 100, 100 + 720, 100 + 512), MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
@@ -53,81 +56,81 @@ STLWindow::STLWindow()
 	fMaxExtent(10)
 {
 	fMenuBar = new BMenuBar(BRect(0, 0, Bounds().Width(), 22), "menubar");
-	fMenuFile = new BMenu("File");
-	fMenuFileSaveAs = new BMenu("Save as" B_UTF8_ELLIPSIS);
-	fMenuView = new BMenu("View");
-	fMenuTools = new BMenu("Tools");
-	fMenuToolsMirror = new BMenu("Mirror");
-	fMenuToolsScale = new BMenu("Scale");
-	fMenuToolsMove = new BMenu("Move");
-	fMenuHelp = new BMenu("Help");
+	fMenuFile = new BMenu(B_TRANSLATE("File"));
+	fMenuFileSaveAs = new BMenu(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS));
+	fMenuView = new BMenu(B_TRANSLATE("View"));
+	fMenuTools = new BMenu(B_TRANSLATE("Tools"));
+	fMenuToolsMirror = new BMenu(B_TRANSLATE("Mirror"));
+	fMenuToolsScale = new BMenu(B_TRANSLATE("Scale"));
+	fMenuToolsMove = new BMenu(B_TRANSLATE("Move"));
+	fMenuHelp = new BMenu(B_TRANSLATE("Help"));
 
-	fMenuFileSaveAs->AddItem(new BMenuItem("STL (ASCII)", new BMessage(MSG_FILE_EXPORT_STLA)));
-	fMenuFileSaveAs->AddItem(new BMenuItem("STL (Binary)", new BMessage(MSG_FILE_EXPORT_STLB)));
-	fMenuFileSaveAs->AddItem(new BMenuItem("Geomview OFF", new BMessage(MSG_FILE_EXPORT_OFF)));
-	fMenuFileSaveAs->AddItem(new BMenuItem("Autodesk DXF", new BMessage(MSG_FILE_EXPORT_DXF)));
-	fMenuFileSaveAs->AddItem(new BMenuItem("Wavefront OBJ", new BMessage(MSG_FILE_EXPORT_OBJ)));
-	fMenuFileSaveAs->AddItem(new BMenuItem("VRML", new BMessage(MSG_FILE_EXPORT_VRML)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("STL (ASCII)"), new BMessage(MSG_FILE_EXPORT_STLA)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("STL (Binary)"), new BMessage(MSG_FILE_EXPORT_STLB)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("Geomview OFF"), new BMessage(MSG_FILE_EXPORT_OFF)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("Autodesk DXF"), new BMessage(MSG_FILE_EXPORT_DXF)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("Wavefront OBJ"), new BMessage(MSG_FILE_EXPORT_OBJ)));
+	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("VRML"), new BMessage(MSG_FILE_EXPORT_VRML)));
 
-	fMenuFile->AddItem(new BMenuItem("Open" B_UTF8_ELLIPSIS, new BMessage(MSG_FILE_OPEN), 'O'));
-	fMenuItemReload = new BMenuItem("Reload", new BMessage(MSG_FILE_RELOAD));
+	fMenuFile->AddItem(new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(MSG_FILE_OPEN), 'O'));
+	fMenuItemReload = new BMenuItem(B_TRANSLATE("Reload"), new BMessage(MSG_FILE_RELOAD));
 	fMenuFile->AddItem(fMenuItemReload);
 	fMenuFile->AddSeparatorItem();
-	fMenuItemSave = new BMenuItem("Save", new BMessage(MSG_FILE_SAVE), 'S');
+	fMenuItemSave = new BMenuItem(B_TRANSLATE("Save"), new BMessage(MSG_FILE_SAVE), 'S');
 	fMenuFile->AddItem(fMenuItemSave);
 	fMenuFile->AddItem(fMenuFileSaveAs);
 	fMenuFileSaveAs->SetTargetForItems(this);
 	fMenuFile->AddSeparatorItem();
-	fMenuItemClose = new BMenuItem("Close", new BMessage(MSG_FILE_CLOSE));
+	fMenuItemClose = new BMenuItem(B_TRANSLATE("Close"), new BMessage(MSG_FILE_CLOSE));
 	fMenuFile->AddItem(fMenuItemClose);
-	fMenuFile->AddItem(new BMenuItem("Quit", new BMessage(B_QUIT_REQUESTED), 'Q'));
+	fMenuFile->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 	fMenuBar->AddItem(fMenuFile);
 	fMenuFile->SetTargetForItems(this);
 
-	fMenuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
+	fMenuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
 	fMenuView->AddItem(fMenuItemSolid);
-	fMenuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
+	fMenuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
 	fMenuView->AddItem(fMenuItemWireframe);
 	fMenuView->AddSeparatorItem();
-	fMenuItemShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
+	fMenuItemShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
 	fMenuView->AddItem(fMenuItemShowAxes);
-	fMenuItemShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
+	fMenuItemShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
 	fMenuView->AddItem(fMenuItemShowOXY);
-	fMenuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
+	fMenuItemShowBox = new BMenuItem(B_TRANSLATE("Bounding box"), new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
 	fMenuView->AddSeparatorItem();
-	fMenuItemStat = new BMenuItem("Show statistics", new BMessage(MSG_VIEWMODE_STAT), 'I');
+	fMenuItemStat = new BMenuItem(B_TRANSLATE("Show statistics"), new BMessage(MSG_VIEWMODE_STAT), 'I');
 	fMenuView->AddItem(fMenuItemStat);
 	fMenuView->AddSeparatorItem();
-	fMenuItemReset = new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R');
+	fMenuItemReset = new BMenuItem(B_TRANSLATE("Reset"), new BMessage(MSG_VIEWMODE_RESETPOS), 'R');
 	fMenuView->AddItem(fMenuItemReset);
 
-	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XY", new BMessage(MSG_TOOLS_MIRROR_XY)));
-	fMenuToolsMirror->AddItem(new BMenuItem("Mirror YZ", new BMessage(MSG_TOOLS_MIRROR_YZ)));
-	fMenuToolsMirror->AddItem(new BMenuItem("Mirror XZ", new BMessage(MSG_TOOLS_MIRROR_XZ)));
+	fMenuToolsMirror->AddItem(new BMenuItem(B_TRANSLATE("Mirror XY"), new BMessage(MSG_TOOLS_MIRROR_XY)));
+	fMenuToolsMirror->AddItem(new BMenuItem(B_TRANSLATE("Mirror YZ"), new BMessage(MSG_TOOLS_MIRROR_YZ)));
+	fMenuToolsMirror->AddItem(new BMenuItem(B_TRANSLATE("Mirror XZ"), new BMessage(MSG_TOOLS_MIRROR_XZ)));
 	fMenuToolsMirror->SetTargetForItems(this);
 
-	fMenuToolsScale->AddItem(new BMenuItem("Scale" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_SCALE)));
-	fMenuToolsScale->AddItem(new BMenuItem("Axis scaling" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_SCALE_3)));
+	fMenuToolsScale->AddItem(new BMenuItem(B_TRANSLATE("Scale" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_SCALE)));
+	fMenuToolsScale->AddItem(new BMenuItem(B_TRANSLATE("Axis scaling" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_SCALE_3)));
 	fMenuToolsScale->SetTargetForItems(this);
 	
-	fMenuToolsMove->AddItem(new BMenuItem("To" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_MOVE_TO)));
-	fMenuToolsMove->AddItem(new BMenuItem("By" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_MOVE_BY)));
-	fMenuToolsMove->AddItem(new BMenuItem("To Center", new BMessage(MSG_TOOLS_MOVE_CENTER)));
-	fMenuToolsMove->AddItem(new BMenuItem("To (0,0,0)", new BMessage(MSG_TOOLS_MOVE_ZERO)));
-	fMenuToolsMove->AddItem(new BMenuItem("On the Middle", new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_MOVE_TO)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("By" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_MOVE_BY)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To Center"), new BMessage(MSG_TOOLS_MOVE_CENTER)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To (0,0,0)"), new BMessage(MSG_TOOLS_MOVE_ZERO)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("On the Middle"), new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuToolsMove->SetTargetForItems(this);
 
-	fMenuItemEditTitle = new BMenuItem("Edit title" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_EDIT_TITLE));
+	fMenuItemEditTitle = new BMenuItem(B_TRANSLATE("Edit title" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_EDIT_TITLE));
 	fMenuTools->AddItem(fMenuItemEditTitle);
 	fMenuTools->AddSeparatorItem();
 	fMenuTools->AddItem(fMenuToolsScale);
 	fMenuTools->AddItem(fMenuToolsMove);
 	fMenuTools->AddItem(fMenuToolsMirror);
-	fMenuItemRotate = new BMenuItem("Rotate" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_ROTATE));
+	fMenuItemRotate = new BMenuItem(B_TRANSLATE("Rotate" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_ROTATE));
 	fMenuTools->AddItem(fMenuItemRotate);
 	fMenuTools->AddSeparatorItem();
-	fMenuItemRepair = new BMenuItem("Repair" B_UTF8_ELLIPSIS, new BMessage(MSG_TOOLS_REPAIR));
+	fMenuItemRepair = new BMenuItem(B_TRANSLATE("Repair" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_REPAIR));
 	fMenuTools->AddItem(fMenuItemRepair);
 
 	fMenuBar->AddItem(fMenuView);
@@ -136,7 +139,7 @@ STLWindow::STLWindow()
 	fMenuBar->AddItem(fMenuTools);
 	fMenuTools->SetTargetForItems(this);
 
-	fMenuHelp->AddItem(new BMenuItem("About", new BMessage(B_ABOUT_REQUESTED)));
+	fMenuHelp->AddItem(new BMenuItem(B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED)));
 	fMenuBar->AddItem(fMenuHelp);
 	fMenuHelp->SetTargetForItems(this);
 
@@ -145,23 +148,23 @@ STLWindow::STLWindow()
 	BRect toolBarRect = Bounds();
 	toolBarRect.top = fMenuBar->Frame().bottom + 1;
 	fToolBar = new STLToolBar(toolBarRect);
-	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), "Open");
-	fToolBar->AddAction(MSG_FILE_SAVE, this, STLoverApplication::GetIcon("document-save", TOOLBAR_ICON_SIZE), "Save");
+	fToolBar->AddAction(MSG_FILE_OPEN, this, STLoverApplication::GetIcon("document-open", TOOLBAR_ICON_SIZE), B_TRANSLATE("Open"));
+	fToolBar->AddAction(MSG_FILE_SAVE, this, STLoverApplication::GetIcon("document-save", TOOLBAR_ICON_SIZE), B_TRANSLATE("Save"));
 	fToolBar->AddSeparator();
-	fToolBar->AddAction(MSG_TOOLS_EDIT_TITLE, this, STLoverApplication::GetIcon("document-edit", TOOLBAR_ICON_SIZE), "Edit title");
-	fToolBar->AddAction(MSG_TOOLS_MIRROR_XY, this, STLoverApplication::GetIcon("mirror-xy", TOOLBAR_ICON_SIZE), "Mirror XY");
-	fToolBar->AddAction(MSG_TOOLS_MIRROR_YZ, this, STLoverApplication::GetIcon("mirror-yz", TOOLBAR_ICON_SIZE), "Mirror YZ");
-	fToolBar->AddAction(MSG_TOOLS_MIRROR_XZ, this, STLoverApplication::GetIcon("mirror-xz", TOOLBAR_ICON_SIZE), "Mirror XZ");
-	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), "Put on the Middle");
-	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), "Move to");
-	fToolBar->AddAction(MSG_TOOLS_MOVE_BY, this, STLoverApplication::GetIcon("move-by", TOOLBAR_ICON_SIZE), "Move by");
-	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), "Scale");
-	fToolBar->AddAction(MSG_TOOLS_SCALE_3, this, STLoverApplication::GetIcon("scale-axis", TOOLBAR_ICON_SIZE), "Axis scale");
-	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), "Rotate");
+	fToolBar->AddAction(MSG_TOOLS_EDIT_TITLE, this, STLoverApplication::GetIcon("document-edit", TOOLBAR_ICON_SIZE), B_TRANSLATE("Edit title"));
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_XY, this, STLoverApplication::GetIcon("mirror-xy", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror XY"));
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_YZ, this, STLoverApplication::GetIcon("mirror-yz", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror YZ"));
+	fToolBar->AddAction(MSG_TOOLS_MIRROR_XZ, this, STLoverApplication::GetIcon("mirror-xz", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror XZ"));
+	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), B_TRANSLATE("Put on the Middle"));
+	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), B_TRANSLATE("Move to"));
+	fToolBar->AddAction(MSG_TOOLS_MOVE_BY, this, STLoverApplication::GetIcon("move-by", TOOLBAR_ICON_SIZE), B_TRANSLATE("Move by"));
+	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), B_TRANSLATE("Scale"));
+	fToolBar->AddAction(MSG_TOOLS_SCALE_3, this, STLoverApplication::GetIcon("scale-axis", TOOLBAR_ICON_SIZE), B_TRANSLATE("Axis scale"));
+	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), B_TRANSLATE("Rotate"));
 	fToolBar->AddSeparator();
-	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), "Repair");
+	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), B_TRANSLATE("Repair"));
 	fToolBar->AddSeparator();
-	fToolBar->AddAction(MSG_VIEWMODE_STAT, this, STLoverApplication::GetIcon("stat", TOOLBAR_ICON_SIZE), "Statistics");
+	fToolBar->AddAction(MSG_VIEWMODE_STAT, this, STLoverApplication::GetIcon("stat", TOOLBAR_ICON_SIZE), B_TRANSLATE("Statistics"));
 	fToolBar->AddGlue();
 	fToolBar->ResizeTo(toolBarRect.Width(), fToolBar->MinSize().height);
 	fToolBar->GroupLayout()->SetInsets(0);
@@ -170,20 +173,20 @@ STLWindow::STLWindow()
 	BRect viewToolBarRect = Bounds();
 	viewToolBarRect.top = fToolBar->Frame().bottom + 1;
 	fViewToolBar = new STLToolBar(viewToolBarRect, B_VERTICAL);
-	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMIN, this, STLoverApplication::GetIcon("zoom-in", TOOLBAR_ICON_SIZE), "Zoom in");
-	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMOUT, this, STLoverApplication::GetIcon("zoom-out", TOOLBAR_ICON_SIZE), "Zoom out");
-	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMFIT, this, STLoverApplication::GetIcon("zoom-fit-best", TOOLBAR_ICON_SIZE), "Best fit");
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMIN, this, STLoverApplication::GetIcon("zoom-in", TOOLBAR_ICON_SIZE), B_TRANSLATE("Zoom in"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMOUT, this, STLoverApplication::GetIcon("zoom-out", TOOLBAR_ICON_SIZE), B_TRANSLATE("Zoom out"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_ZOOMFIT, this, STLoverApplication::GetIcon("zoom-fit-best", TOOLBAR_ICON_SIZE), B_TRANSLATE("Best fit"));
 	fViewToolBar->AddSeparator();
-	fViewToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), "Reset view");
+	fViewToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), B_TRANSLATE("Reset view"));
 	fViewToolBar->AddSeparator();
-	fViewToolBar->AddAction(MSG_VIEWMODE_WIREFRAME_TOGGLE, this, STLoverApplication::GetIcon("wireframe", TOOLBAR_ICON_SIZE), "Wireframe");
-	fViewToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), "Show axes");
-	fViewToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), "Show plane OXY");
-	fViewToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), "Bounding box");
+	fViewToolBar->AddAction(MSG_VIEWMODE_WIREFRAME_TOGGLE, this, STLoverApplication::GetIcon("wireframe", TOOLBAR_ICON_SIZE), B_TRANSLATE("Wireframe"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), B_TRANSLATE("Show axes"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), B_TRANSLATE("Show plane OXY"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), B_TRANSLATE("Bounding box"));
 	fViewToolBar->AddSeparator();
-	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), "Front view");
-	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), "Right view");
-	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), "Top view");
+	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), B_TRANSLATE("Front view"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), B_TRANSLATE("Right view"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), B_TRANSLATE("Top view"));
 	fViewToolBar->AddGlue();
 	fViewToolBar->ResizeTo(fViewToolBar->MinSize().width, viewToolBarRect.Height());
 	fViewToolBar->GroupLayout()->SetInsets(0);
@@ -197,7 +200,7 @@ STLWindow::STLWindow()
 	fStlView->Hide();
 
 	fStlLogoView = new STLLogoView(stlRect);
-	fStlLogoView->SetText("Drop STL files here");
+	fStlLogoView->SetText(B_TRANSLATE("Drop STL files here"));
 	fStlLogoView->SetTextColor(255, 255, 255);
 	AddChild(fStlLogoView);
 
@@ -347,8 +350,11 @@ bool
 STLWindow::QuitRequested()
 {
 	if (fStlModified) {
-		BAlert* alert = new BAlert("Save", "Save changes to current icon before closing?",
-			"Cancel", "Don't save", "Save", B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
+		BPath path(fOpenedFileName);
+		BString alertText(B_TRANSLATE("Save changes to the document"));
+		alertText << " \"" << path.Leaf() << "\"?";
+		BAlert* alert = new BAlert(B_TRANSLATE("Save"), alertText,
+			B_TRANSLATE("Cancel"), B_TRANSLATE("Don't save"), B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
 		alert->SetShortcut(0, B_ESCAPE);
 		int32 choice = alert->Go();
 		switch (choice) {
@@ -490,21 +496,21 @@ STLWindow::MessageReceived(BMessage *message)
 				fSaveFilePanel->SetSaveText("");
 			}
 			BPath openedFile(fOpenedFileName);
-			BString title("Save ");
-			title << openedFile.Leaf() << " to ";
+			BString title(B_TRANSLATE("Save"));
+			title << " " << openedFile.Leaf() << " " << B_TRANSLATE("to") << " ";
 			if (message->what == MSG_FILE_EXPORT_STLA)
-				title << "STL (ASCII)";
+				title << B_TRANSLATE("STL (ASCII)");
 			if (message->what == MSG_FILE_EXPORT_STLB)
-				title << "STL (Binary)";
+				title << B_TRANSLATE("STL (Binary)");
 			if (message->what == MSG_FILE_EXPORT_DXF)
-				title << "Autodesk DXF";
+				title << B_TRANSLATE("Autodesk DXF");
 			if (message->what == MSG_FILE_EXPORT_VRML)
-				title << "VRML";
+				title << B_TRANSLATE("VRML");
 			if (message->what == MSG_FILE_EXPORT_OFF)
-				title << "Geomview OFF";
+				title << B_TRANSLATE("Geomview OFF");
 			if (message->what == MSG_FILE_EXPORT_OBJ)
-				title << "Wavefront OBJ";
-			title << " file as...";
+				title << B_TRANSLATE("Wavefront OBJ");
+			title << " " << B_TRANSLATE("file as" B_UTF8_ELLIPSIS);
 			fSaveFilePanel->Window()->SetTitle(title.String());
 			fSaveFilePanel->Show();
 			delete fileMsg;
@@ -548,11 +554,11 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			if (fErrorTimeCounter > 1) {
 				fErrorTimeCounter--;
-				fStlLogoView->SetText("Unknown file format!");
+				fStlLogoView->SetText(B_TRANSLATE("Unknown file format!"));
 				fStlLogoView->SetTextColor(255, 25, 25);
 			} else if (fErrorTimeCounter == 1) {
 				fErrorTimeCounter--;
-				fStlLogoView->SetText("Drop STL files here");
+				fStlLogoView->SetText(B_TRANSLATE("Drop STL files here"));
 				fStlLogoView->SetTextColor(255, 255, 255);
 			}
 			break;
@@ -632,7 +638,7 @@ STLWindow::MessageReceived(BMessage *message)
 		case B_ABOUT_REQUESTED:
 		{
 			BAboutWindow* wind = new BAboutWindow(MAIN_WIN_TITLE, APP_SIGNATURE);
-			wind->AddCopyright(2020, "Gerasim Troeglazov (3dEyes**)");
+			wind->AddCopyright(2020, B_TRANSLATE("Gerasim Troeglazov (3dEyes**)"));
 			wind->AddDescription(
 				"This program is free software; you can redistribute it and/or modify "
 				"it under the terms of the GNU General Public License as published by "
@@ -776,8 +782,8 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_EDIT_TITLE:
 		{
-			STLInputWindow *input = new STLInputWindow("STL Title", 1, this, MSG_TOOLS_TITLE_SET);
-			input->SetTextValue(0, "Title:", (const char*)fStlObject->stats.header);
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("STL Title"), 1, this, MSG_TOOLS_TITLE_SET);
+			input->SetTextValue(0, B_TRANSLATE("Title:"), (const char*)fStlObject->stats.header);
 			input->Show();
 			break;
 		}
@@ -793,8 +799,8 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE:
 		{
-			STLInputWindow *input = new STLInputWindow("Scale", 1, this, MSG_TOOLS_SCALE_SET);
-			input->SetTextValue(0, "Scale factor:", "1.0");
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Scale"), 1, this, MSG_TOOLS_SCALE_SET);
+			input->SetTextValue(0, B_TRANSLATE("Scale factor:"), "1.0");
 			input->Show();
 			break;
 		}
@@ -812,10 +818,10 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE_3:
 		{
-			STLInputWindow *input = new STLInputWindow("Custom axis scale", 3, this, MSG_TOOLS_SCALE_SET_3);
-			input->SetTextValue(0, "Scale X factor:", "1.0");
-			input->SetTextValue(1, "Scale Y factor:", "1.0");
-			input->SetTextValue(2, "Scale Z factor:", "1.0");
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Custom axis scale"), 3, this, MSG_TOOLS_SCALE_SET_3);
+			input->SetTextValue(0, B_TRANSLATE("Scale X factor:"), "1.0");
+			input->SetTextValue(1, B_TRANSLATE("Scale Y factor:"), "1.0");
+			input->SetTextValue(2, B_TRANSLATE("Scale Z factor:"), "1.0");
 			input->Show();
 			break;
 		}
@@ -838,10 +844,10 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_ROTATE:
 		{
-			STLInputWindow *input = new STLInputWindow("Rotate", 3, this, MSG_TOOLS_ROTATE_SET);
-			input->SetTextValue(0, "X-axis:", "0.0");
-			input->SetTextValue(1, "Y-axis:", "0.0");
-			input->SetTextValue(2, "Z-axis:", "0.0");
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Rotate"), 3, this, MSG_TOOLS_ROTATE_SET);
+			input->SetTextValue(0, B_TRANSLATE("X-axis:"), "0.0");
+			input->SetTextValue(1, B_TRANSLATE("Y-axis:"), "0.0");
+			input->SetTextValue(2, B_TRANSLATE("Z-axis:"), "0.0");
 			input->Show();
 			break;
 		}
@@ -888,10 +894,10 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_TO:
 		{
-			STLInputWindow *input = new STLInputWindow("Move to", 3, this, MSG_TOOLS_MOVE_TO_SET);
-			input->SetFloatValue(0, "X:", fStlObject->stats.min.x);
-			input->SetFloatValue(1, "Y:", fStlObject->stats.min.y);
-			input->SetFloatValue(2, "Z:", fStlObject->stats.min.z);
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), 3, this, MSG_TOOLS_MOVE_TO_SET);
+			input->SetFloatValue(0, B_TRANSLATE("X:"), fStlObject->stats.min.x);
+			input->SetFloatValue(1, B_TRANSLATE("Y:"), fStlObject->stats.min.y);
+			input->SetFloatValue(2, B_TRANSLATE("Z:"), fStlObject->stats.min.z);
 			input->Show();
 			break;
 		}
@@ -912,10 +918,10 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_BY:
 		{
-			STLInputWindow *input = new STLInputWindow("Move by", 3, this, MSG_TOOLS_MOVE_BY_SET);
-			input->SetFloatValue(0, "∆X:", 0);
-			input->SetFloatValue(1, "∆Y:", 0);
-			input->SetFloatValue(2, "∆Z:", 0);
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move by"), 3, this, MSG_TOOLS_MOVE_BY_SET);
+			input->SetFloatValue(0, B_TRANSLATE("∆X:"), 0);
+			input->SetFloatValue(1, B_TRANSLATE("∆Y:"), 0);
+			input->SetFloatValue(2, B_TRANSLATE("∆Z:"), 0);
 			input->Show();
 			break;
 		}
@@ -1003,36 +1009,36 @@ STLWindow::MessageReceived(BMessage *message)
 
 			BPopUpMenu* menu = new BPopUpMenu("PopUpMenu",false,false);
 
-			BMenuItem *_menuItemSolid = new BMenuItem("Solid", new BMessage(MSG_VIEWMODE_SOLID));
+			BMenuItem *_menuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
 			_menuItemSolid->SetMarked(!fShowWireframe);
-			BMenuItem *_menuItemWireframe = new BMenuItem("Wireframe", new BMessage(MSG_VIEWMODE_WIREFRAME));
+			BMenuItem *_menuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
 			_menuItemWireframe->SetMarked(fShowWireframe);
 
 			menu->AddItem(_menuItemSolid);
 			menu->AddItem(_menuItemWireframe);
 			menu->AddSeparatorItem();
 
-			BMenuItem *_menuItemfShowAxes = new BMenuItem("Axes", new BMessage(MSG_VIEWMODE_AXES));
+			BMenuItem *_menuItemfShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
 			_menuItemfShowAxes->SetMarked(fShowAxes);
-			BMenuItem *_menuItemfShowOXY = new BMenuItem("Plane OXY", new BMessage(MSG_VIEWMODE_OXY));
+			BMenuItem *_menuItemfShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
 			_menuItemfShowOXY->SetMarked(fShowOXY);
-			BMenuItem *_menuItemShowBox = new BMenuItem("Bounding box", new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
+			BMenuItem *_menuItemShowBox = new BMenuItem(B_TRANSLATE("Bounding box"), new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 			_menuItemShowBox->SetMarked(fShowBoundingBox);
 
 			menu->AddItem(_menuItemfShowAxes);
 			menu->AddItem(_menuItemfShowOXY);
 			menu->AddItem(_menuItemShowBox);
 			menu->AddSeparatorItem();
-			menu->AddItem(new BMenuItem("Reset", new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
+			menu->AddItem(new BMenuItem(B_TRANSLATE("Reset"), new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
 			menu->AddSeparatorItem();
-			menu->AddItem(new BMenuItem("Edit title...", new BMessage(MSG_TOOLS_EDIT_TITLE)));
+			menu->AddItem(new BMenuItem(B_TRANSLATE("Edit title" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_EDIT_TITLE)));
 			menu->AddSeparatorItem();
 			menu->AddItem(fMenuToolsScale);
 			menu->AddItem(fMenuToolsMove);
 			menu->AddItem(fMenuToolsMirror);
-			menu->AddItem(new BMenuItem("Rotate...", new BMessage(MSG_TOOLS_ROTATE)));
+			menu->AddItem(new BMenuItem(B_TRANSLATE("Rotate" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_ROTATE)));
 			menu->AddSeparatorItem();
-			menu->AddItem(new BMenuItem("Repair", new BMessage(MSG_TOOLS_REPAIR)));
+			menu->AddItem(new BMenuItem(B_TRANSLATE("Repair" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_REPAIR)));
 			menu->SetTargetForItems(this);
 
 			menu->Go(fStlView->ConvertToScreen(point), true, false, true);
@@ -1120,7 +1126,7 @@ STLWindow::OpenFile(const char *filename)
 	CloseFile();
 
 	fOpenedFileName.SetTo(filename);
-	fStlLogoView->SetText("Loading" B_UTF8_ELLIPSIS);
+	fStlLogoView->SetText(B_TRANSLATE("Loading" B_UTF8_ELLIPSIS));
 
 	fStlLoading = true;
 	fFileLoaderThread = spawn_thread(_FileLoaderFunction, "loaderThread", B_NORMAL_PRIORITY, (void*)this);
@@ -1147,7 +1153,7 @@ STLWindow::CloseFile(void)
 		stl_close(stl);
 		free (stl);
 
-		fStlLogoView->SetText("Drop STL files here");
+		fStlLogoView->SetText(B_TRANSLATE("Drop STL files here"));
 		fStlLogoView->SetTextColor(255, 255, 255);
 		fErrorTimeCounter = 0;
 		UpdateUI();
@@ -1163,7 +1169,7 @@ STLWindow::UpdateStats(void)
 
 	BPath path(fOpenedFileName);
 	fStatView->SetTextValue("filename", isLoaded ? path.Leaf() : 0);
-	fStatView->SetTextValue("type", isLoaded ? (fStlObject->stats.type == binary ? "Binary" : "ASCII") : "");
+	fStatView->SetTextValue("type", isLoaded ? (fStlObject->stats.type == binary ? B_TRANSLATE("Binary") : B_TRANSLATE("ASCII")) : "");
 	fStatView->SetTextValue("title", isLoaded ? fStlObject->stats.header : "");
 
 	fStatView->SetFloatValue("min-x", isLoaded ? fStlObject->stats.min.x : 0);

@@ -1,0 +1,131 @@
+1	Russian	application/x-vnd.stlover	2630605460
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Найти и соеденить соседние грани. Исправить повреждённые
+Best fit	STLoverMainWindow		Оптимальный размер
+Remove facets that have 0 neighbors	STLoverRepairWindow		Удалить грани, не имеющие соседних
+On the Middle	STLoverMainWindow		На середину
+Reset view	STLoverMainWindow		Начальный вид
+Zoom in	STLoverMainWindow		Увеличить
+Move by	STLoverMainWindow		Относительное перемещение
+Put on the Middle	STLoverMainWindow		Поместить на середину
+Reload	STLoverMainWindow		Переоткрыть
+∆Z:	STLoverMainWindow		Смещение по Z:
+View	STLoverMainWindow		Вид
+Axis scale	STLoverMainWindow		Масштабировать по осям
+Add facets to fill holes	STLoverRepairWindow		Добавить грани для заполнения дыр
+Y-axis:	STLoverMainWindow		Ось Y:
+Show axes	STLoverMainWindow		Показать оси координат
+Repair	STLoverMainWindow		Восстановить
+∆Y:	STLoverMainWindow		Смещение по Y:
+Right view	STLoverMainWindow		Вид справа
+Length:	STLoverStatView		Длина:
+Axis scaling…	STLoverMainWindow		Масштабировать по осям…
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Rotate…	STLoverMainWindow		Вращать…
+Quit	STLoverMainWindow		Выход
+Save changes to the document	STLoverMainWindow		Сохранить изменения в документе
+Rotate	STLoverMainWindow		Вращать
+Drop STL files here	STLoverMainWindow		Вы можете бросить STL файлы сюда
+Scale factor:	STLoverMainWindow		Коэффициент масштабирования:
+∆X:	STLoverMainWindow		Смещение по X:
+Cancel	STLoverMainWindow		Отмена
+File	STLoverStatView		Файл
+Check and fix direction of normals	STLoverRepairWindow		Проверить и исправить направление нормалей
+Scale…	STLoverMainWindow		Масштабировать…
+STL file	STLoverApplication		STL файл
+Repair…	STLoverMainWindow		Восстановить…
+Edges fixed:	STLoverStatView		Исправлено рёбер:
+Min Y:	STLoverStatView		Мин. Y:
+Wireframe	STLoverMainWindow		Каркас
+Unknown file format!	STLoverMainWindow		Неизвестный формат файла!
+Check and fix normal values	STLoverRepairWindow		Проверить и исправить значение нормалей
+Amount to increment tolerance after iteration	STLoverRepairWindow		Приращение допуска после каждой итерации
+Height:	STLoverStatView		Высота:
+Close	STLoverMainWindow		Закрыть
+Statistics	STLoverMainWindow		Статистика
+Custom axis scale	STLoverMainWindow		Масштабирование по осям
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Герасим Троеглазов (3dEyes**)
+Ok	STLoverRepairWindow		Ок
+Max X:	STLoverStatView		Макс. X:
+Move	STLoverMainWindow		Переместить
+Scale	STLoverMainWindow		Масштабировать
+Repair	STLoverRepairWindow		Восстановить
+Edit title…	STLoverMainWindow		Редактировать заголовок…
+Help	STLoverMainWindow		Справка
+Show statistics	STLoverMainWindow		Показать статистику
+Move to	STLoverMainWindow		Переместить в точку
+Open	STLoverMainWindow		Открыть
+Loading…	STLoverMainWindow		Загрузка…
+A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
+X-axis:	STLoverMainWindow		Ось X:
+Cancel	STLoverInputWindow		Отмена
+Binary	STLoverMainWindow		Двоичный
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Volume:	STLoverStatView		Объём:
+file as…	STLoverMainWindow		файл как…
+Only check for perfectly matched edges	STLoverRepairWindow		Проверять только идеально совпадающие грани
+Min Z:	STLoverStatView		Мин. Z:
+STL (ASCII)	STLoverMainWindow		STL (Текстовый)
+Scale X factor:	STLoverMainWindow		Scale X factor:
+About	STLoverMainWindow		О программе
+Bounding box	STLoverMainWindow		Границы объекта
+Max Y:	STLoverStatView		Макс. Y:
+File	STLoverMainWindow		Файл
+Zoom out	STLoverMainWindow		Уменьшить
+Reverse the directions of all facets and normals	STLoverRepairWindow		Изменить направление всех граней и нормалей
+Plane OXY	STLoverMainWindow		Плоскость OXY
+Scale Y factor:	STLoverMainWindow		Масштаб по оси Y:
+Width:	STLoverStatView		Ширина:
+Facets added:	STLoverStatView		Добавлено граней:
+Degenerate facets:	STLoverStatView		Вырожденных граней:
+Scale Z factor:	STLoverMainWindow		Масштаб по оси Z:
+Axes	STLoverMainWindow		Оси координат
+Number of iterations for nearby check	STLoverRepairWindow		Количество итераций при поиске соседних граней
+Mirror XY	STLoverMainWindow		Зеркалировать относительно плоскости XY
+Tools	STLoverMainWindow		Инструменты
+STL Type:	STLoverStatView		Формат:
+Disconnected:	STLoverStatView		Разъединённых граней:
+Title:	STLoverMainWindow		Заголовок:
+Facets:	STLoverStatView		Всего граней:
+Facets removed:	STLoverStatView		Удалено граней:
+ASCII	STLoverMainWindow		Текстовый
+Top view	STLoverMainWindow		Вид сверху
+Save as…	STLoverMainWindow		Сохранить как…
+To (0,0,0)	STLoverMainWindow		В точку (0,0,0)
+Max Z:	STLoverStatView		Макс. Z:
+STLover	System name		STLover
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Cancel	STLoverRepairWindow		Отмена
+Show plane OXY	STLoverMainWindow		Показать плоскость OXY
+Facets reversed:	STLoverStatView		Изменено направлений:
+Reset	STLoverMainWindow		Начальный вид
+Z:	STLoverMainWindow		Z:
+VRML	STLoverMainWindow		VRML
+Parts:	STLoverStatView		Частей:
+Mirror YZ	STLoverMainWindow		Зеркалировать относительно плоскости YZ
+Z-axis:	STLoverMainWindow		Ось Z:
+Initial tolerance to use for nearby check	STLoverRepairWindow		Начальный допуск при поиске соседних граней
+By…	STLoverMainWindow		Относительно на…
+Mirror	STLoverMainWindow		Отзеркалировать
+Save	STLoverMainWindow		Сохранить
+to	STLoverMainWindow		в
+Title:	STLoverStatView		Заголовок:
+Y:	STLoverMainWindow		Y:
+Mirror XZ	STLoverMainWindow		Зеркалировать относительно плоскости XZ
+Normals fixed:	STLoverStatView		Исправлено нормалей:
+Ok	STLoverInputWindow		Ок
+Backward edges:	STLoverStatView		Обратных рёбер:
+To…	STLoverMainWindow		В точку…
+Object size	STLoverStatView		Размеры
+STL (Binary)	STLoverMainWindow		STL (Двоичный)
+Name:	STLoverStatView		Имя:
+X:	STLoverMainWindow		X:
+Edit title	STLoverMainWindow		Редактировать заголовок
+Open…	STLoverMainWindow		Открыть…
+Facet status	STLoverStatView		Грани
+Processing	STLoverStatView		Обработка
+Don't save	STLoverMainWindow		Не сохранять
+To Center	STLoverMainWindow		Центрировать
+STL Title	STLoverMainWindow		STL Заголовок
+Solid	STLoverMainWindow		Заливка
+Front view	STLoverMainWindow		Вид спереди
+Min X:	STLoverStatView		Мин. X:

@@ -20,6 +20,9 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverGLView"
+
 STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
 	needUpdate(true),

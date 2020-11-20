@@ -19,6 +19,9 @@
 #include "STLApp.h"
 #include "STLWindow.h"
 
+#undef  B_TRANSLATION_CONTEXT
+#define B_TRANSLATION_CONTEXT          "STLoverApplication"
+
 STLoverApplication::STLoverApplication() : BApplication(APP_SIGNATURE),
 	lastActivatedWindow(NULL)
 {
@@ -142,8 +145,8 @@ STLoverApplication::InstallMimeType(void)
 	if (ret != B_OK && ret != B_FILE_EXISTS)
 		return;
 
-	mime.SetShortDescription("STL file");
-	mime.SetLongDescription("A file format native to the STereoLithography CAD software");
+	mime.SetShortDescription(B_TRANSLATE("STL file"));
+	mime.SetLongDescription(B_TRANSLATE("A file format native to the STereoLithography CAD software"));
 
 	BMessage message('extn');
 	message.AddString("extensions", "stl");
