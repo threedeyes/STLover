@@ -4,8 +4,8 @@ resource app_signature "application/x-vnd.stlover";
 
 resource app_version {
 	major  = 0,
-	middle = 5,
-	minor  = 1,
+	middle = 6,
+	minor  = 0,
 	variety = 0,
 	internal = 0,
 	short_info = "STLover",
