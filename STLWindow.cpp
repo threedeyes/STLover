@@ -81,7 +81,7 @@ STLWindow::STLWindow()
 	fMenuFile->AddItem(fMenuFileSaveAs);
 	fMenuFileSaveAs->SetTargetForItems(this);
 	fMenuFile->AddSeparatorItem();
-	fMenuItemClose = new BMenuItem(B_TRANSLATE("Close"), new BMessage(MSG_FILE_CLOSE));
+	fMenuItemClose = new BMenuItem(B_TRANSLATE("Close"), new BMessage(MSG_FILE_CLOSE), 'W');
 	fMenuFile->AddItem(fMenuItemClose);
 	fMenuFile->AddItem(new BMenuItem(B_TRANSLATE("Quit"), new BMessage(B_QUIT_REQUESTED), 'Q'));
 	fMenuBar->AddItem(fMenuFile);
