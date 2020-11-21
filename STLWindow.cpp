@@ -351,8 +351,8 @@ STLWindow::QuitRequested()
 {
 	if (fStlModified) {
 		BPath path(fOpenedFileName);
-		BString alertText(B_TRANSLATE("Save changes to the document"));
-		alertText << " \"" << path.Leaf() << "\"?";
+		BString alertText(B_TRANSLATE("Save changes to document '%filename%' ?"));
+		alertText.ReplaceFirst("%filename%", path.Leaf());
 		BAlert* alert = new BAlert(B_TRANSLATE("Save"), alertText,
 			B_TRANSLATE("Cancel"), B_TRANSLATE("Don't save"), B_TRANSLATE("Save"), B_WIDTH_AS_USUAL, B_OFFSET_SPACING, B_WARNING_ALERT);
 		alert->SetShortcut(0, B_ESCAPE);
@@ -496,21 +496,21 @@ STLWindow::MessageReceived(BMessage *message)
 				fSaveFilePanel->SetSaveText("");
 			}
 			BPath openedFile(fOpenedFileName);
-			BString title(B_TRANSLATE("Save"));
-			title << " " << openedFile.Leaf() << " " << B_TRANSLATE("to") << " ";
+			BString title(B_TRANSLATE(
+				"Save '%document%' as a '%format%' file as" B_UTF8_ELLIPSIS));
+			title.ReplaceFirst("%document%", openedFile.Leaf());
 			if (message->what == MSG_FILE_EXPORT_STLA)
-				title << B_TRANSLATE("STL (ASCII)");
+				title.ReplaceFirst("%format%", B_TRANSLATE("STL (ASCII)"));
 			if (message->what == MSG_FILE_EXPORT_STLB)
-				title << B_TRANSLATE("STL (Binary)");
+				title.ReplaceFirst("%format%", B_TRANSLATE("STL (Binary)"));
 			if (message->what == MSG_FILE_EXPORT_DXF)
-				title << B_TRANSLATE("Autodesk DXF");
+				title.ReplaceFirst("%format%", B_TRANSLATE("Autodesk DXF"));
 			if (message->what == MSG_FILE_EXPORT_VRML)
-				title << B_TRANSLATE("VRML");
+				title.ReplaceFirst("%format%", B_TRANSLATE("VRML"));
 			if (message->what == MSG_FILE_EXPORT_OFF)
-				title << B_TRANSLATE("Geomview OFF");
+				title.ReplaceFirst("%format%", B_TRANSLATE("Geomview OFF"));
 			if (message->what == MSG_FILE_EXPORT_OBJ)
-				title << B_TRANSLATE("Wavefront OBJ");
-			title << " " << B_TRANSLATE("file as" B_UTF8_ELLIPSIS);
+				title.ReplaceFirst("%format%", B_TRANSLATE("Wavefront OBJ"));
 			fSaveFilePanel->Window()->SetTitle(title.String());
 			fSaveFilePanel->Show();
 			delete fileMsg;
