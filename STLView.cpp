@@ -82,11 +82,6 @@ STLView::AttachedToWindow(void)
 void
 STLView::SetupProjection(void)
 {
-	glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
-	glClearDepth(1.0);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_DEPTH_TEST);
-	glShadeModel(GL_SMOOTH);
 	glViewport(0, 0, boundRect.Width(), boundRect.Height());
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -260,18 +255,17 @@ STLView::DrawAxis(void)
 	float coneSize = radius / 50.0;
 
 	glLineWidth(1);
-	glColor4f (1, 0, 0, 1);
+	
 	glBegin(GL_LINES);
+	glColor4f (1, 0, 0, 1);
 	glVertex3f(xShift, yShift - radius, zShift);
 	glVertex3f(xShift, yShift + radius, zShift);
-	glEnd();
+	
 	glColor4f (0, 1, 0, 1);
-	glBegin(GL_LINES);
 	glVertex3f(xShift - radius, yShift, zShift);
 	glVertex3f(xShift + radius, yShift, zShift);
-	glEnd();
+	
 	glColor4f (1, 1, 0, 1);
-	glBegin(GL_LINES);
 	glVertex3f(xShift, yShift, zShift - radius);
 	glVertex3f(xShift, yShift, zShift + radius);
 	glEnd();
@@ -304,12 +298,17 @@ void
 STLView::Render(void)
 {
 	if (!needUpdate)
-    	return;
+		return;
 
 	if (stlWindow->IsLoaded()) {
 		LockGL();
 		needUpdate = false;
 
+		glEnable(GL_DEPTH_TEST);
+		
+		//glShadeModel(GL_SMOOTH);
+		glShadeModel(GL_FLAT);
+		
 		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
@@ -317,8 +316,7 @@ STLView::Render(void)
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
 
-		glPolygonMode(GL_FRONT, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
-		glPolygonMode(GL_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
+		glPolygonMode(GL_FRONT_AND_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
 		glEnable(GL_LIGHTING);
 
@@ -333,9 +331,7 @@ STLView::Render(void)
 
 		glDisable(GL_LIGHTING);
 
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		glEnable(GL_LINE_SMOOTH);
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		if (showOXY)
 			DrawOXY();
@@ -346,10 +342,7 @@ STLView::Render(void)
 		if (showBox)
 			DrawBox();
 
-		glDisable(GL_LINE_SMOOTH);
-		glDisable(GL_BLEND);
-
-		SwapBuffers();	
+		SwapBuffers();
 		UnlockGL();
 	}
 }
