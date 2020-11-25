@@ -254,22 +254,6 @@ STLView::DrawAxis(void)
 			stlObjectView->stats.size.z * stlObjectView->stats.size.z) * 1.2;
 	float coneSize = radius / 50.0;
 
-	glLineWidth(1);
-	
-	glBegin(GL_LINES);
-	glColor4f (1, 0, 0, 1);
-	glVertex3f(xShift, yShift - radius, zShift);
-	glVertex3f(xShift, yShift + radius, zShift);
-	
-	glColor4f (0, 1, 0, 1);
-	glVertex3f(xShift - radius, yShift, zShift);
-	glVertex3f(xShift + radius, yShift, zShift);
-	
-	glColor4f (1, 1, 0, 1);
-	glVertex3f(xShift, yShift, zShift - radius);
-	glVertex3f(xShift, yShift, zShift + radius);
-	glEnd();
-
 	GLUquadricObj *coneObj = gluNewQuadric();
 	glPushMatrix();
 	glColor4f (1, 0, 0, 1);
@@ -292,6 +276,23 @@ STLView::DrawAxis(void)
 	glPopMatrix();
 
 	gluDeleteQuadric(coneObj);
+	
+	glLineWidth(1);
+	
+	glBegin(GL_LINES);
+	glColor4f (1, 0, 0, 1);
+	glVertex3f(xShift, yShift - radius, zShift);
+	glVertex3f(xShift, yShift + radius, zShift);
+	
+	glColor4f (0, 1, 0, 1);
+	glVertex3f(xShift - radius, yShift, zShift);
+	glVertex3f(xShift + radius, yShift, zShift);
+	
+	glColor4f (1, 1, 0, 1);
+	glVertex3f(xShift, yShift, zShift - radius);
+	glVertex3f(xShift, yShift, zShift + radius);
+	glEnd();
+	
 }
 
 void
@@ -332,16 +333,24 @@ STLView::Render(void)
 		glDisable(GL_LIGHTING);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		if (showOXY)
-			DrawOXY();
-
+		
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_LINE_SMOOTH);
+		glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
+		
 		if (showAxes)
 			DrawAxis();
-
+		
+		if (showOXY)
+			DrawOXY();
+			
 		if (showBox)
 			DrawBox();
 
+		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_BLEND);
+		
 		SwapBuffers();
 		UnlockGL();
 	}
