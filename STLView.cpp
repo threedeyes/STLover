@@ -253,6 +253,7 @@ STLView::DrawAxis(void)
 			stlObjectView->stats.size.y * stlObjectView->stats.size.x +
 			stlObjectView->stats.size.z * stlObjectView->stats.size.z) * 1.2;
 	float coneSize = radius / 50.0;
+	float labelSize = coneSize * 1.5;
 
 	GLUquadricObj *coneObj = gluNewQuadric();
 	glPushMatrix();
@@ -276,23 +277,45 @@ STLView::DrawAxis(void)
 	glPopMatrix();
 
 	gluDeleteQuadric(coneObj);
-	
+
 	glLineWidth(1);
-	
+
 	glBegin(GL_LINES);
 	glColor4f (1, 0, 0, 1);
+	// Y axis
 	glVertex3f(xShift, yShift - radius, zShift);
 	glVertex3f(xShift, yShift + radius, zShift);
-	
+	// Y label
+	glVertex3f(xShift, yShift + radius, zShift + (labelSize * 2));
+	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
+	glVertex3f(xShift, yShift + radius + labelSize, zShift + (labelSize * 2));
+	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
+	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + labelSize);
+	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
+
+	// X axis
 	glColor4f (0, 1, 0, 1);
 	glVertex3f(xShift - radius, yShift, zShift);
 	glVertex3f(xShift + radius, yShift, zShift);
-	
+	// X label
+	glVertex3f(xShift + radius, yShift, zShift + (labelSize * 2));
+	glVertex3f(xShift + radius + labelSize, yShift, zShift + labelSize);
+	glVertex3f(xShift + radius, yShift, zShift + labelSize);
+	glVertex3f(xShift + radius + labelSize, yShift, zShift + (labelSize * 2));
+
+	// Z axis
 	glColor4f (1, 1, 0, 1);
 	glVertex3f(xShift, yShift, zShift - radius);
 	glVertex3f(xShift, yShift, zShift + radius);
+	// Z label
+	glVertex3f(xShift + labelSize, yShift, zShift + radius);
+	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius);
+	glVertex3f(xShift + labelSize, yShift, zShift + radius);
+	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius + labelSize);
+	glVertex3f(xShift + labelSize, yShift, zShift + radius + labelSize);
+	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius + labelSize);
+
 	glEnd();
-	
 }
 
 void
