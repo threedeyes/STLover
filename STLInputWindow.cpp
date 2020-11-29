@@ -122,6 +122,19 @@ STLInputWindow::SetFloatValue(uint32 valueNum, const char *label, float value)
 	strValue << value;
 	SetTextValue(valueNum, label, strValue.String());
 }
+
+void
+STLInputWindow::SetTextColor(uint32 valueNum, rgb_color color)
+{
+	if (valueNum < 0 || valueNum > 2)
+		return;
+	if (valueNum == 0)
+		fValueControl->TextView()->SetViewColor(color);
+	else if (valueNum == 1)
+		fValueControl2->TextView()->SetViewColor(color);
+	else
+		fValueControl3->TextView()->SetViewColor(color);
+}
 		
 void
 STLInputWindow::MessageReceived(BMessage* message)

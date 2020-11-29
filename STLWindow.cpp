@@ -824,8 +824,11 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Custom axis scale"), 3, this, MSG_TOOLS_SCALE_SET_3);
 			input->SetTextValue(0, B_TRANSLATE("Scale X factor:"), "1.0");
+			input->SetTextColor(0, {164, 255, 164});
 			input->SetTextValue(1, B_TRANSLATE("Scale Y factor:"), "1.0");
+			input->SetTextColor(1, {255, 164, 164});
 			input->SetTextValue(2, B_TRANSLATE("Scale Z factor:"), "1.0");
+			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}
@@ -850,8 +853,11 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Rotate"), 3, this, MSG_TOOLS_ROTATE_SET);
 			input->SetTextValue(0, B_TRANSLATE("X-axis:"), "0.0");
+			input->SetTextColor(0, {164, 255, 164});
 			input->SetTextValue(1, B_TRANSLATE("Y-axis:"), "0.0");
+			input->SetTextColor(1, {255, 164, 164});
 			input->SetTextValue(2, B_TRANSLATE("Z-axis:"), "0.0");
+			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}
@@ -900,8 +906,11 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), 3, this, MSG_TOOLS_MOVE_TO_SET);
 			input->SetFloatValue(0, B_TRANSLATE("X:"), fStlObject->stats.min.x);
+			input->SetTextColor(0, {164, 255, 164});
 			input->SetFloatValue(1, B_TRANSLATE("Y:"), fStlObject->stats.min.y);
+			input->SetTextColor(1, {255, 164, 164});
 			input->SetFloatValue(2, B_TRANSLATE("Z:"), fStlObject->stats.min.z);
+			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}
@@ -924,8 +933,11 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move by"), 3, this, MSG_TOOLS_MOVE_BY_SET);
 			input->SetFloatValue(0, B_TRANSLATE("∆X:"), 0);
+			input->SetTextColor(0, {164, 255, 164});
 			input->SetFloatValue(1, B_TRANSLATE("∆Y:"), 0);
+			input->SetTextColor(1, {255, 164, 164});
 			input->SetFloatValue(2, B_TRANSLATE("∆Z:"), 0);
+			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}

@@ -40,6 +40,7 @@ class STLInputWindow : public BWindow {
 		void SetTextValue(uint32 valueNum, const char *label, const char *value);
 		void SetIntValue(uint32 valueNum, const char *label, int value);
 		void SetFloatValue(uint32 valueNum, const char *label, float value);
+		void SetTextColor(uint32 valueNum, rgb_color color);
 
 	private:
 		BWindow *fParentWindow;
