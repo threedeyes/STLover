@@ -32,6 +32,7 @@
 #include <Roster.h>
 #include <FilePanel.h>
 #include <FindDirectory.h>
+#include <RecentItems.h>
 
 #include <private/interface/AboutWindow.h>
 
@@ -87,6 +88,7 @@ class STLWindow : public BWindow {
 		BMenu *fMenuToolsScale;
 		BMenu *fMenuToolsMove;
 		BMenu *fMenuHelp;
+		BMenuItem *fMenuItemOpen;
 		BMenuItem *fMenuItemReload;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;

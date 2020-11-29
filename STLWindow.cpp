@@ -72,8 +72,11 @@ STLWindow::STLWindow()
 	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("Wavefront OBJ"), new BMessage(MSG_FILE_EXPORT_OBJ)));
 	fMenuFileSaveAs->AddItem(new BMenuItem(B_TRANSLATE("VRML"), new BMessage(MSG_FILE_EXPORT_VRML)));
 
-	fMenuFile->AddItem(new BMenuItem(B_TRANSLATE("Open" B_UTF8_ELLIPSIS), new BMessage(MSG_FILE_OPEN), 'O'));
-	fMenuItemReload = new BMenuItem(B_TRANSLATE("Reload"), new BMessage(MSG_FILE_RELOAD));
+	fMenuItemOpen = new BMenuItem(BRecentFilesList::NewFileListMenu( B_TRANSLATE("Open" B_UTF8_ELLIPSIS),
+		NULL, NULL, be_app, 9, true, NULL, APP_SIGNATURE), new BMessage(MSG_FILE_OPEN));
+	fMenuItemOpen->SetShortcut('O', 0);
+	fMenuFile->AddItem(fMenuItemOpen);
+	fMenuItemReload = new BMenuItem(B_TRANSLATE("Reload"), new BMessage(MSG_FILE_RELOAD), 'L');
 	fMenuFile->AddItem(fMenuItemReload);
 	fMenuFile->AddSeparatorItem();
 	fMenuItemSave = new BMenuItem(B_TRANSLATE("Save"), new BMessage(MSG_FILE_SAVE), 'S');
