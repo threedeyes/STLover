@@ -235,6 +235,11 @@ STLWindow::~STLWindow()
 
 	CloseFile();
 
+	if (fOpenFilePanel != NULL)
+		fOpenFilePanel->Window()->PostMessage(B_QUIT_REQUESTED);
+	if (fSaveFilePanel != NULL)
+		fSaveFilePanel->Window()->PostMessage(B_QUIT_REQUESTED);
+
 	be_app->PostMessage(MSG_WINDOW_CLOSED);
 }
 
@@ -379,10 +384,6 @@ STLWindow::QuitRequested()
 			}
 		}
 	}
-
-	if (be_app->CountWindows() == 1)
-		be_app->PostMessage(B_QUIT_REQUESTED);
-
 	return true;
 }
 
@@ -452,7 +453,7 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_FILE_OPEN:
 		{
-			if (!fOpenFilePanel) {
+			if (fOpenFilePanel == NULL) {
 				fOpenFilePanel = new BFilePanel(B_OPEN_PANEL, NULL, NULL,
 					B_FILE_NODE, true, NULL, NULL, false, true);
 				fOpenFilePanel->SetTarget(this);
@@ -490,7 +491,7 @@ STLWindow::MessageReceived(BMessage *message)
 			fileMsg->AddInt32("format", message->what);
 			fileMsg->what = B_SAVE_REQUESTED;
 
-			if (!fSaveFilePanel) {
+			if (fSaveFilePanel == NULL) {
 				fSaveFilePanel = new BFilePanel(B_SAVE_PANEL, NULL, NULL,
 					B_FILE_NODE, true, fileMsg, NULL, false, true);
 				fSaveFilePanel->SetTarget(this);

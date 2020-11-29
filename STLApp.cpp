@@ -80,6 +80,10 @@ STLoverApplication::MessageReceived(BMessage *message)
 					break;
 				}
 			}
+
+			if (lastActivatedWindow == NULL)
+				PostMessage(B_QUIT_REQUESTED);
+
 			break;
 		}
 		default:
