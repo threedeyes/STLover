@@ -24,7 +24,7 @@
 #define B_TRANSLATION_CONTEXT          "STLoverGLView"
 
 STLView::STLView(BRect frame, uint32 type)
-	: BGLView(frame, "view", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
+	: BGLView(frame, "STLView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
 	needUpdate(true),
 	showAxes(false),
 	showBox(false),

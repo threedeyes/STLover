@@ -106,6 +106,7 @@
 #define FPS_LIMIT 100
 
 #define TOOLBAR_ICON_SIZE 22
+#define INPUT_WINDOW_ALIGN_MARGIN 16
 
 class STLWindow;
 

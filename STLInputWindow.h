@@ -35,13 +35,15 @@ class STLInputWindow : public BWindow {
 		virtual ~STLInputWindow() { };
 
 		virtual void MessageReceived(BMessage* message);
+		virtual	void Show();
 
 		void SetTextValue(uint32 valueNum, const char *label, const char *value);
 		void SetIntValue(uint32 valueNum, const char *label, int value);
 		void SetFloatValue(uint32 valueNum, const char *label, float value);
 
 	private:
-		BMessenger fTarget;
+		BWindow *fParentWindow;
+		BMessenger fTargetMessenger;
 		BString fValue;
 		BTextControl *fValueControl;
 		BTextControl *fValueControl2;

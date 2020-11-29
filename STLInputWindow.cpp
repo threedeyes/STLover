@@ -23,9 +23,10 @@
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
 STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId)
-	: BWindow(BRect(100, 100, 400, 200), title, B_MODAL_WINDOW_LOOK, B_MODAL_ALL_WINDOW_FEEL,
+	: BWindow(BRect(0, 0, 640, 480), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
 	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
-	fTarget(target),
+	fParentWindow(target),
+	fTargetMessenger(target),
 	fValues(count),
 	fMessageId(messageId)
 {
@@ -63,20 +64,30 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 	if (fValues == 3) {
 		BLayoutBuilder::Grid<>(this, padding, padding)
 			.SetInsets(padding, padding, padding, padding)
-			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
-			.AddTextControl(fValueControl2, 0, 1, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
-			.AddTextControl(fValueControl3, 0, 2, B_ALIGN_HORIZONTAL_UNSET, 1, 4)
+			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
+			.AddTextControl(fValueControl2, 0, 1, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
+			.AddTextControl(fValueControl3, 0, 2, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
 			.Add(BSpaceLayoutItem::CreateGlue(), 0, 3)
-			.Add(cancelButton, 2, 3)
-			.Add(fOkButton, 3, 3);
+			.Add(cancelButton, 4, 3)
+			.Add(fOkButton, 5, 3);
 	}
 
 	fOkButton->MakeDefault(true);
 	fValueControl->MakeFocus(true);
 
-	BRect parentRect = target->Frame();
-	MoveTo(parentRect.left + ((parentRect.Width() - Frame().Width()) / 2.0),
-		parentRect.top + ((parentRect.Height() - Frame().Height()) / 2.0));
+	ResizeToPreferred();
+}
+
+void
+STLInputWindow::Show()
+{
+	BView *stlView = fParentWindow->FindView("STLView");
+	BRect viewRect = stlView == NULL ? fParentWindow->Frame() : stlView->ConvertToScreen(stlView->Bounds());
+	viewRect.InsetBy(INPUT_WINDOW_ALIGN_MARGIN, INPUT_WINDOW_ALIGN_MARGIN);
+
+	MoveTo(viewRect.right - Bounds().Width(), viewRect.bottom - Bounds().Height());
+
+	BWindow::Show();
 }
 
 void
@@ -131,7 +142,7 @@ STLInputWindow::MessageReceived(BMessage* message)
 				msg->AddString("value2", fValueControl2->Text());
 				msg->AddString("value3", fValueControl3->Text());
 			}
-			fTarget.SendMessage(msg);
+			fTargetMessenger.SendMessage(msg);
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		}
