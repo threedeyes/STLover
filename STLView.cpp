@@ -228,7 +228,7 @@ STLView::DrawOXY(float margin)
 		if (fabs(r) < 0.0001)
 			glColor4f (1, 0, 0, 1);
 		else
-			glColor4f (1, 1, 0, 1);
+			glColor4f (0.1, 0.1, 1, 1);
 		glVertex3f(xShift - r, yShift - yMin, zShift);
 		glVertex3f(xShift - r, yShift - yMax, zShift);
 	}
@@ -236,7 +236,7 @@ STLView::DrawOXY(float margin)
 		if (fabs(r) < 0.0001)
 			glColor4f (0, 1, 0, 1);
 		else
-			glColor4f (1, 1, 0, 1);
+			glColor4f (0.1, 0.1, 1, 1);
 		glVertex3f(xShift - xMin , yShift - r, zShift);
 		glVertex3f(xShift - xMax, yShift - r, zShift);
 	}
@@ -271,7 +271,7 @@ STLView::DrawAxis(void)
 	glPopMatrix();
 
 	glPushMatrix();
-	glColor4f (1, 1, 0, 1);
+	glColor4f (0.1, 0.1, 1, 1);
 	glTranslated(xShift, yShift, zShift + radius);
 	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
 	glPopMatrix();
@@ -304,7 +304,7 @@ STLView::DrawAxis(void)
 	glVertex3f(xShift + radius + labelSize, yShift, zShift + (labelSize * 2));
 
 	// Z axis
-	glColor4f (1, 1, 0, 1);
+	glColor4f (0.1, 0.1, 1, 1);
 	glVertex3f(xShift, yShift, zShift - radius);
 	glVertex3f(xShift, yShift, zShift + radius);
 	// Z label
