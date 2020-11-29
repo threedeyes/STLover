@@ -150,8 +150,8 @@ STLView::Reset(bool scale, bool rotate, bool pan)
 		scaleFactor = 0.0;
 
 	if(rotate) {
-		xRotate = -90.0;
-		yRotate = 0.0;
+		xRotate = -45.0;
+		yRotate = 45.0;
 	}
 
 	if(pan) {

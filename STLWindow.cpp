@@ -1230,7 +1230,7 @@ STLWindow::TransformPosition()
 	float longerSide = xMaxExtent > yMaxExtent ? xMaxExtent : yMaxExtent;
 	longerSide += (zMaxExtent * (sin(FOV * (M_PI / 180.0)) / sin((90.0 - FOV) * (M_PI / 180.0))));
 
-	fZDepth = -((longerSide / 2.0) / tanf((FOV / 2.0) * (M_PI / 180.0)));
+	fZDepth = -1.2 *((longerSide / 2.0) / tanf((FOV / 2.0) * (M_PI / 180.0)));
 
 	if ((xMaxExtent > yMaxExtent) && (xMaxExtent > zMaxExtent))
     	fMaxExtent = xMaxExtent;
