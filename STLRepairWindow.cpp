@@ -64,7 +64,7 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 	fToleranceTextControl = new BTextControl(B_TRANSLATE("Initial tolerance to use for nearby check"), toleranceText.String(), NULL);
 	fToleranceTextControl->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 
-	fOkButton = new BButton(B_TRANSLATE("Ok"), new BMessage(MSG_INPUT_OK));
+	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(true);
 
 	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));

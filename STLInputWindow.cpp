@@ -47,7 +47,7 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 		fValueControl3->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
 	}
 
-	fOkButton = new BButton(B_TRANSLATE("Ok"), new BMessage(MSG_INPUT_OK));
+	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
 
 	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));
