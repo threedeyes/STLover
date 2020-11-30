@@ -119,9 +119,9 @@ STLWindow::STLWindow()
 	
 	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_MOVE_TO)));
 	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("By" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_MOVE_BY)));
-	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To Center"), new BMessage(MSG_TOOLS_MOVE_CENTER)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To origin"), new BMessage(MSG_TOOLS_MOVE_CENTER)));
 	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To (0,0,0)"), new BMessage(MSG_TOOLS_MOVE_ZERO)));
-	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("On the Middle"), new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
+	fMenuToolsMove->AddItem(new BMenuItem(B_TRANSLATE("To top of OXY plane"), new BMessage(MSG_TOOLS_MOVE_MIDDLE)));
 	fMenuToolsMove->SetTargetForItems(this);
 
 	fMenuItemEditTitle = new BMenuItem(B_TRANSLATE("Edit title" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_EDIT_TITLE));
@@ -158,7 +158,7 @@ STLWindow::STLWindow()
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_XY, this, STLoverApplication::GetIcon("mirror-xy", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror XY"));
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_YZ, this, STLoverApplication::GetIcon("mirror-yz", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror YZ"));
 	fToolBar->AddAction(MSG_TOOLS_MIRROR_XZ, this, STLoverApplication::GetIcon("mirror-xz", TOOLBAR_ICON_SIZE), B_TRANSLATE("Mirror XZ"));
-	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), B_TRANSLATE("Put on the Middle"));
+	fToolBar->AddAction(MSG_TOOLS_MOVE_MIDDLE, this, STLoverApplication::GetIcon("move-middle", TOOLBAR_ICON_SIZE), B_TRANSLATE("Move to top of OXY plane"));
 	fToolBar->AddAction(MSG_TOOLS_MOVE_TO, this, STLoverApplication::GetIcon("move-to", TOOLBAR_ICON_SIZE), B_TRANSLATE("Move to"));
 	fToolBar->AddAction(MSG_TOOLS_MOVE_BY, this, STLoverApplication::GetIcon("move-by", TOOLBAR_ICON_SIZE), B_TRANSLATE("Move by"));
 	fToolBar->AddAction(MSG_TOOLS_SCALE, this, STLoverApplication::GetIcon("scale", TOOLBAR_ICON_SIZE), B_TRANSLATE("Scale"));
