@@ -102,7 +102,7 @@ STLWindow::STLWindow()
 	fMenuItemShowBox = new BMenuItem(B_TRANSLATE("Bounding box"), new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 	fMenuView->AddItem(fMenuItemShowBox);
 	fMenuView->AddSeparatorItem();
-	fMenuItemStat = new BMenuItem(B_TRANSLATE("Show statistics"), new BMessage(MSG_VIEWMODE_STAT), 'I');
+	fMenuItemStat = new BMenuItem(B_TRANSLATE("Statistics"), new BMessage(MSG_VIEWMODE_STAT), 'I');
 	fMenuView->AddItem(fMenuItemStat);
 	fMenuView->AddSeparatorItem();
 	fMenuItemReset = new BMenuItem(B_TRANSLATE("Reset"), new BMessage(MSG_VIEWMODE_RESETPOS), 'R');
