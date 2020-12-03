@@ -1,0 +1,129 @@
+1	Romanian	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Despre
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		Axe
+Axis scale	STLoverMainWindow		Scala axei
+Axis scaling…	STLoverMainWindow		Scalare axă…
+Best fit	STLoverMainWindow		Cea mai bună potrivire
+Binary	STLoverMainWindow		Binar
+Bounding box	STLoverMainWindow		Căsuță de încadrare
+By…	STLoverMainWindow		De…
+Cancel	STLoverMainWindow		Anulează
+Close	STLoverMainWindow		Închide
+Custom axis scale	STLoverMainWindow		Scală de axă personalizată
+Don't save	STLoverMainWindow		Nu salva
+Drop STL files here	STLoverMainWindow		Plasați fișiere STL aici
+Edit title	STLoverMainWindow		Editează titlul
+Edit title…	STLoverMainWindow		Editează titlul…
+File	STLoverMainWindow		Fișier
+Front view	STLoverMainWindow		Vizualizare din față
+Geomview OFF	STLoverMainWindow		Geomview OPRIT
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Ajutor
+Loading…	STLoverMainWindow		Se încarcă…
+Mirror	STLoverMainWindow		Oglindă
+Mirror XY	STLoverMainWindow		Oglindă XY
+Mirror XZ	STLoverMainWindow		Oglindă XZ
+Mirror YZ	STLoverMainWindow		Oglindă YZ
+Move	STLoverMainWindow		Mută
+Move by	STLoverMainWindow		Mută prin
+Move to	STLoverMainWindow		Mută la
+Move to top of OXY plane	STLoverMainWindow		Mută deasupra planului OXY
+Open	STLoverMainWindow		Deschide
+Open…	STLoverMainWindow		Deschide…
+Plane OXY	STLoverMainWindow		Planul OXY
+Quit	STLoverMainWindow		Ieșire
+Reload	STLoverMainWindow		Reîncarcă
+Repair	STLoverMainWindow		Repară
+Repair…	STLoverMainWindow		Repară…
+Reset	STLoverMainWindow		Restabilește
+Reset view	STLoverMainWindow		Restabilește vizualizarea
+Right view	STLoverMainWindow		Îndreaptă vizualizarea
+Rotate	STLoverMainWindow		Rotește
+Rotate…	STLoverMainWindow		Rotește…
+Save	STLoverMainWindow		Salvează
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Salvează documentul „%document%” ca un fișier „%format%” ca…
+Save as…	STLoverMainWindow		Salvează ca…
+Save changes to document '%filename%' ?	STLoverMainWindow		Salvați modificările la documentul „%filename%” ?
+Scale	STLoverMainWindow		Scalează
+Scale factor:	STLoverMainWindow		Factor de scalare:
+Scale X factor:	STLoverMainWindow		Factorul de scalare X:
+Scale Y factor:	STLoverMainWindow		Factorul de scalare Y:
+Scale Z factor:	STLoverMainWindow		Factorul de scalare Z:
+Scale…	STLoverMainWindow		Scalare…
+Show axes	STLoverMainWindow		Arată axele
+Show plane OXY	STLoverMainWindow		Arată planul OXY
+Solid	STLoverMainWindow		Solid
+Statistics	STLoverMainWindow		Statistici
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binar)
+STL Title	STLoverMainWindow		Titlu STL
+Title:	STLoverMainWindow		Titlu:
+To (0,0,0)	STLoverMainWindow		La (0,0,0)
+To origin	STLoverMainWindow		La origine
+To top of OXY plane	STLoverMainWindow		La vârful planului OXY
+To…	STLoverMainWindow		La…
+Tools	STLoverMainWindow		Unelte
+Top view	STLoverMainWindow		Vizualizare de top
+Unknown file format!	STLoverMainWindow		Format de fișier necunoscut!
+View	STLoverMainWindow		Vizualizare
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		OBJ Wavefront
+Wireframe	STLoverMainWindow		Cadru de sârmă
+X-axis:	STLoverMainWindow		Axa-X:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Axa-Y:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Axa-Z:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Mărește
+Zoom out	STLoverMainWindow		Micșorează
+A file format native to the STereoLithography CAD software	STLoverApplication		Un format de fișier nativ programului CAD STereoLithography
+STL file	STLoverApplication		Fișier STL
+Add facets to fill holes	STLoverRepairWindow		Adaugă fațete pentru a umple găuri
+Amount to increment tolerance after iteration	STLoverRepairWindow		Cantitatea cu care se incrementează toleranța după iterație
+Cancel	STLoverRepairWindow		Anulează
+Check and fix direction of normals	STLoverRepairWindow		Verifică și fixează direcția normalelor
+Check and fix normal values	STLoverRepairWindow		Verifică și fixează valorile normale
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Găsește și conectează fațetele din apropiere. Corectează fațetele defecte
+Initial tolerance to use for nearby check	STLoverRepairWindow		Toleranța inițială de utilizat pentru verificarea din apropiere
+Number of iterations for nearby check	STLoverRepairWindow		Numărul de iterații pentru verificarea din apropiere
+OK	STLoverRepairWindow		Ok
+Only check for perfectly matched edges	STLoverRepairWindow		Verifică doar pentru marginile potrivite perfect
+Remove facets that have 0 neighbors	STLoverRepairWindow		Elimină fațetele care au 0 vecini
+Repair	STLoverRepairWindow		Repară
+Reverse the directions of all facets and normals	STLoverRepairWindow		Inversează direcțiile tuturor fațetelor și normalelor
+Backward edges:	STLoverStatView		Margini înapoiate:
+Degenerate facets:	STLoverStatView		Fațete degenerate:
+Disconnected:	STLoverStatView		Deconectat:
+Edges fixed:	STLoverStatView		Margini fixate:
+Facet status	STLoverStatView		Stare fațetă
+Facets added:	STLoverStatView		Fațete adăugate:
+Facets removed:	STLoverStatView		Fațete eliminate:
+Facets reversed:	STLoverStatView		Fațete inversate:
+Facets:	STLoverStatView		Fațete:
+File	STLoverStatView		Fișier
+Height:	STLoverStatView		Înălțime:
+Length:	STLoverStatView		Lungime:
+Max X:	STLoverStatView		Max X:
+Max Y:	STLoverStatView		Max Y:
+Max Z:	STLoverStatView		Max Z:
+Min X:	STLoverStatView		Min X:
+Min Y:	STLoverStatView		Min Y:
+Min Z:	STLoverStatView		Min Z:
+Name:	STLoverStatView		Nume:
+Normals fixed:	STLoverStatView		Normale fixate:
+Object size	STLoverStatView		Dimensiune obiect
+Parts:	STLoverStatView		Părți:
+Processing	STLoverStatView		Se procesează
+STL Type:	STLoverStatView		Tip STL:
+Title:	STLoverStatView		Titlu:
+Volume:	STLoverStatView		Volum:
+Width:	STLoverStatView		Lățime:
+Cancel	STLoverInputWindow		Anulează
+OK	STLoverInputWindow		Ok
+STLover	System name		STLover

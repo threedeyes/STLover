@@ -1,12 +1,10 @@
-1	English	application/x-vnd.stlover	2630605460
+1	English	application/x-vnd.stlover	3052238959
 Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
 Best fit	STLoverMainWindow		Best fit
 Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
-On the Middle	STLoverMainWindow		On the Middle
 Reset view	STLoverMainWindow		Reset view
 Zoom in	STLoverMainWindow		Zoom in
 Move by	STLoverMainWindow		Move by
-Put on the Middle	STLoverMainWindow		Put on the Middle
 Reload	STLoverMainWindow		Reload
 ∆Z:	STLoverMainWindow		∆Z:
 View	STLoverMainWindow		View
@@ -17,14 +15,17 @@ Show axes	STLoverMainWindow		Show axes
 Repair	STLoverMainWindow		Repair
 ∆Y:	STLoverMainWindow		∆Y:
 Right view	STLoverMainWindow		Right view
-Length:	STLoverStatView		Length:
 Axis scaling…	STLoverMainWindow		Axis scaling…
 Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Save changes to document '%filename%' ?	STLoverMainWindow		Save changes to document '%filename%' ?
+Length:	STLoverStatView		Length:
 Rotate…	STLoverMainWindow		Rotate…
+To top of OXY plane	STLoverMainWindow		To top of OXY plane
 Quit	STLoverMainWindow		Quit
-Save changes to the document	STLoverMainWindow		Save changes to the document
+Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
 Rotate	STLoverMainWindow		Rotate
 Drop STL files here	STLoverMainWindow		Drop STL files here
+OK	STLoverRepairWindow		OK
 Scale factor:	STLoverMainWindow		Scale factor:
 ∆X:	STLoverMainWindow		∆X:
 Cancel	STLoverMainWindow		Cancel
@@ -43,15 +44,15 @@ Height:	STLoverStatView		Height:
 Close	STLoverMainWindow		Close
 Statistics	STLoverMainWindow		Statistics
 Custom axis scale	STLoverMainWindow		Custom axis scale
+OK	STLoverInputWindow		OK
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
-Ok	STLoverRepairWindow		Ok
 Max X:	STLoverStatView		Max X:
 Move	STLoverMainWindow		Move
 Scale	STLoverMainWindow		Scale
 Repair	STLoverRepairWindow		Repair
 Edit title…	STLoverMainWindow		Edit title…
 Help	STLoverMainWindow		Help
-Show statistics	STLoverMainWindow		Show statistics
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Save '%document%' as a '%format%' file as…
 Move to	STLoverMainWindow		Move to
 Open	STLoverMainWindow		Open
 Loading…	STLoverMainWindow		Loading…
@@ -61,7 +62,6 @@ Cancel	STLoverInputWindow		Cancel
 Binary	STLoverMainWindow		Binary
 Geomview OFF	STLoverMainWindow		Geomview OFF
 Volume:	STLoverStatView		Volume:
-file as…	STLoverMainWindow		file as…
 Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfectly matched edges
 Min Z:	STLoverStatView		Min Z:
 STL (ASCII)	STLoverMainWindow		STL (ASCII)
@@ -86,6 +86,7 @@ STL Type:	STLoverStatView		STL Type:
 Disconnected:	STLoverStatView		Disconnected:
 Title:	STLoverMainWindow		Title:
 Facets:	STLoverStatView		Facets:
+To origin	STLoverMainWindow		To origin
 Facets removed:	STLoverStatView		Facets removed:
 ASCII	STLoverMainWindow		ASCII
 Top view	STLoverMainWindow		Top view
@@ -107,12 +108,10 @@ Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerance
 By…	STLoverMainWindow		By…
 Mirror	STLoverMainWindow		Mirror
 Save	STLoverMainWindow		Save
-to	STLoverMainWindow		to
 Title:	STLoverStatView		Title:
 Y:	STLoverMainWindow		Y:
 Mirror XZ	STLoverMainWindow		Mirror XZ
 Normals fixed:	STLoverStatView		Normals fixed:
-Ok	STLoverInputWindow		Ok
 Backward edges:	STLoverStatView		Backward edges:
 To…	STLoverMainWindow		To…
 Object size	STLoverStatView		Object size
@@ -124,7 +123,6 @@ Open…	STLoverMainWindow		Open…
 Facet status	STLoverStatView		Facet status
 Processing	STLoverStatView		Processing
 Don't save	STLoverMainWindow		Don't save
-To Center	STLoverMainWindow		To Center
 STL Title	STLoverMainWindow		STL Title
 Solid	STLoverMainWindow		Solid
 Front view	STLoverMainWindow		Front view

@@ -1,0 +1,129 @@
+1	Catalan	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Quant a
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autoescriptori DXF
+Axes	STLoverMainWindow		Eix
+Axis scale	STLoverMainWindow		Escala de l'eix
+Axis scaling…	STLoverMainWindow		Escalatge de l'eix...
+Best fit	STLoverMainWindow		El millor ajust
+Binary	STLoverMainWindow		Binari
+Bounding box	STLoverMainWindow		Casella delimitadora
+By…	STLoverMainWindow		Per...
+Cancel	STLoverMainWindow		Cancel·la
+Close	STLoverMainWindow		Tanca
+Custom axis scale	STLoverMainWindow		Escala d'eix personalitzada
+Don't save	STLoverMainWindow		No ho desis
+Drop STL files here	STLoverMainWindow		Deixeu anar fitxers STL aquí.
+Edit title	STLoverMainWindow		Edita'n el títol
+Edit title…	STLoverMainWindow		Edició del títol...
+File	STLoverMainWindow		Fitxer
+Front view	STLoverMainWindow		Vista frontal
+Geomview OFF	STLoverMainWindow		Geomvista DESACTIVADA
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Ajuda
+Loading…	STLoverMainWindow		Es carrega...
+Mirror	STLoverMainWindow		Rèplica
+Mirror XY	STLoverMainWindow		Rèplica XY
+Mirror XZ	STLoverMainWindow		Rèplica XZ
+Mirror YZ	STLoverMainWindow		Rèplica YZ
+Move	STLoverMainWindow		Mou
+Move by	STLoverMainWindow		Mou per...
+Move to	STLoverMainWindow		Mou a...
+Move to top of OXY plane	STLoverMainWindow		Mou el pla OXY a dalt
+Open	STLoverMainWindow		Obre
+Open…	STLoverMainWindow		Obre...
+Plane OXY	STLoverMainWindow		Pla OXY
+Quit	STLoverMainWindow		Surt
+Reload	STLoverMainWindow		Torna-ho a carregar
+Repair	STLoverMainWindow		Repara-ho
+Repair…	STLoverMainWindow		Reparació...
+Reset	STLoverMainWindow		Restableix
+Reset view	STLoverMainWindow		Restableix-ne la vista
+Right view	STLoverMainWindow		Vista dreta
+Rotate	STLoverMainWindow		Gira
+Rotate…	STLoverMainWindow		Gira...
+Save	STLoverMainWindow		Desa-ho
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Desa %document% com a fitxer %format% com a…
+Save as…	STLoverMainWindow		Desa-ho com a...
+Save changes to document '%filename%' ?	STLoverMainWindow		Voleu desar els canvis al document %filename%?
+Scale	STLoverMainWindow		Escala
+Scale factor:	STLoverMainWindow		Factor de l'escala:
+Scale X factor:	STLoverMainWindow		Factor X de l'escala:
+Scale Y factor:	STLoverMainWindow		Factor Y de l'escala:
+Scale Z factor:	STLoverMainWindow		Factor Z de l'escala:
+Scale…	STLoverMainWindow		Escala...
+Show axes	STLoverMainWindow		Mostra'n els eixos
+Show plane OXY	STLoverMainWindow		Mostra el pla OXY
+Solid	STLoverMainWindow		Sòlid
+Statistics	STLoverMainWindow		Estadístiques
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binari)
+STL Title	STLoverMainWindow		Títol d'STL
+Title:	STLoverMainWindow		Títol:
+To (0,0,0)	STLoverMainWindow		A (0,0,0)
+To origin	STLoverMainWindow		A l'origen
+To top of OXY plane	STLoverMainWindow		A dalt del pla OXY
+To…	STLoverMainWindow		A...
+Tools	STLoverMainWindow		Eines
+Top view	STLoverMainWindow		Vista superior
+Unknown file format!	STLoverMainWindow		Format de fitxer desconegut
+View	STLoverMainWindow		Vista
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Frontal d’ona OBJ
+Wireframe	STLoverMainWindow		Marc metàl·lic
+X-axis:	STLoverMainWindow		Eix X:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Eix Y:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Eix Z:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Amplia
+Zoom out	STLoverMainWindow		Redueix
+A file format native to the STereoLithography CAD software	STLoverApplication		Un format de fitxer nadiu del programari CAD STereoLithography
+STL file	STLoverApplication		Fitxer STL
+Add facets to fill holes	STLoverRepairWindow		Afegeix-hi facetes per omplir forats
+Amount to increment tolerance after iteration	STLoverRepairWindow		Quantitat per a l'increment de tolerància després de la iteració
+Cancel	STLoverRepairWindow		Cancel·la
+Check and fix direction of normals	STLoverRepairWindow		Comprova i corregeix la direcció dels normals
+Check and fix normal values	STLoverRepairWindow		Comprova i corregeix els valors normals
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Cerca i connecta les facetes properes. Corregeix-ne les incorrectes.
+Initial tolerance to use for nearby check	STLoverRepairWindow		Tolerància inicial a usar per a comprovacions properes
+Number of iterations for nearby check	STLoverRepairWindow		Nombre d'iteracions per a comprovacions properes
+OK	STLoverRepairWindow		D'acord
+Only check for perfectly matched edges	STLoverRepairWindow		Comprova només si hi ha vores perfectament coincidents
+Remove facets that have 0 neighbors	STLoverRepairWindow		Suprimeix les facetes que tinguin 0 veïns
+Repair	STLoverRepairWindow		Repara
+Reverse the directions of all facets and normals	STLoverRepairWindow		Inverteix les direccions de totes les facetes i normals
+Backward edges:	STLoverStatView		Vores posteriors:
+Degenerate facets:	STLoverStatView		Desgeneració de facetes:
+Disconnected:	STLoverStatView		Desconnexions:
+Edges fixed:	STLoverStatView		Vores corregides:
+Facet status	STLoverStatView		Estat de la faceta
+Facets added:	STLoverStatView		Facetes afegides:
+Facets removed:	STLoverStatView		Facetes suprimides:
+Facets reversed:	STLoverStatView		Facetes reservades:
+Facets:	STLoverStatView		Facetes:
+File	STLoverStatView		Fitxer
+Height:	STLoverStatView		Alçada:
+Length:	STLoverStatView		Llargada:
+Max X:	STLoverStatView		Màx. X:
+Max Y:	STLoverStatView		Màx. Y:
+Max Z:	STLoverStatView		Màx. Z:
+Min X:	STLoverStatView		Min. X:
+Min Y:	STLoverStatView		Min. Y:
+Min Z:	STLoverStatView		Min. Z:
+Name:	STLoverStatView		Nom:
+Normals fixed:	STLoverStatView		Normals corregits:
+Object size	STLoverStatView		Mida de l'objecte
+Parts:	STLoverStatView		Parts:
+Processing	STLoverStatView		Processament
+STL Type:	STLoverStatView		Tipus d'STL:
+Title:	STLoverStatView		Títol:
+Volume:	STLoverStatView		Volum:
+Width:	STLoverStatView		Amplada:
+Cancel	STLoverInputWindow		Cancel·la
+OK	STLoverInputWindow		D'acord
+STLover	System name		Amant d'STL

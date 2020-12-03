@@ -1,0 +1,129 @@
+1	German	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Über
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		Achsen
+Axis scale	STLoverMainWindow		Achsen Faktor
+Axis scaling…	STLoverMainWindow		Achsen Faktor…
+Best fit	STLoverMainWindow		Optimale Größe
+Binary	STLoverMainWindow		Binär
+Bounding box	STLoverMainWindow		Begrenzungs-Box
+By…	STLoverMainWindow		Um…
+Cancel	STLoverMainWindow		Abbrechen
+Close	STLoverMainWindow		Schließen
+Custom axis scale	STLoverMainWindow		Individueller Achsenmaßstab
+Don't save	STLoverMainWindow		Nicht speichern
+Drop STL files here	STLoverMainWindow		STL Dateien hier fallen lassen
+Edit title	STLoverMainWindow		Titel bearbeiten
+Edit title…	STLoverMainWindow		Titel bearbeiten…
+File	STLoverMainWindow		Datei
+Front view	STLoverMainWindow		Ansicht vorn
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Hilfe
+Loading…	STLoverMainWindow		Lädt…
+Mirror	STLoverMainWindow		Spiegeln
+Mirror XY	STLoverMainWindow		Spiegeln XY
+Mirror XZ	STLoverMainWindow		Spiegeln XZ
+Mirror YZ	STLoverMainWindow		Spiegeln YZ
+Move	STLoverMainWindow		Verschieben
+Move by	STLoverMainWindow		Verschieben um
+Move to	STLoverMainWindow		Verschieben nach
+Move to top of OXY plane	STLoverMainWindow		Auf die OXY Ebene setzen
+Open	STLoverMainWindow		Öffnen
+Open…	STLoverMainWindow		Öffnen…
+Plane OXY	STLoverMainWindow		Ebene OXY
+Quit	STLoverMainWindow		Beenden
+Reload	STLoverMainWindow		Neu laden
+Repair	STLoverMainWindow		Reparieren
+Repair…	STLoverMainWindow		Reparieren…
+Reset	STLoverMainWindow		Zurücksetzen
+Reset view	STLoverMainWindow		Ansicht zurücksetzen
+Right view	STLoverMainWindow		Ansicht rechts
+Rotate	STLoverMainWindow		Drehen
+Rotate…	STLoverMainWindow		Drehen…
+Save	STLoverMainWindow		Speichern
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		%document%' als '%format%' Datei speichern…
+Save as…	STLoverMainWindow		Speichern unter…
+Save changes to document '%filename%' ?	STLoverMainWindow		Änderungen am Dokument '%filename%' speichern?
+Scale	STLoverMainWindow		Maßstab
+Scale factor:	STLoverMainWindow		Maßstabsfaktor:
+Scale X factor:	STLoverMainWindow		Maßstabsfaktor X:
+Scale Y factor:	STLoverMainWindow		Maßstabsfaktor Y:
+Scale Z factor:	STLoverMainWindow		Maßstabsfaktor Z:
+Scale…	STLoverMainWindow		Faktor…
+Show axes	STLoverMainWindow		Achsen anzeigen
+Show plane OXY	STLoverMainWindow		Ebene OXY anzeigen
+Solid	STLoverMainWindow		Schattiert
+Statistics	STLoverMainWindow		Statistik
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binär)
+STL Title	STLoverMainWindow		STL Titel
+Title:	STLoverMainWindow		Titel:
+To (0,0,0)	STLoverMainWindow		Nach (0,0,0)
+To origin	STLoverMainWindow		Zum Ursprung
+To top of OXY plane	STLoverMainWindow		Auf OXY Ebene setzen
+To…	STLoverMainWindow		Nach…
+Tools	STLoverMainWindow		Werkzeuge
+Top view	STLoverMainWindow		Ansicht oben
+Unknown file format!	STLoverMainWindow		Unbekanntes Dateiformat
+View	STLoverMainWindow		Ansicht
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wireframe	STLoverMainWindow		Drahtgitter
+X-axis:	STLoverMainWindow		X-Achse:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Y-Achse:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Z-Achse:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Vergrößern
+Zoom out	STLoverMainWindow		Verkleinern
+A file format native to the STereoLithography CAD software	STLoverApplication		Das Dateiformat der STereoLithography CAD Software
+STL file	STLoverApplication		STL Datei
+Add facets to fill holes	STLoverRepairWindow		Flächen hinzufügen, um Löcher zu schließen
+Amount to increment tolerance after iteration	STLoverRepairWindow		Toleranzerhöhung nach jeder Iteration
+Cancel	STLoverRepairWindow		Abbrechen
+Check and fix direction of normals	STLoverRepairWindow		Prüfen und Richtungskorrektur von Normalen
+Check and fix normal values	STLoverRepairWindow		Prüfen und Korrigieren von Normalenwerten
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Finden und verbinden benachbarter Flächen. Korrigieren falscher Flächen.
+Initial tolerance to use for nearby check	STLoverRepairWindow		Anfangstoleranz für benachbarte Flächen
+Number of iterations for nearby check	STLoverRepairWindow		Anzahl der Iterationen zum Finden benachbarter Flächen
+OK	STLoverRepairWindow		OK
+Only check for perfectly matched edges	STLoverRepairWindow		Nur nach perfekt passenden Kanten suchen
+Remove facets that have 0 neighbors	STLoverRepairWindow		Flächen ohne Nachbarn entfernen
+Repair	STLoverRepairWindow		Reparieren
+Reverse the directions of all facets and normals	STLoverRepairWindow		Richtung aller Flächen und Normalen umkehren
+Backward edges:	STLoverStatView		Rückwärtige Kanten:
+Degenerate facets:	STLoverStatView		Degenerierte Flächen:
+Disconnected:	STLoverStatView		Unverbunden:
+Edges fixed:	STLoverStatView		Reparierte Kanten:
+Facet status	STLoverStatView		Flächen Status
+Facets added:	STLoverStatView		Hinzugefügte Flächen:
+Facets removed:	STLoverStatView		Entfernte Flächen:
+Facets reversed:	STLoverStatView		Umgekehrte Flächen:
+Facets:	STLoverStatView		Flächen:
+File	STLoverStatView		Datei
+Height:	STLoverStatView		Höhe:
+Length:	STLoverStatView		Länge:
+Max X:	STLoverStatView		Max X:
+Max Y:	STLoverStatView		Max Y:
+Max Z:	STLoverStatView		Max Z:
+Min X:	STLoverStatView		Min X:
+Min Y:	STLoverStatView		Min Y:
+Min Z:	STLoverStatView		Min Z:
+Name:	STLoverStatView		Name:
+Normals fixed:	STLoverStatView		Reparierte Normalen:
+Object size	STLoverStatView		Objektgröße
+Parts:	STLoverStatView		Teile:
+Processing	STLoverStatView		Verarbeitung
+STL Type:	STLoverStatView		STL Typ:
+Title:	STLoverStatView		Titel:
+Volume:	STLoverStatView		Volumen:
+Width:	STLoverStatView		Breite:
+Cancel	STLoverInputWindow		Abbrechen
+OK	STLoverInputWindow		OK
+STLover	System name		STLover
