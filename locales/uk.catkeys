@@ -1,0 +1,129 @@
+1	Ukrainian	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		Зсув по X:
+∆Y:	STLoverMainWindow		Зсув по Y:
+∆Z:	STLoverMainWindow		Зсув по Z:
+About	STLoverMainWindow		Про програму
+ASCII	STLoverMainWindow		Текстовий
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		Осі координат
+Axis scale	STLoverMainWindow		Масштабувати по осях
+Axis scaling…	STLoverMainWindow		Масштабувати по осях…
+Best fit	STLoverMainWindow		Оптимальний розмір
+Binary	STLoverMainWindow		Двійковий
+Bounding box	STLoverMainWindow		Межі об'єкта
+By…	STLoverMainWindow		Відносно…
+Cancel	STLoverMainWindow		Скасувати
+Close	STLoverMainWindow		Закрити
+Custom axis scale	STLoverMainWindow		Масштабування по осях
+Don't save	STLoverMainWindow		Не зберігати
+Drop STL files here	STLoverMainWindow		Перемістіть STL файли сюди
+Edit title	STLoverMainWindow		Редагувати заголовок
+Edit title…	STLoverMainWindow		Редагувати заголовок…
+File	STLoverMainWindow		Файл
+Front view	STLoverMainWindow		Вигляд спереду
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Герасим Троєглазов (3dEyes**)
+Help	STLoverMainWindow		Довідка
+Loading…	STLoverMainWindow		Завантаження…
+Mirror	STLoverMainWindow		Віддзеркалити
+Mirror XY	STLoverMainWindow		Віддзеркалити по площині XY
+Mirror XZ	STLoverMainWindow		Віддзеркалити по площині XZ
+Mirror YZ	STLoverMainWindow		Віддзеркалити по площині YZ
+Move	STLoverMainWindow		Перемістити
+Move by	STLoverMainWindow		Відносне переміщення
+Move to	STLoverMainWindow		Перемістити в точку
+Move to top of OXY plane	STLoverMainWindow		Перемістити в центр площини OXY
+Open	STLoverMainWindow		Відкрити
+Open…	STLoverMainWindow		Відкрити…
+Plane OXY	STLoverMainWindow		Площина OXY
+Quit	STLoverMainWindow		Вихід
+Reload	STLoverMainWindow		Перезавантажити
+Repair	STLoverMainWindow		Відновити
+Repair…	STLoverMainWindow		Відновити…
+Reset	STLoverMainWindow		Скинути
+Reset view	STLoverMainWindow		Початковий вигляд
+Right view	STLoverMainWindow		Вигляд справа
+Rotate	STLoverMainWindow		Обертати
+Rotate…	STLoverMainWindow		Обертати…
+Save	STLoverMainWindow		Зберегти
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Зберегти файл '%document%' у форматі '%format%' як…
+Save as…	STLoverMainWindow		Зберегти як…
+Save changes to document '%filename%' ?	STLoverMainWindow		Зберегти зміни в документі '%filename%' ?
+Scale	STLoverMainWindow		Масштабувати
+Scale factor:	STLoverMainWindow		Коефіцієнт масштабування:
+Scale X factor:	STLoverMainWindow		Масштаб по осі X:
+Scale Y factor:	STLoverMainWindow		Масштаб по осі Y:
+Scale Z factor:	STLoverMainWindow		Масштаб по осі Z:
+Scale…	STLoverMainWindow		Масштабувати…
+Show axes	STLoverMainWindow		Показати осі координат
+Show plane OXY	STLoverMainWindow		Показати площину OXY
+Solid	STLoverMainWindow		Заливка
+Statistics	STLoverMainWindow		Статистика
+STL (ASCII)	STLoverMainWindow		STL (текстовий)
+STL (Binary)	STLoverMainWindow		STL (двійковий)
+STL Title	STLoverMainWindow		Заголовок STL
+Title:	STLoverMainWindow		Заголовок:
+To (0,0,0)	STLoverMainWindow		В точку (0,0,0)
+To origin	STLoverMainWindow		На початок координат
+To top of OXY plane	STLoverMainWindow		В центр площини OXY
+To…	STLoverMainWindow		В точку…
+Tools	STLoverMainWindow		Інструменти
+Top view	STLoverMainWindow		Вигляд зверху
+Unknown file format!	STLoverMainWindow		Невідомий формат файлу!
+View	STLoverMainWindow		Вигляд
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wireframe	STLoverMainWindow		Каркас
+X-axis:	STLoverMainWindow		Вісь X:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Вісь Y:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Вісь Z:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Збільшити
+Zoom out	STLoverMainWindow		Зменшити
+A file format native to the STereoLithography CAD software	STLoverApplication		Формат файлу програми STereoLithography CAD
+STL file	STLoverApplication		Файл STL
+Add facets to fill holes	STLoverRepairWindow		Додати грані, щоб заповнити отвори
+Amount to increment tolerance after iteration	STLoverRepairWindow		Приріст допуску після кожної ітерації
+Cancel	STLoverRepairWindow		Скасувати
+Check and fix direction of normals	STLoverRepairWindow		Перевірити і виправити напрямок нормалей
+Check and fix normal values	STLoverRepairWindow		Перевірити і виправити значення нормалей
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Знайти і з'єднати сусідні грані. Виправити пошкоджені
+Initial tolerance to use for nearby check	STLoverRepairWindow		Початковий допуск при пошуку сусідніх граней
+Number of iterations for nearby check	STLoverRepairWindow		Кількість ітерацій при пошуку сусідніх граней
+OK	STLoverRepairWindow		OK
+Only check for perfectly matched edges	STLoverRepairWindow		Перевіряти лише ідеально співпадаючі грані
+Remove facets that have 0 neighbors	STLoverRepairWindow		Видалити грані, які не мають сусідніх
+Repair	STLoverRepairWindow		Відновити
+Reverse the directions of all facets and normals	STLoverRepairWindow		Змінити напрямки всіх граней і нормалей
+Backward edges:	STLoverStatView		Зворотних ребер:
+Degenerate facets:	STLoverStatView		Вироджених граней:
+Disconnected:	STLoverStatView		Роз'єднаних граней:
+Edges fixed:	STLoverStatView		Виправлено ребер:
+Facet status	STLoverStatView		Грані
+Facets added:	STLoverStatView		Додано граней:
+Facets removed:	STLoverStatView		Видалено граней:
+Facets reversed:	STLoverStatView		Змінено напрямків:
+Facets:	STLoverStatView		Всього граней:
+File	STLoverStatView		Файл
+Height:	STLoverStatView		Висота:
+Length:	STLoverStatView		Довжина:
+Max X:	STLoverStatView		Макс. X:
+Max Y:	STLoverStatView		Макс. Y:
+Max Z:	STLoverStatView		Макс. Z:
+Min X:	STLoverStatView		Мін. X:
+Min Y:	STLoverStatView		Мін. Y:
+Min Z:	STLoverStatView		Мін. Z:
+Name:	STLoverStatView		Ім'я:
+Normals fixed:	STLoverStatView		Виправлено нормалей:
+Object size	STLoverStatView		Розміри об'єкта
+Parts:	STLoverStatView		Частин:
+Processing	STLoverStatView		Обробка
+STL Type:	STLoverStatView		Тип STL:
+Title:	STLoverStatView		Заголовок:
+Volume:	STLoverStatView		Об'єм:
+Width:	STLoverStatView		Ширина:
+Cancel	STLoverInputWindow		Скасувати
+OK	STLoverInputWindow		OK
+STLover	System name		STLover

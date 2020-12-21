@@ -1,0 +1,129 @@
+1	Turkish	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Hakkında
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		Eksenler
+Axis scale	STLoverMainWindow		Eksen ölçeği
+Axis scaling…	STLoverMainWindow		Eksen ölçeklendirmesi…
+Best fit	STLoverMainWindow		Tam sığan
+Binary	STLoverMainWindow		İkili
+Bounding box	STLoverMainWindow		Zıplayan kutu
+By…	STLoverMainWindow		Şunun tarafından…
+Cancel	STLoverMainWindow		İptal
+Close	STLoverMainWindow		Kapat
+Custom axis scale	STLoverMainWindow		Özel eksen ölçeği
+Don't save	STLoverMainWindow		Kaydetme
+Drop STL files here	STLoverMainWindow		STL dosyalarını buraya bırakın
+Edit title	STLoverMainWindow		Başlığı düzenle
+Edit title…	STLoverMainWindow		Başlığı düzenle…
+File	STLoverMainWindow		Dosya
+Front view	STLoverMainWindow		Önden görünüm
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Yardım
+Loading…	STLoverMainWindow		Yükleniyor…
+Mirror	STLoverMainWindow		Yansı
+Mirror XY	STLoverMainWindow		XY yansısı
+Mirror XZ	STLoverMainWindow		XZ yansısı
+Mirror YZ	STLoverMainWindow		YZ yansısı
+Move	STLoverMainWindow		Taşı
+Move by	STLoverMainWindow		Şununla taşı
+Move to	STLoverMainWindow		Şuraya taşı
+Move to top of OXY plane	STLoverMainWindow		OXY düzleminin en üstüne taşı
+Open	STLoverMainWindow		Aç
+Open…	STLoverMainWindow		Aç…
+Plane OXY	STLoverMainWindow		OXY düzlemi
+Quit	STLoverMainWindow		Çık
+Reload	STLoverMainWindow		Yeniden yükle
+Repair	STLoverMainWindow		Onar
+Repair…	STLoverMainWindow		Onar…
+Reset	STLoverMainWindow		Sıfırla
+Reset view	STLoverMainWindow		Görünümü sıfırla
+Right view	STLoverMainWindow		Sağdan görünüm
+Rotate	STLoverMainWindow		Döndür
+Rotate…	STLoverMainWindow		Döndür…
+Save	STLoverMainWindow		Kaydet
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		'%document%' belgesini '%format%' dosya biçiminde farklı kaydet…
+Save as…	STLoverMainWindow		Farklı kaydet…
+Save changes to document '%filename%' ?	STLoverMainWindow		'%filename%' belgesine yapılan değişiklikler kaydedilsin mi?
+Scale	STLoverMainWindow		Ölçek
+Scale factor:	STLoverMainWindow		Ölçek çarpanı:
+Scale X factor:	STLoverMainWindow		X ölçeği çarpanı:
+Scale Y factor:	STLoverMainWindow		Y ölçeği çarpanı:
+Scale Z factor:	STLoverMainWindow		Z ölçeği çarpanı
+Scale…	STLoverMainWindow		Ölçeklendir…
+Show axes	STLoverMainWindow		Eksenleri göster
+Show plane OXY	STLoverMainWindow		OXY düzlemini göster
+Solid	STLoverMainWindow		Katı
+Statistics	STLoverMainWindow		İstatistikler
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (İkili)
+STL Title	STLoverMainWindow		STL Başlığı
+Title:	STLoverMainWindow		Başlık:
+To (0,0,0)	STLoverMainWindow		Şuraya: (0,0,0)
+To origin	STLoverMainWindow		Kökene
+To top of OXY plane	STLoverMainWindow		OXY düzleminin en üstüne
+To…	STLoverMainWindow		Şuraya…
+Tools	STLoverMainWindow		Araçlar
+Top view	STLoverMainWindow		Yukarıdan görünüm
+Unknown file format!	STLoverMainWindow		Bilinmeyen dosya biçimi!
+View	STLoverMainWindow		Görünüm
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wireframe	STLoverMainWindow		İskelet
+X-axis:	STLoverMainWindow		X ekseni:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Y ekseni:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Z ekseni:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Yakınlaştır
+Zoom out	STLoverMainWindow		Uzaklaştır
+A file format native to the STereoLithography CAD software	STLoverApplication		STereoLithography CAD yazılımına özel bir dosya biçimi
+STL file	STLoverApplication		STL dosyası
+Add facets to fill holes	STLoverRepairWindow		Delikleri doldurmak için fasetalar ekle
+Amount to increment tolerance after iteration	STLoverRepairWindow		Yineleme sonrasında artırılacak tolerans miktarı
+Cancel	STLoverRepairWindow		İptal
+Check and fix direction of normals	STLoverRepairWindow		Olağanların yönünü denetle ve düzelt
+Check and fix normal values	STLoverRepairWindow		Olağan değerleri denetle ve düzelt
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Yakınlardaki fasetaları bul ve birbirine bağla. Hatalı fasetaları onar.
+Initial tolerance to use for nearby check	STLoverRepairWindow		Yakınlık denetimi için kullanılacak başlangıç toleransı
+Number of iterations for nearby check	STLoverRepairWindow		Yakınlık denetimi için yineleme sayısı
+OK	STLoverRepairWindow		Tamam
+Only check for perfectly matched edges	STLoverRepairWindow		Yalnızca kusursuzca eşleşen kenarlar için denetle
+Remove facets that have 0 neighbors	STLoverRepairWindow		Hiçbir komşusu olmayan fasetaları kaldır
+Repair	STLoverRepairWindow		Onar
+Reverse the directions of all facets and normals	STLoverRepairWindow		Tüm fasetaların ve olağanların yönlerini tersine çevir
+Backward edges:	STLoverStatView		Arka kenarlar:
+Degenerate facets:	STLoverStatView		Fasetaları boz
+Disconnected:	STLoverStatView		Bağlantısı kopmuş:
+Edges fixed:	STLoverStatView		Düzeltilen kenarlar:
+Facet status	STLoverStatView		Faseta durumu
+Facets added:	STLoverStatView		Eklenen fasetalar:
+Facets removed:	STLoverStatView		Kaldırılan fasetalar:
+Facets reversed:	STLoverStatView		Tersine çevrilen fasetalar:
+Facets:	STLoverStatView		Fasetalar:
+File	STLoverStatView		Dosya
+Height:	STLoverStatView		Yükseklik:
+Length:	STLoverStatView		Uzunluk:
+Max X:	STLoverStatView		X en çok:
+Max Y:	STLoverStatView		Y en çok:
+Max Z:	STLoverStatView		Z en çok:
+Min X:	STLoverStatView		X en az:
+Min Y:	STLoverStatView		Y en az:
+Min Z:	STLoverStatView		Z en az:
+Name:	STLoverStatView		Ad:
+Normals fixed:	STLoverStatView		Düzeltilen olağanlar:
+Object size	STLoverStatView		Nesne boyutu
+Parts:	STLoverStatView		Kısımlar:
+Processing	STLoverStatView		İşleniyor
+STL Type:	STLoverStatView		STL Türü:
+Title:	STLoverStatView		Başlık:
+Volume:	STLoverStatView		Hacim:
+Width:	STLoverStatView		Genişlik:
+Cancel	STLoverInputWindow		İptal
+OK	STLoverInputWindow		Tamam
+STLover	System name		STLover
