@@ -20,10 +20,6 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
-#include <iostream>
-
-using namespace std;
-
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverGLView"
 
@@ -52,7 +48,6 @@ STLView::MessageReceived(BMessage *message)
 				float dy = message->FindFloat("be:wheel_delta_y");
 				scaleFactor += ((dy * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor)))) * 0.3;
 				needUpdate = true;
-				cout<<scaleFactor<<endl;
 			}
 			break;
 		}
@@ -269,7 +264,9 @@ float matrix[16];
 void
 STLView::DrawAxis(void)
 {
-
+	double alpha = std::abs(cos(xRotate*M_PI/180.0));
+	double beta = std::abs(cos(yRotate*M_PI/180.0));
+	
 	glLineWidth(1);
 
 	// Y axis
@@ -279,25 +276,26 @@ STLView::DrawAxis(void)
 	glVertex3f(0,1,0);
 	glEnd();
 
-	glPushMatrix();
-	glTranslatef(0,1.5,0);
-	
-	Billboard();
-	
-	glScalef(0.025,0.025,0.025);
-	
-	glBegin(GL_LINES);
-	glVertex3f(0,0,0);
-	glVertex3f(0,1,0);
-	
-	glVertex3f(0,1,0);
-	glVertex3f(0.5,1.5,0);
-	
-	glVertex3f(0,1,0);
-	glVertex3f(-0.5,1.5,0);
-	glEnd();
-	glPopMatrix();
-
+	if (std::abs(1.0-beta)>0.03 || alpha>0.03) {
+		glPushMatrix();
+		glTranslatef(0,1.5,0);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(0,0,0);
+		glVertex3f(0,1,0);
+		
+		glVertex3f(0,1,0);
+		glVertex3f(0.5,1.5,0);
+		
+		glVertex3f(0,1,0);
+		glVertex3f(-0.5,1.5,0);
+		glEnd();
+		glPopMatrix();
+	}
 	// X axis
 	glBegin(GL_LINES);
 	glColor4f (0, 1, 0, 1);
@@ -305,22 +303,23 @@ STLView::DrawAxis(void)
 	glVertex3f(1,0,0);
 	glEnd();
 	
-	glPushMatrix();
-	glTranslatef(1.5,0,0);
-	
-	Billboard();
-	
-	glScalef(0.025,0.025,0.025);
-	
-	glBegin(GL_LINES);
-	glVertex3f(-0.75,0,0);
-	glVertex3f(0.75,1.5,0);
-	
-	glVertex3f(0.75,0,0);
-	glVertex3f(-0.75,1.5,0);
-	glEnd();
-	glPopMatrix();
-	
+	if (beta>0.03 || alpha>0.03) {
+		glPushMatrix();
+		glTranslatef(1.5,0,0);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(-0.75,0,0);
+		glVertex3f(0.75,1.5,0);
+		
+		glVertex3f(0.75,0,0);
+		glVertex3f(-0.75,1.5,0);
+		glEnd();
+		glPopMatrix();
+	}
 	// Z axis
 	glBegin(GL_LINES);
 	glColor4f (0.1, 0.1, 1, 1);
@@ -328,24 +327,26 @@ STLView::DrawAxis(void)
 	glVertex3f(0,0,1);
 	glEnd();
 	
-	glPushMatrix();
-	glTranslatef(0,0,1.5);
-	
-	Billboard();
-	
-	glScalef(0.025,0.025,0.025);
-	
-	glBegin(GL_LINES);
-	glVertex3f(0.75,0,0);
-	glVertex3f(-0.75,0,0);
-	
-	glVertex3f(-0.75,0,0);
-	glVertex3f(0.75,1,0);
-	
-	glVertex3f(0.75,1,0);
-	glVertex3f(-0.75,1,0);
-	glEnd();
-	glPopMatrix();
+	if (std::abs(1.0-alpha)>0.03) {
+		glPushMatrix();
+		glTranslatef(0,0,1.5);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(0.75,0,0);
+		glVertex3f(-0.75,0,0);
+		
+		glVertex3f(-0.75,0,0);
+		glVertex3f(0.75,1,0);
+		
+		glVertex3f(0.75,1,0);
+		glVertex3f(-0.75,1,0);
+		glEnd();
+		glPopMatrix();
+	}
 }
 
 void
@@ -404,27 +405,24 @@ STLView::Render(void)
 		
 		if (showAxes) {
 			
-			
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glOrtho(-1,1,-1,1,0.01,1000);
+			
+			float aspect = (float)boundRect.Width()/(float)boundRect.Height();
+			float fx = aspect*0.8f;;
+			float fy = -0.8f;
+			
+			glOrtho(-aspect,aspect,-1,1,0.01,1000);
 			
 			glMatrixMode(GL_MODELVIEW);
-			//glPushMatrix();
 			
 			glLoadIdentity();
 			
-			//glScalef(-scaleFactor,-scaleFactor,-scaleFactor);
-			//glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
-			glTranslatef(0.8,-0.8,-1);
+			glTranslatef(fx,fy,-1);
 			glScalef(0.1f,0.1f,0.1f);
 			glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 			glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
-			
 			DrawAxis();
-			//glPopMatrix();
-			
-			//glMatrixMode(GL_MODELVIEW);
 		}
 		
 		glDisable(GL_LINE_SMOOTH);
