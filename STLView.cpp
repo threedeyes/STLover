@@ -82,14 +82,12 @@ STLView::AttachedToWindow(void)
 void
 STLView::SetupProjection(void)
 {
-	glViewport(0, 0, boundRect.Width(), boundRect.Height());
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-
+	glViewport(0, 0, boundRect.Width(), boundRect.Height());
 	gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
 		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
 
-	glMatrixMode(GL_MODELVIEW);
 }
 
 void
@@ -243,79 +241,112 @@ STLView::DrawOXY(float margin)
 	glEnd();
 }
 
+static void
+Billboard()
+{
+float matrix[16];
+	glGetFloatv(GL_MODELVIEW_MATRIX,matrix);
+	
+	for (int i=0;i<3;i++) {
+		for (int j=0;j<3;j++) {
+			if (i==j) {
+				matrix[i*4+j]=1.0f;
+			}
+			else {
+				matrix[i*4+j]=0.0f;
+			}
+		}
+	}
+	
+	glLoadMatrixf(matrix);
+}
+
 void
 STLView::DrawAxis(void)
 {
-	float xShift = stlObjectView->stats.min.x - stlObject->stats.min.x;
-	float yShift = stlObjectView->stats.min.y - stlObject->stats.min.y;
-	float zShift = stlObjectView->stats.min.z - stlObject->stats.min.z;
-	float radius = sqrt(stlObjectView->stats.size.x * stlObjectView->stats.size.x +
-			stlObjectView->stats.size.y * stlObjectView->stats.size.x +
-			stlObjectView->stats.size.z * stlObjectView->stats.size.z) * 1.2;
-	float coneSize = radius / 50.0;
-	float labelSize = coneSize * 1.5;
-
-	GLUquadricObj *coneObj = gluNewQuadric();
-	glPushMatrix();
-	glColor4f (1, 0, 0, 1);
-	glTranslated(xShift, yShift + radius, zShift);
-	glRotated(270, 1, 0, 0);
-	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor4f (0, 1, 0, 1);
-	glTranslated(xShift + radius, yShift, zShift);
-	glRotated(90.0, 0, 1, 0);
-	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
-	glPopMatrix();
-
-	glPushMatrix();
-	glColor4f (0.1, 0.1, 1, 1);
-	glTranslated(xShift, yShift, zShift + radius);
-	gluCylinder(coneObj, coneSize, 0, coneSize * 3.0, 16, 16);
-	glPopMatrix();
-
-	gluDeleteQuadric(coneObj);
-
+	double alpha = std::abs(cos(xRotate*M_PI/180.0));
+	double beta = std::abs(cos(yRotate*M_PI/180.0));
+	
 	glLineWidth(1);
 
+	// Y axis
 	glBegin(GL_LINES);
 	glColor4f (1, 0, 0, 1);
-	// Y axis
-	glVertex3f(xShift, yShift - radius, zShift);
-	glVertex3f(xShift, yShift + radius, zShift);
-	// Y label
-	glVertex3f(xShift, yShift + radius, zShift + (labelSize * 2));
-	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
-	glVertex3f(xShift, yShift + radius + labelSize, zShift + (labelSize * 2));
-	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
-	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + labelSize);
-	glVertex3f(xShift, yShift + radius + (labelSize / 2), zShift + (labelSize * 1.5));
-
-	// X axis
-	glColor4f (0, 1, 0, 1);
-	glVertex3f(xShift - radius, yShift, zShift);
-	glVertex3f(xShift + radius, yShift, zShift);
-	// X label
-	glVertex3f(xShift + radius, yShift, zShift + (labelSize * 2));
-	glVertex3f(xShift + radius + labelSize, yShift, zShift + labelSize);
-	glVertex3f(xShift + radius, yShift, zShift + labelSize);
-	glVertex3f(xShift + radius + labelSize, yShift, zShift + (labelSize * 2));
-
-	// Z axis
-	glColor4f (0.1, 0.1, 1, 1);
-	glVertex3f(xShift, yShift, zShift - radius);
-	glVertex3f(xShift, yShift, zShift + radius);
-	// Z label
-	glVertex3f(xShift + labelSize, yShift, zShift + radius);
-	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius);
-	glVertex3f(xShift + labelSize, yShift, zShift + radius);
-	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius + labelSize);
-	glVertex3f(xShift + labelSize, yShift, zShift + radius + labelSize);
-	glVertex3f(xShift + (labelSize * 2), yShift, zShift + radius + labelSize);
-
+	glVertex3f(0,0,0);
+	glVertex3f(0,1,0);
 	glEnd();
+
+	if (std::abs(1.0-beta)>0.03 || alpha>0.03) {
+		glPushMatrix();
+		glTranslatef(0,1.5,0);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(0,0,0);
+		glVertex3f(0,1,0);
+		
+		glVertex3f(0,1,0);
+		glVertex3f(0.5,1.5,0);
+		
+		glVertex3f(0,1,0);
+		glVertex3f(-0.5,1.5,0);
+		glEnd();
+		glPopMatrix();
+	}
+	// X axis
+	glBegin(GL_LINES);
+	glColor4f (0, 1, 0, 1);
+	glVertex3f(0,0,0);
+	glVertex3f(1,0,0);
+	glEnd();
+	
+	if (beta>0.03 || alpha>0.03) {
+		glPushMatrix();
+		glTranslatef(1.5,0,0);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(-0.75,0,0);
+		glVertex3f(0.75,1.5,0);
+		
+		glVertex3f(0.75,0,0);
+		glVertex3f(-0.75,1.5,0);
+		glEnd();
+		glPopMatrix();
+	}
+	// Z axis
+	glBegin(GL_LINES);
+	glColor4f (0.1, 0.1, 1, 1);
+	glVertex3f(0,0,0);
+	glVertex3f(0,0,1);
+	glEnd();
+	
+	if (std::abs(1.0-alpha)>0.03) {
+		glPushMatrix();
+		glTranslatef(0,0,1.5);
+		
+		Billboard();
+		
+		glScalef(0.025,0.025,0.025);
+		
+		glBegin(GL_LINES);
+		glVertex3f(0.75,0,0);
+		glVertex3f(-0.75,0,0);
+		
+		glVertex3f(-0.75,0,0);
+		glVertex3f(0.75,1,0);
+		
+		glVertex3f(0.75,1,0);
+		glVertex3f(-0.75,1,0);
+		glEnd();
+		glPopMatrix();
+	}
 }
 
 void
@@ -326,6 +357,7 @@ STLView::Render(void)
 
 	if (stlWindow->IsLoaded()) {
 		LockGL();
+		SetupProjection();
 		needUpdate = false;
 
 		glEnable(GL_DEPTH_TEST);
@@ -335,6 +367,7 @@ STLView::Render(void)
 		
 		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 		glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
@@ -362,15 +395,36 @@ STLView::Render(void)
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
 		
-		if (showAxes)
-			DrawAxis();
+
 		
 		if (showOXY)
 			DrawOXY();
 			
 		if (showBox)
 			DrawBox();
-
+		
+		if (showAxes) {
+			
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			
+			float aspect = (float)boundRect.Width()/(float)boundRect.Height();
+			float fx = aspect*0.8f;;
+			float fy = -0.8f;
+			
+			glOrtho(-aspect,aspect,-1,1,0.01,1000);
+			
+			glMatrixMode(GL_MODELVIEW);
+			
+			glLoadIdentity();
+			
+			glTranslatef(fx,fy,-1);
+			glScalef(0.1f,0.1f,0.1f);
+			glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
+			glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
+			DrawAxis();
+		}
+		
 		glDisable(GL_LINE_SMOOTH);
 		glDisable(GL_BLEND);
 		
