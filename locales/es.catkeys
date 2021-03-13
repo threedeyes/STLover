@@ -1,0 +1,129 @@
+1	Spanish	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Acerca de
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		DXF de Autodesk
+Axes	STLoverMainWindow		Ejes
+Axis scale	STLoverMainWindow		Escala de ejes
+Axis scaling…	STLoverMainWindow		Escala de los ejes…
+Best fit	STLoverMainWindow		Mejor ajuste
+Binary	STLoverMainWindow		Binario
+Bounding box	STLoverMainWindow		Caja delimitadora
+By…	STLoverMainWindow		By…
+Cancel	STLoverMainWindow		Cancelar
+Close	STLoverMainWindow		Cerrar
+Custom axis scale	STLoverMainWindow		Escala personalizada de ejes
+Don't save	STLoverMainWindow		No guardar
+Drop STL files here	STLoverMainWindow		Suelte aquí los archivos STL
+Edit title	STLoverMainWindow		Editar título
+Edit title…	STLoverMainWindow		Editar título…
+File	STLoverMainWindow		Archivo
+Front view	STLoverMainWindow		Vista frontal
+Geomview OFF	STLoverMainWindow		Geomview APAGADO
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Ayuda
+Loading…	STLoverMainWindow		Cargando…
+Mirror	STLoverMainWindow		Mirror
+Mirror XY	STLoverMainWindow		Mirror XY
+Mirror XZ	STLoverMainWindow		Mirror XZ
+Mirror YZ	STLoverMainWindow		Mirror YZ
+Move	STLoverMainWindow		Mover
+Move by	STLoverMainWindow		Move by
+Move to	STLoverMainWindow		Move to
+Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
+Open	STLoverMainWindow		Abrir
+Open…	STLoverMainWindow		Abrir…
+Plane OXY	STLoverMainWindow		Plane OXY
+Quit	STLoverMainWindow		Salir
+Reload	STLoverMainWindow		Recargar
+Repair	STLoverMainWindow		Reparar
+Repair…	STLoverMainWindow		Reparar…
+Reset	STLoverMainWindow		Restaurar
+Reset view	STLoverMainWindow		Restaurar vista
+Right view	STLoverMainWindow		Right view
+Rotate	STLoverMainWindow		Rotar
+Rotate…	STLoverMainWindow		Rotar…
+Save	STLoverMainWindow		Guardar
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Guardar '%document%' como un archivo '%format%' en…
+Save as…	STLoverMainWindow		Guardar como…
+Save changes to document '%filename%' ?	STLoverMainWindow		¿Desea guardar los cambios al documento '%filename%'?
+Scale	STLoverMainWindow		Escala
+Scale factor:	STLoverMainWindow		Scale factor:
+Scale X factor:	STLoverMainWindow		Scale X factor:
+Scale Y factor:	STLoverMainWindow		Scale Y factor:
+Scale Z factor:	STLoverMainWindow		Scale Z factor:
+Scale…	STLoverMainWindow		Scale…
+Show axes	STLoverMainWindow		Show axes
+Show plane OXY	STLoverMainWindow		Show plane OXY
+Solid	STLoverMainWindow		Solid
+Statistics	STLoverMainWindow		Estadísticas
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binary)
+STL Title	STLoverMainWindow		STL Title
+Title:	STLoverMainWindow		Título:
+To (0,0,0)	STLoverMainWindow		To (0,0,0)
+To origin	STLoverMainWindow		To origin
+To top of OXY plane	STLoverMainWindow		To top of OXY plane
+To…	STLoverMainWindow		To…
+Tools	STLoverMainWindow		Tools
+Top view	STLoverMainWindow		Top view
+Unknown file format!	STLoverMainWindow		Formato de archivo desconocido
+View	STLoverMainWindow		View
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wireframe	STLoverMainWindow		Wireframe
+X-axis:	STLoverMainWindow		Eje X:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Eje Y:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Eje Z:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Acercar
+Zoom out	STLoverMainWindow		Alejar
+A file format native to the STereoLithography CAD software	STLoverApplication		Un formato de archivo nativo de la aplicación de CAD STereoLithography
+STL file	STLoverApplication		Archivo STL
+Add facets to fill holes	STLoverRepairWindow		Add facets to fill holes
+Amount to increment tolerance after iteration	STLoverRepairWindow		Amount to increment tolerance after iteration
+Cancel	STLoverRepairWindow		Cancelar
+Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
+Check and fix normal values	STLoverRepairWindow		Verificar y corregir valores normales
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
+Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerance to use for nearby check
+Number of iterations for nearby check	STLoverRepairWindow		Number of iterations for nearby check
+OK	STLoverRepairWindow		Aceptar
+Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfectly matched edges
+Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
+Repair	STLoverRepairWindow		Reparar
+Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
+Backward edges:	STLoverStatView		Backward edges:
+Degenerate facets:	STLoverStatView		Degenerate facets:
+Disconnected:	STLoverStatView		Disconnected:
+Edges fixed:	STLoverStatView		Edges fixed:
+Facet status	STLoverStatView		Facet status
+Facets added:	STLoverStatView		Facets added:
+Facets removed:	STLoverStatView		Facets removed:
+Facets reversed:	STLoverStatView		Facets reversed:
+Facets:	STLoverStatView		Facets:
+File	STLoverStatView		Archivo
+Height:	STLoverStatView		Height:
+Length:	STLoverStatView		Length:
+Max X:	STLoverStatView		Max X:
+Max Y:	STLoverStatView		Max Y:
+Max Z:	STLoverStatView		Max Z:
+Min X:	STLoverStatView		Min X:
+Min Y:	STLoverStatView		Min Y:
+Min Z:	STLoverStatView		Min Z:
+Name:	STLoverStatView		Nombre:
+Normals fixed:	STLoverStatView		Normals fixed:
+Object size	STLoverStatView		Tamaño de objeto
+Parts:	STLoverStatView		Partes:
+Processing	STLoverStatView		Processing
+STL Type:	STLoverStatView		Tipo de STL:
+Title:	STLoverStatView		Título:
+Volume:	STLoverStatView		Volumen:
+Width:	STLoverStatView		Width:
+Cancel	STLoverInputWindow		Cancelar
+OK	STLoverInputWindow		Aceptar
+STLover	System name		STLover
