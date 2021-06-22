@@ -48,6 +48,7 @@ STLView::MessageReceived(BMessage *message)
 				float dy = message->FindFloat("be:wheel_delta_y");
 				scaleFactor += ((dy * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor)))) * 0.3;
 				needUpdate = true;
+				printf("%f\n",scaleFactor);
 			}
 			break;
 		}
@@ -85,9 +86,14 @@ STLView::SetupProjection(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, boundRect.Width(), boundRect.Height());
+	/*
 	gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
 		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
-
+	*/
+	float w = scaleFactor/2;
+	float ratio = (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height();
+	glOrtho(-w*ratio,w*ratio,-w,w,0.1f,stlWindow->GetZDepth()+stlWindow->GetBigExtent());
+	printf("w %f %f\n",stlWindow->GetZDepth(),scaleFactor);
 }
 
 void
@@ -369,9 +375,13 @@ STLView::Render(void)
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
+		//glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
+		glTranslatef(0,0,stlWindow->GetBigExtent());
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
+		
+		printf("%f %f\n",stlWindow->GetZDepth() , scaleFactor);
+		fflush(stdout);
 
 		glPolygonMode(GL_FRONT_AND_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
