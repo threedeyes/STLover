@@ -45,6 +45,7 @@ class STLView : public BGLView {
 		void ShowBoundingBox(bool show) { showBox = show; }
 		void ShowOXY(bool show) { showOXY = show; }
 		void SetViewMode(uint32 mode) { viewMode = mode; }
+		void SetOrthographic(bool ortho) { viewOrtho = ortho; SetupProjection(); };
 		void Render(void);
 		void RenderUpdate() { needUpdate = true; }
 
@@ -86,6 +87,7 @@ class STLView : public BGLView {
 		bool showBox;
 		bool showAxes;
 		bool showOXY;
+		bool viewOrtho;
 };
 
 #endif

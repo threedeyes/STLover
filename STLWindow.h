@@ -59,8 +59,8 @@ class STLWindow : public BWindow {
 		void TransformPosition(void);
 
 		int GetErrorTimer(void) { return fErrorTimeCounter; }
-		int GetBigExtent(void) { return fMaxExtent; }
-		int GetZDepth(void) { return fZDepth; }
+		float GetBigExtent(void) { return fMaxExtent; }
+		float GetZDepth(void) { return fZDepth; }
 		bool IsLoaded(void) { return (fStlObject != NULL && fStlValid); }
 		bool IsLoading(void) { return fStlLoading; }
 		bool IsRenderWork(void) {return fRenderWork; }
@@ -123,6 +123,7 @@ class STLWindow : public BWindow {
 		bool fShowWireframe;
 		bool fShowAxes;
 		bool fShowOXY;
+		bool fViewOrtho;
 
 		int32 fExactFlag;
 		int32 fNearbyFlag;

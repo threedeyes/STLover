@@ -20,6 +20,9 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
+#include <iostream>
+using namespace std;
+
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverGLView"
 
@@ -28,7 +31,8 @@ STLView::STLView(BRect frame, uint32 type)
 	needUpdate(true),
 	showAxes(false),
 	showBox(false),
-	showOXY(false)
+	showOXY(false),
+	viewOrtho(false)
 {
 	appIcon = STLoverApplication::GetIcon(NULL, 164);
 }
@@ -86,14 +90,21 @@ STLView::SetupProjection(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, boundRect.Width(), boundRect.Height());
-	/*
-	gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
-		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
-	*/
-	float w = scaleFactor/2;
-	float ratio = (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height();
-	glOrtho(-w*ratio,w*ratio,-w,w,0.1f,stlWindow->GetZDepth()+stlWindow->GetBigExtent());
-	printf("w %f %f\n",stlWindow->GetZDepth(),scaleFactor);
+	
+	if (viewOrtho) {
+	printf("Setup an orthographic projection\n");
+		float w = std::abs(scaleFactor/2.0f);
+		float ratio = (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height();
+		//glOrtho(-w*ratio,w*ratio,-w,w,0.1f,stlWindow->GetZDepth()+stlWindow->GetBigExtent());
+		glOrtho(-w*ratio,w*ratio,-w,w,0.1f,1000.0f);
+		printf("ZDepth %f scaleFactor %f\n",stlWindow->GetZDepth(),scaleFactor);
+	}
+	else {
+		printf("Setup a perspective projection\n");
+		gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
+			0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
+	
+	}
 }
 
 void
@@ -375,13 +386,23 @@ STLView::Render(void)
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		//glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
-		glTranslatef(0,0,stlWindow->GetBigExtent());
-		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
-		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
 		
-		printf("%f %f\n",stlWindow->GetZDepth() , scaleFactor);
-		fflush(stdout);
+		
+		if (viewOrtho) {
+			clog<<"translate "<<stlWindow->GetBigExtent()<<endl;
+			glTranslatef(0,0,-stlWindow->GetBigExtent());
+			glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
+			glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
+		}
+		else {
+			clog<<"translate "<<stlWindow->GetZDepth() + scaleFactor<<endl;
+			glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
+			glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
+			glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
+		}
+		
+		clog<<"ZD:"<<stlWindow->GetZDepth()<<" sF"<<scaleFactor<<endl;
+		clog<<"rotate:"<<xRotate<<" "<<yRotate<<endl;
 
 		glPolygonMode(GL_FRONT_AND_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
