@@ -192,7 +192,7 @@ STLWindow::STLWindow()
 	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), B_TRANSLATE("Front view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), B_TRANSLATE("Right view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), B_TRANSLATE("Top view"));
-	fViewToolBar->AddAction(MSG_VIEWMODE_ORTHO, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), B_TRANSLATE("Projection mode"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_ORTHO, this, STLoverApplication::GetIcon("orthographic", TOOLBAR_ICON_SIZE), B_TRANSLATE("Projection mode"));
 	fViewToolBar->AddGlue();
 	fViewToolBar->ResizeTo(fViewToolBar->MinSize().width, viewToolBarRect.Height());
 	fViewToolBar->GroupLayout()->SetInsets(0);
