@@ -730,7 +730,6 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_VIEWMODE_ORTHO:
 		{
 			fViewOrtho=!fViewOrtho;
-			std::clog<<"Ortho toggled "<<fViewOrtho<<std::endl;
 			UpdateUI();
 			
 			fStlView->SetOrthographic(fViewOrtho);
@@ -1238,7 +1237,7 @@ STLWindow::UpdateStats(void)
 void
 STLWindow::TransformPosition()
 {
-	printf("TransformPosition\n");
+
 	stl_translate(fStlObjectView, 0, 0, 0);
 
 	float xMaxExtent = 0;
