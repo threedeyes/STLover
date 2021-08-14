@@ -19,6 +19,10 @@
 #include "STLApp.h"
 #include "STLInputWindow.h"
 
+#include <iostream>
+
+using namespace std;
+
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
@@ -142,18 +146,32 @@ STLInputWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 		case MSG_INPUT_VALUE_UPDATED:
 		{
+			clog<<"edit!"<<endl;
+			
+			BMessage *msg = new BMessage(MSG_INPUT_VALUE_UPDATED);
+			msg->AddInt32("action",fMessageId);
+			msg->AddFloat("value0", atof(fValueControl->Text()));
+			if (fValues == 3) {
+				msg->AddFloat("value1", atof(fValueControl2->Text()));
+				msg->AddFloat("value2", atof(fValueControl3->Text()));
+			}
+			fTargetMessenger.SendMessage(msg);
+			
+			/* Is this really working? */
 			bool enabled = fValueControl->Text() != NULL && fValueControl->Text()[0] != '\0';
 			if (fOkButton->IsEnabled() != enabled)
 				fOkButton->SetEnabled(enabled);
 			break;
 		}
+		
 		case MSG_INPUT_OK:
 		{
 			BMessage *msg = new BMessage(fMessageId);
-			msg->AddString("value", fValueControl->Text());
+			
+			msg->AddFloat("value0", atof(fValueControl->Text()));
 			if (fValues == 3) {
-				msg->AddString("value2", fValueControl2->Text());
-				msg->AddString("value3", fValueControl3->Text());
+				msg->AddFloat("value1", atof(fValueControl2->Text()));
+				msg->AddFloat("value2", atof(fValueControl3->Text()));
 			}
 			fTargetMessenger.SendMessage(msg);
 			PostMessage(B_QUIT_REQUESTED);

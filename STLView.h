@@ -39,7 +39,7 @@ class STLView : public BGLView {
 		virtual void MouseUp(BPoint point);
 		virtual void MouseMoved(BPoint p, uint32 transit,const BMessage *message);
 
-		void SetSTL(stl_file *stl, stl_file *stlView);
+		void SetSTL(stl_file *stl);
 		void Reset(bool scale = true, bool rotate = true, bool pan = true);
 		void ShowAxes(bool show) { showAxes = show; }
 		void ShowBoundingBox(bool show) { showBox = show; }
@@ -62,6 +62,8 @@ class STLView : public BGLView {
 		void DrawOXY(float margin = 30.0);
 
 		void SetupProjection(void);
+		
+		void DrawSTL();
 
 		BRect boundRect;
 		BBitmap *appIcon;
@@ -73,7 +75,6 @@ class STLView : public BGLView {
 		STLWindow *stlWindow;
 
 		stl_file* stlObject;
-		stl_file* stlObjectView;
 
 		float xRotate;
 		float yRotate;

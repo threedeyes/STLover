@@ -163,11 +163,10 @@ STLView::Reset(bool scale, bool rotate, bool pan)
 }
 
 void
-STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
+STLView::SetSTL(stl_file *stl)
 {
 	LockGL();
-	stlObject = _stl;
-	stlObjectView = _stlView;
+	stlObject = stl;
 	SetupProjection();
 	Reset();
 	UnlockGL();
@@ -176,8 +175,8 @@ STLView::SetSTL(stl_file *_stl, stl_file *_stlView)
 void
 STLView::DrawBox(void)
 {
-	stl_vertex min = stlObjectView->stats.min;
-	stl_vertex size = stlObjectView->stats.size;
+	stl_vertex min = stlObject->stats.min;
+	stl_vertex size = stlObject->stats.size;
 
 	glLineWidth(1);
 	glColor4f (0.9, 0.25, 0.6, 1);
@@ -211,14 +210,17 @@ STLView::DrawBox(void)
 void
 STLView::DrawOXY(float margin)
 {
-	float xShift = stlObjectView->stats.min.x - stlObject->stats.min.x;
-	float yShift = stlObjectView->stats.min.y - stlObject->stats.min.y;
-	float zShift = stlObjectView->stats.min.z - stlObject->stats.min.z;
+	/* 
+	TODO: check this
+	*/
+	float xShift = stlObject->stats.min.x - stlObject->stats.min.x;
+	float yShift = stlObject->stats.min.y - stlObject->stats.min.y;
+	float zShift = stlObject->stats.min.z - stlObject->stats.min.z;
 
-	float xMin = lroundf((stlObjectView->stats.min.x + xShift) / 10.0) * 10.0 - margin;
-	float xMax = lroundf((stlObjectView->stats.max.x + xShift) / 10.0) * 10.0 + margin;
-	float yMin = lroundf((stlObjectView->stats.min.y + yShift) / 10.0) * 10.0 - margin;
-	float yMax = lroundf((stlObjectView->stats.max.y + yShift) / 10.0) * 10.0 + margin;
+	float xMin = lroundf((stlObject->stats.min.x + xShift) / 10.0) * 10.0 - margin;
+	float xMax = lroundf((stlObject->stats.max.x + xShift) / 10.0) * 10.0 + margin;
+	float yMin = lroundf((stlObject->stats.min.y + yShift) / 10.0) * 10.0 - margin;
+	float yMax = lroundf((stlObject->stats.max.y + yShift) / 10.0) * 10.0 + margin;
 
 	glLineWidth(1);
 	glBegin(GL_LINES);
@@ -244,9 +246,9 @@ STLView::DrawOXY(float margin)
 static void
 Billboard()
 {
-float matrix[16];
+	float matrix[16];
 	glGetFloatv(GL_MODELVIEW_MATRIX,matrix);
-	
+
 	for (int i=0;i<3;i++) {
 		for (int j=0;j<3;j++) {
 			if (i==j) {
@@ -257,7 +259,7 @@ float matrix[16];
 			}
 		}
 	}
-	
+
 	glLoadMatrixf(matrix);
 }
 
@@ -266,7 +268,7 @@ STLView::DrawAxis(void)
 {
 	double alpha = std::abs(cos(xRotate*M_PI/180.0));
 	double beta = std::abs(cos(yRotate*M_PI/180.0));
-	
+
 	glLineWidth(1);
 
 	// Y axis
@@ -350,6 +352,19 @@ STLView::DrawAxis(void)
 }
 
 void
+STLView::DrawSTL(void)
+{
+	glBegin(GL_TRIANGLES);
+		for(size_t i = 0 ; i < stlObject->stats.number_of_facets ; i++) {
+			glNormal3f(stlObject->facet_start[i].normal.x, stlObject->facet_start[i].normal.y, stlObject->facet_start[i].normal.z);
+			glVertex3f(stlObject->facet_start[i].vertex[0].x, stlObject->facet_start[i].vertex[0].y, stlObject->facet_start[i].vertex[0].z);
+			glVertex3f(stlObject->facet_start[i].vertex[1].x, stlObject->facet_start[i].vertex[1].y, stlObject->facet_start[i].vertex[1].z);
+			glVertex3f(stlObject->facet_start[i].vertex[2].x, stlObject->facet_start[i].vertex[2].y, stlObject->facet_start[i].vertex[2].z);
+		}
+	glEnd();
+}
+
+void
 STLView::Render(void)
 {
 	if (!needUpdate)
@@ -377,14 +392,7 @@ STLView::Render(void)
 
 		glEnable(GL_LIGHTING);
 
-		glBegin(GL_TRIANGLES);
-		for(size_t i = 0 ; i < stlObjectView->stats.number_of_facets ; i++) {
-			glNormal3f(stlObjectView->facet_start[i].normal.x, stlObjectView->facet_start[i].normal.y, stlObjectView->facet_start[i].normal.z);
-			glVertex3f(stlObjectView->facet_start[i].vertex[0].x, stlObjectView->facet_start[i].vertex[0].y, stlObjectView->facet_start[i].vertex[0].z);
-			glVertex3f(stlObjectView->facet_start[i].vertex[1].x, stlObjectView->facet_start[i].vertex[1].y, stlObjectView->facet_start[i].vertex[1].z);
-			glVertex3f(stlObjectView->facet_start[i].vertex[2].x, stlObjectView->facet_start[i].vertex[2].y, stlObjectView->facet_start[i].vertex[2].z);
-		}
-		glEnd();
+		DrawSTL();
 
 		glDisable(GL_LIGHTING);
 
