@@ -20,6 +20,8 @@
 #include "STLView.h"
 #include "STLWindow.h"
 
+#include <cstring>
+
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverGLView"
 
@@ -28,7 +30,8 @@ STLView::STLView(BRect frame, uint32 type)
 	needUpdate(true),
 	showAxes(false),
 	showBox(false),
-	showOXY(false)
+	showOXY(false),
+	fShowPreview(false)
 {
 	appIcon = STLoverApplication::GetIcon(NULL, 164);
 }
@@ -352,9 +355,10 @@ STLView::DrawAxis(void)
 }
 
 void
-STLView::DrawSTL(void)
+STLView::DrawSTL(rgb_color color)
 {
 	glBegin(GL_TRIANGLES);
+		glColor3ub(color.red,color.green,color.blue);
 		for(size_t i = 0 ; i < stlObject->stats.number_of_facets ; i++) {
 			glNormal3f(stlObject->facet_start[i].normal.x, stlObject->facet_start[i].normal.y, stlObject->facet_start[i].normal.z);
 			glVertex3f(stlObject->facet_start[i].vertex[0].x, stlObject->facet_start[i].vertex[0].y, stlObject->facet_start[i].vertex[0].z);
@@ -391,8 +395,16 @@ STLView::Render(void)
 		glPolygonMode(GL_FRONT_AND_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
 		glEnable(GL_LIGHTING);
+		glEnable(GL_COLOR_MATERIAL);
 
 		DrawSTL();
+		
+		if (fShowPreview) {
+			glPushMatrix();
+				glMultMatrixf(fPreviewMatrix);
+				DrawSTL({128,101,0});
+			glPopMatrix();
+		}
 
 		glDisable(GL_LIGHTING);
 
@@ -439,4 +451,12 @@ STLView::Render(void)
 		SwapBuffers();
 		UnlockGL();
 	}
+}
+
+void
+STLView::ShowPreview(float *matrix)
+{
+	std::memcpy(fPreviewMatrix,matrix,sizeof(float)*16);
+	fShowPreview=true;
+	RenderUpdate();
 }

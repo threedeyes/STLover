@@ -817,6 +817,7 @@ STLWindow::MessageReceived(BMessage *message)
 				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -978,9 +979,25 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_INPUT_VALUE_UPDATED:
 		{
 			clog<<"Updated edit!"<<endl;
+			int32 action = message->FindInt32("action");
+			clog<<action<<endl;
 			clog<<message->FindFloat("value0")<<" ";
 			clog<<message->FindFloat("value1")<<" ";
 			clog<<message->FindFloat("value2")<<endl;
+			
+			switch(action) {
+				case MSG_TOOLS_SCALE_SET:
+				{
+					clog<<"scale!"<<endl;
+					float s = message->FindFloat("value0");
+					float matrix[16] = { s, 0 ,0 ,0,
+										 0, s ,0 ,0,
+										 0, 0 ,s ,0,
+										 0 ,0 ,0 ,1 };
+					fStlView->ShowPreview(matrix);
+				}
+				break;
+			}
 			break;
 		}
 		

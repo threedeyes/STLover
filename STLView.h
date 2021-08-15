@@ -56,6 +56,8 @@ class STLView : public BGLView {
 		void SetYRotate(float value) { yRotate = value; needUpdate = true;}
 		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true;}
 
+		void ShowPreview(float *matrix);
+		void HidePreview() { fShowPreview = false;}
 	private:
 		void DrawBox(void);
 		void DrawAxis(void);
@@ -63,7 +65,8 @@ class STLView : public BGLView {
 
 		void SetupProjection(void);
 		
-		void DrawSTL();
+		void DrawSTL() { DrawSTL({128,128,128});}
+		void DrawSTL(rgb_color color);
 
 		BRect boundRect;
 		BBitmap *appIcon;
@@ -87,6 +90,9 @@ class STLView : public BGLView {
 		bool showBox;
 		bool showAxes;
 		bool showOXY;
+
+		float fPreviewMatrix[16];
+		bool fShowPreview;
 };
 
 #endif
