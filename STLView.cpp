@@ -397,13 +397,14 @@ STLView::Render(void)
 		glEnable(GL_LIGHTING);
 		glEnable(GL_COLOR_MATERIAL);
 
-		DrawSTL();
-		
 		if (fShowPreview) {
 			glPushMatrix();
 				glMultMatrixf(fPreviewMatrix);
 				DrawSTL({128,101,0});
 			glPopMatrix();
+		}
+		else {
+			DrawSTL();
 		}
 
 		glDisable(GL_LIGHTING);

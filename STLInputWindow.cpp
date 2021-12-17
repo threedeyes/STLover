@@ -54,7 +54,7 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
 
-	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));
+	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(MSG_INPUT_CANCEL));
 
 	float padding = be_control_look->DefaultItemSpacing();
 	if (fValues == 1) {
@@ -176,6 +176,14 @@ STLInputWindow::MessageReceived(BMessage* message)
 			fTargetMessenger.SendMessage(msg);
 			PostMessage(B_QUIT_REQUESTED);
 			break;
+		}
+		
+		case MSG_INPUT_CANCEL:
+		{
+			fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
+			PostMessage(B_QUIT_REQUESTED);
+			break;
+
 		}
 		default:
 			BWindow::MessageReceived(message);

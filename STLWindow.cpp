@@ -845,6 +845,7 @@ STLWindow::MessageReceived(BMessage *message)
 				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -942,16 +943,15 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_BY_SET:
 		{
-			const char *dx = message->FindString("value");
-			const char *dy = message->FindString("value2");
-			const char *dz = message->FindString("value3");
-			if (dx != NULL && dy != NULL && dz != NULL && IsLoaded()) {
-				float dxValue = atof(dx);
-				float dyValue = atof(dy);
-				float dzValue = atof(dz);
-				stl_translate_relative(fStlObject, dxValue, dyValue, dzValue);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			if (IsLoaded()) {
+				stl_translate_relative(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -997,8 +997,42 @@ STLWindow::MessageReceived(BMessage *message)
 					fStlView->ShowPreview(matrix);
 				}
 				break;
+
+				case MSG_TOOLS_SCALE_SET_3:
+				{
+					clog<<"scale!"<<endl;
+					float sx = message->FindFloat("value0");
+					float sy = message->FindFloat("value1");
+					float sz = message->FindFloat("value2");
+
+					float matrix[16] = { sx, 0 ,0 ,0,
+										 0, sy ,0 ,0,
+										 0, 0 ,sz ,0,
+										 0 ,0 ,0 ,1 };
+					fStlView->ShowPreview(matrix);
+				}
+				break;
+				
+				case MSG_TOOLS_MOVE_BY_SET:
+				{
+					clog<<"move by!"<<endl;
+					float tx = message->FindFloat("value0");
+					float ty = message->FindFloat("value1");
+					float tz = message->FindFloat("value2");
+
+					float matrix[16] = { 1, 0 ,0 ,0,
+										 0, 1 ,0 ,0,
+										 0, 0 ,1 ,0,
+										 tx ,ty ,tz ,1 };
+					fStlView->ShowPreview(matrix);
+				}
 			}
 			break;
+		}
+		
+		case MSG_INPUT_CANCEL:
+		{
+			fStlView->HidePreview();
 		}
 		
 		case MSG_VIEWMODE_SOLID:

@@ -94,6 +94,7 @@
 #define MSG_APPEND_REFS_RECIEVED		'APRR'
 #define MSG_INPUT_VALUE_UPDATED			'IVUP'
 #define MSG_INPUT_OK					'IWOK'
+#define MSG_INPUT_CANCEL				'IWKO'
 #define MSG_EASTER_EGG					'EEGG'
 #define MSG_POPUP_MENU					'POPM'
 #define MSG_APP_QUIT					'QAPP'
