@@ -21,6 +21,9 @@
 #include "STLWindow.h"
 
 #include <cstring>
+#include <iostream>
+
+using namespace std;
 
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverGLView"
@@ -31,7 +34,8 @@ STLView::STLView(BRect frame, uint32 type)
 	showAxes(false),
 	showBox(false),
 	showOXY(false),
-	fShowPreview(false)
+	fShowPreview(false),
+	viewOrtho(false)
 {
 	appIcon = STLoverApplication::GetIcon(NULL, 164);
 }
@@ -88,9 +92,18 @@ STLView::SetupProjection(void)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, boundRect.Width(), boundRect.Height());
-	gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
-		0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
-
+	
+	if (viewOrtho) {
+		float w = (stlWindow->GetBigExtent()/2.0f);
+		float tmp = (stlWindow->GetZDepth() + scaleFactor)/stlWindow->GetZDepth();
+		w=w*tmp;
+		float ratio = (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height();
+		glOrtho(-w*ratio,w*ratio,-w,w,0.1f,(-stlWindow->GetZDepth()+stlWindow->GetBigExtent())*2.0f);
+	}
+	else {
+		gluPerspective(FOV, (GLfloat)boundRect.Width() / (GLfloat)boundRect.Height(),
+			0.1f, stlWindow->GetZDepth() + stlWindow->GetBigExtent());
+	}
 }
 
 void
@@ -118,10 +131,10 @@ STLView::MouseMoved(BPoint p, uint32 transit,const BMessage *message)
 		needUpdate = true;
 	}
 	if (buttons & B_SECONDARY_MOUSE_BUTTON && lastMouseButtons != 0) {
-    	xPan += ((lastMousePos.x - p.x) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
-    	yPan -= ((lastMousePos.y - p.y) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
+		xPan += ((lastMousePos.x - p.x) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
+		yPan -= ((lastMousePos.y - p.y) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
 		lastMousePos = p;
-    	needUpdate = true;
+		needUpdate = true;
 	}
 }
 
@@ -388,10 +401,17 @@ STLView::Render(void)
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
-		glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
+
+		if (viewOrtho) {
+			glTranslatef(xPan, yPan, stlWindow->GetZDepth());
+		}
+		else {
+			glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
+		}
+
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
-
+		
 		glPolygonMode(GL_FRONT_AND_BACK, viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
 		glEnable(GL_LIGHTING);
@@ -417,7 +437,6 @@ STLView::Render(void)
 		glHint(GL_LINE_SMOOTH_HINT,GL_NICEST);
 		
 
-		
 		if (showOXY)
 			DrawOXY();
 			
