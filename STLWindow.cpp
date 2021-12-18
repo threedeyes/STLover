@@ -25,6 +25,8 @@
 #include "STLRepairWindow.h"
 #include "STLToolBar.h"
 
+#include <iostream>
+
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverMainWindow"
 
@@ -190,6 +192,7 @@ STLWindow::STLWindow()
 	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), B_TRANSLATE("Front view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), B_TRANSLATE("Right view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), B_TRANSLATE("Top view"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_ORTHO, this, STLoverApplication::GetIcon("orthographic", TOOLBAR_ICON_SIZE), B_TRANSLATE("Projection mode"));
 	fViewToolBar->AddGlue();
 	fViewToolBar->ResizeTo(fViewToolBar->MinSize().width, viewToolBarRect.Height());
 	fViewToolBar->GroupLayout()->SetInsets(0);
@@ -723,6 +726,16 @@ STLWindow::MessageReceived(BMessage *message)
 			UpdateUI();
 			break;
 		}
+		
+		case MSG_VIEWMODE_ORTHO:
+		{
+			fViewOrtho=!fViewOrtho;
+			UpdateUI();
+			
+			fStlView->SetOrthographic(fViewOrtho);
+			break;
+		}
+		
 		case MSG_VIEWMODE_RIGHT:
 		{
 			fStlView->Reset(true, false, true);
@@ -1123,6 +1136,8 @@ STLWindow::UpdateUIStates(bool show)
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMIN, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMOUT, show);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ZOOMFIT, show);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_ORTHO, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_ORTHO, fViewOrtho);
 
 	if (locked)
 		UnlockLooper();
@@ -1222,6 +1237,7 @@ STLWindow::UpdateStats(void)
 void
 STLWindow::TransformPosition()
 {
+
 	stl_translate(fStlObjectView, 0, 0, 0);
 
 	float xMaxExtent = 0;
