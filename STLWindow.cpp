@@ -25,6 +25,9 @@
 #include "STLRepairWindow.h"
 #include "STLToolBar.h"
 
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
+
 #include <iostream>
 
 using namespace std;
@@ -874,21 +877,22 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_ROTATE_SET:
 		{
-			const char *rotateX = message->FindString("value");
-			const char *rotateY = message->FindString("value2");
-			const char *rotateZ = message->FindString("value3");
-			if (rotateX != NULL && rotateY != NULL && rotateZ != NULL && IsLoaded()) {
-				float rotateXAngle = atof(rotateX);
-				float rotateYAngle = atof(rotateY);
-				float rotateZAngle = atof(rotateZ);
-				stl_rotate_x(fStlObject, rotateXAngle);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			
+			if (IsLoaded()) {
 				
-				stl_rotate_y(fStlObject, rotateYAngle);
+				stl_rotate_x(fStlObject, values[0]);
 				
-				stl_rotate_z(fStlObject, rotateZAngle);
+				stl_rotate_y(fStlObject, values[1]);
+				
+				stl_rotate_z(fStlObject, values[2]);
 				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -916,27 +920,26 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_MOVE_TO:
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), 3, this, MSG_TOOLS_MOVE_TO_SET);
-			input->SetFloatValue(0, B_TRANSLATE("X:"), fStlObject->stats.min.x);
+			input->SetFloatValue(0, B_TRANSLATE("X:"), 0);
 			input->SetTextColor(0, {164, 255, 164});
-			input->SetFloatValue(1, B_TRANSLATE("Y:"), fStlObject->stats.min.y);
+			input->SetFloatValue(1, B_TRANSLATE("Y:"), 0);
 			input->SetTextColor(1, {255, 164, 164});
-			input->SetFloatValue(2, B_TRANSLATE("Z:"), fStlObject->stats.min.z);
+			input->SetFloatValue(2, B_TRANSLATE("Z:"), 0);
 			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_MOVE_TO_SET:
 		{
-			const char *x = message->FindString("value");
-			const char *y = message->FindString("value2");
-			const char *z = message->FindString("value3");
-			if (x != NULL && y != NULL && z != NULL && IsLoaded()) {
-				float xValue = atof(x);
-				float yValue = atof(y);
-				float zValue = atof(z);
-				stl_translate(fStlObject, xValue, yValue, zValue);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			if (IsLoaded()) {
+				stl_translate(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -1001,11 +1004,11 @@ STLWindow::MessageReceived(BMessage *message)
 				{
 					clog<<"scale!"<<endl;
 					float s = message->FindFloat("value0");
-					float matrix[16] = { s, 0 ,0 ,0,
-										 0, s ,0 ,0,
-										 0, 0 ,s ,0,
-										 0 ,0 ,0 ,1 };
-					fStlView->ShowPreview(matrix);
+					
+					glm::mat4 matrix;
+					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(s,s,s));
+					
+					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
 
@@ -1015,12 +1018,11 @@ STLWindow::MessageReceived(BMessage *message)
 					float sx = message->FindFloat("value0");
 					float sy = message->FindFloat("value1");
 					float sz = message->FindFloat("value2");
-
-					float matrix[16] = { sx, 0 ,0 ,0,
-										 0, sy ,0 ,0,
-										 0, 0 ,sz ,0,
-										 0 ,0 ,0 ,1 };
-					fStlView->ShowPreview(matrix);
+					
+					glm::mat4 matrix;
+					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(sx,sy,sz));
+					
+					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
 				
@@ -1030,13 +1032,51 @@ STLWindow::MessageReceived(BMessage *message)
 					float tx = message->FindFloat("value0");
 					float ty = message->FindFloat("value1");
 					float tz = message->FindFloat("value2");
-
-					float matrix[16] = { 1, 0 ,0 ,0,
-										 0, 1 ,0 ,0,
-										 0, 0 ,1 ,0,
-										 tx ,ty ,tz ,1 };
-					fStlView->ShowPreview(matrix);
+					
+					glm::mat4 matrix;
+					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+					
+					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
+				break;
+				
+				case MSG_TOOLS_MOVE_TO_SET:
+				{
+					clog<<"move to!"<<endl;
+					float tx = message->FindFloat("value0");
+					float ty = message->FindFloat("value1");
+					float tz = message->FindFloat("value2");
+					tx-=fStlObject->stats.min.x;
+					ty-=fStlObject->stats.min.y;
+					tz-=fStlObject->stats.min.z;
+					glm::mat4 matrix;
+					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+					
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+				
+				case MSG_TOOLS_ROTATE_SET:
+				{
+					clog<<"rotate by!"<<endl;
+					float rx = message->FindFloat("value0");
+					float ry = message->FindFloat("value1");
+					float rz = message->FindFloat("value2");
+					
+					rx = rx*M_PI/180.0f;
+					ry = ry*M_PI/180.0f;
+					rz = rz*M_PI/180.0f;
+					
+					glm::mat4 matrix;
+					glm::mat4 mx,my,mz;
+					mx = glm::rotate(glm::mat4(1.0f),rx,glm::vec3(1.0,0.0,0.0));
+					my = glm::rotate(glm::mat4(1.0f),ry,glm::vec3(0.0,1.0,0.0));
+					mz = glm::rotate(glm::mat4(1.0f),rz,glm::vec3(0.0,0.0,1.0));
+					
+					matrix = mz * my * mx;
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
 			}
 			break;
 		}
