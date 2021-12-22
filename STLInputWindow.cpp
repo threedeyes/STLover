@@ -19,16 +19,12 @@
 #include "STLApp.h"
 #include "STLInputWindow.h"
 
-#include <iostream>
-
-using namespace std;
-
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
 STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId)
 	: BWindow(BRect(0, 0, 640, 480), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
-	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
+	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_CLOSABLE),
 	fParentWindow(target),
 	fTargetMessenger(target),
 	fValues(count),
@@ -146,8 +142,6 @@ STLInputWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 		case MSG_INPUT_VALUE_UPDATED:
 		{
-			clog<<"edit!"<<endl;
-			
 			BMessage *msg = new BMessage(MSG_INPUT_VALUE_UPDATED);
 			msg->AddInt32("action",fMessageId);
 			msg->AddFloat("value0", atof(fValueControl->Text()));
@@ -163,7 +157,7 @@ STLInputWindow::MessageReceived(BMessage* message)
 				fOkButton->SetEnabled(enabled);
 			break;
 		}
-		
+
 		case MSG_INPUT_OK:
 		{
 			BMessage *msg = new BMessage(fMessageId);
@@ -177,14 +171,14 @@ STLInputWindow::MessageReceived(BMessage* message)
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		}
-		
+
 		case MSG_INPUT_CANCEL:
 		{
 			fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
 			PostMessage(B_QUIT_REQUESTED);
 			break;
-
 		}
+
 		default:
 			BWindow::MessageReceived(message);
 			break;

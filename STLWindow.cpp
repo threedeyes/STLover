@@ -28,10 +28,6 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 
-#include <iostream>
-
-using namespace std;
-
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverMainWindow"
 
@@ -881,7 +877,7 @@ STLWindow::MessageReceived(BMessage *message)
 			values[0] = message->FindFloat("value0");
 			values[1] = message->FindFloat("value1");
 			values[2] = message->FindFloat("value2");
-			
+
 			if (IsLoaded()) {
 				
 				stl_rotate_x(fStlObject, values[0]);
@@ -992,60 +988,52 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_INPUT_VALUE_UPDATED:
 		{
-			clog<<"Updated edit!"<<endl;
 			int32 action = message->FindInt32("action");
-			clog<<action<<endl;
-			clog<<message->FindFloat("value0")<<" ";
-			clog<<message->FindFloat("value1")<<" ";
-			clog<<message->FindFloat("value2")<<endl;
-			
+
 			switch(action) {
 				case MSG_TOOLS_SCALE_SET:
 				{
-					clog<<"scale!"<<endl;
 					float s = message->FindFloat("value0");
-					
+
 					glm::mat4 matrix;
 					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(s,s,s));
-					
+
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
 
 				case MSG_TOOLS_SCALE_SET_3:
 				{
-					clog<<"scale!"<<endl;
 					float sx = message->FindFloat("value0");
 					float sy = message->FindFloat("value1");
 					float sz = message->FindFloat("value2");
-					
+
 					glm::mat4 matrix;
 					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(sx,sy,sz));
-					
+
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
 				
 				case MSG_TOOLS_MOVE_BY_SET:
 				{
-					clog<<"move by!"<<endl;
 					float tx = message->FindFloat("value0");
 					float ty = message->FindFloat("value1");
 					float tz = message->FindFloat("value2");
-					
+
 					glm::mat4 matrix;
 					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
-					
+
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
 				
 				case MSG_TOOLS_MOVE_TO_SET:
 				{
-					clog<<"move to!"<<endl;
 					float tx = message->FindFloat("value0");
 					float ty = message->FindFloat("value1");
 					float tz = message->FindFloat("value2");
+
 					tx-=fStlObject->stats.min.x;
 					ty-=fStlObject->stats.min.y;
 					tz-=fStlObject->stats.min.z;
@@ -1055,24 +1043,23 @@ STLWindow::MessageReceived(BMessage *message)
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
 				break;
-				
+
 				case MSG_TOOLS_ROTATE_SET:
 				{
-					clog<<"rotate by!"<<endl;
 					float rx = message->FindFloat("value0");
 					float ry = message->FindFloat("value1");
 					float rz = message->FindFloat("value2");
-					
+
 					rx = rx*M_PI/180.0f;
 					ry = ry*M_PI/180.0f;
 					rz = rz*M_PI/180.0f;
-					
+
 					glm::mat4 matrix;
 					glm::mat4 mx,my,mz;
 					mx = glm::rotate(glm::mat4(1.0f),rx,glm::vec3(1.0,0.0,0.0));
 					my = glm::rotate(glm::mat4(1.0f),ry,glm::vec3(0.0,1.0,0.0));
 					mz = glm::rotate(glm::mat4(1.0f),rz,glm::vec3(0.0,0.0,1.0));
-					
+
 					matrix = mz * my * mx;
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
