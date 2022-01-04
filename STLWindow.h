@@ -97,6 +97,7 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemShowBox;
 		BMenuItem *fMenuItemShowAxes;
 		BMenuItem *fMenuItemShowOXY;
+		BMenuItem *fMenuItemOrthographicView;
 		BMenuItem *fMenuItemStat;
 		BMenuItem *fMenuItemReset;
 		BMenuItem *fMenuItemEditTitle;

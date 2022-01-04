@@ -97,6 +97,9 @@ STLWindow::STLWindow()
 	fMenuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
 	fMenuView->AddItem(fMenuItemWireframe);
 	fMenuView->AddSeparatorItem();
+	fMenuItemOrthographicView = new BMenuItem(B_TRANSLATE("Orthographic projection"), new BMessage(MSG_VIEWMODE_ORTHO));
+	fMenuView->AddItem(fMenuItemOrthographicView);
+	fMenuView->AddSeparatorItem();
 	fMenuItemShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
 	fMenuView->AddItem(fMenuItemShowAxes);
 	fMenuItemShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
@@ -192,7 +195,8 @@ STLWindow::STLWindow()
 	fViewToolBar->AddAction(MSG_VIEWMODE_FRONT, this, STLoverApplication::GetIcon("view-front", TOOLBAR_ICON_SIZE), B_TRANSLATE("Front view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_RIGHT, this, STLoverApplication::GetIcon("view-right", TOOLBAR_ICON_SIZE), B_TRANSLATE("Right view"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_TOP, this, STLoverApplication::GetIcon("view-top", TOOLBAR_ICON_SIZE), B_TRANSLATE("Top view"));
-	fViewToolBar->AddAction(MSG_VIEWMODE_ORTHO, this, STLoverApplication::GetIcon("orthographic", TOOLBAR_ICON_SIZE), B_TRANSLATE("Projection mode"));
+	fViewToolBar->AddSeparator();
+	fViewToolBar->AddAction(MSG_VIEWMODE_ORTHO, this, STLoverApplication::GetIcon("orthographic", TOOLBAR_ICON_SIZE), B_TRANSLATE("Orthographic projection"));
 	fViewToolBar->AddGlue();
 	fViewToolBar->ResizeTo(fViewToolBar->MinSize().width, viewToolBarRect.Height());
 	fViewToolBar->GroupLayout()->SetInsets(0);
@@ -270,6 +274,7 @@ STLWindow::LoadSettings(void)
 		bool _showStat = false;
 		bool _fShowWireframe = false;
 		bool _fShowOXY = false;
+		bool _fOrthoProj = false;
 		BRect _windowRect(100, 100, 100 + 720, 100 + 512);
 
 		file.ReadAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
@@ -278,6 +283,7 @@ STLWindow::LoadSettings(void)
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStat", B_BOOL_TYPE, 0, &_showStat, sizeof(bool));
 		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_fShowWireframe, sizeof(bool));
+		file.ReadAttr("OrthographicProjection", B_BOOL_TYPE, 0, &_fOrthoProj, sizeof(bool));
 		file.ReadAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
 		file.ReadAttr("RemoveUnconnected", B_INT32_TYPE, 0, &fRemoveUnconnectedFlag, sizeof(int32));
@@ -301,6 +307,9 @@ STLWindow::LoadSettings(void)
 
 		fShowWireframe = _fShowWireframe;
 		fStlView->SetViewMode(_fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
+
+		fViewOrtho = _fOrthoProj;
+		fStlView->SetOrthographic(fViewOrtho);
 
 		fShowStat = _showStat;
 		if (fShowStat)
@@ -332,7 +341,7 @@ STLWindow::SaveSettings(void)
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &fShowStat, sizeof(bool));
 		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &fShowWireframe, sizeof(bool));
-
+		file.WriteAttr("OrthographicProjection", B_BOOL_TYPE, 0, &fViewOrtho, sizeof(bool));
 		file.WriteAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
 		file.WriteAttr("RemoveUnconnected", B_INT32_TYPE, 0, &fRemoveUnconnectedFlag, sizeof(int32));
@@ -1183,6 +1192,7 @@ STLWindow::UpdateUIStates(bool show)
 	fMenuItemShowOXY->SetMarked(fShowOXY);
 	fMenuItemSolid->SetMarked(!fShowWireframe);
 	fMenuItemWireframe->SetMarked(fShowWireframe);
+	fMenuItemOrthographicView->SetMarked(fViewOrtho);
 	fMenuItemStat->SetEnabled(show);
 	fMenuItemStat->SetMarked(fShowStat);
 
