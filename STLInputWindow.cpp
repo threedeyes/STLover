@@ -24,7 +24,7 @@
 
 STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId)
 	: BWindow(BRect(0, 0, 640, 480), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
-	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
+	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_CLOSABLE),
 	fParentWindow(target),
 	fTargetMessenger(target),
 	fValues(count),
@@ -50,7 +50,7 @@ STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target,
 	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
 
-	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(B_QUIT_REQUESTED));
+	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(MSG_INPUT_CANCEL));
 
 	float padding = be_control_look->DefaultItemSpacing();
 	if (fValues == 1) {
@@ -142,23 +142,43 @@ STLInputWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 		case MSG_INPUT_VALUE_UPDATED:
 		{
+			BMessage *msg = new BMessage(MSG_INPUT_VALUE_UPDATED);
+			msg->AddInt32("action",fMessageId);
+			msg->AddFloat("value0", atof(fValueControl->Text()));
+			if (fValues == 3) {
+				msg->AddFloat("value1", atof(fValueControl2->Text()));
+				msg->AddFloat("value2", atof(fValueControl3->Text()));
+			}
+			fTargetMessenger.SendMessage(msg);
+			
+			/* Is this really working? */
 			bool enabled = fValueControl->Text() != NULL && fValueControl->Text()[0] != '\0';
 			if (fOkButton->IsEnabled() != enabled)
 				fOkButton->SetEnabled(enabled);
 			break;
 		}
+
 		case MSG_INPUT_OK:
 		{
 			BMessage *msg = new BMessage(fMessageId);
-			msg->AddString("value", fValueControl->Text());
+			
+			msg->AddFloat("value0", atof(fValueControl->Text()));
 			if (fValues == 3) {
-				msg->AddString("value2", fValueControl2->Text());
-				msg->AddString("value3", fValueControl3->Text());
+				msg->AddFloat("value1", atof(fValueControl2->Text()));
+				msg->AddFloat("value2", atof(fValueControl3->Text()));
 			}
 			fTargetMessenger.SendMessage(msg);
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		}
+
+		case MSG_INPUT_CANCEL:
+		{
+			fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
+			PostMessage(B_QUIT_REQUESTED);
+			break;
+		}
+
 		default:
 			BWindow::MessageReceived(message);
 			break;

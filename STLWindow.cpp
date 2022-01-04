@@ -25,7 +25,8 @@
 #include "STLRepairWindow.h"
 #include "STLToolBar.h"
 
-#include <iostream>
+#include <glm/glm.hpp>
+#include <glm/ext.hpp>
 
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverMainWindow"
@@ -51,7 +52,6 @@ STLWindow::STLWindow()
 	fIterationsValue(2),
 	fStlValid(false),
 	fStlObject(NULL),
-	fStlObjectView(NULL),
 	fErrorTimeCounter(0),
 	fRenderWork(true),
 	fZDepth(-5),
@@ -537,7 +537,7 @@ STLWindow::MessageReceived(BMessage *message)
 			SetTitle(path.Leaf());
 
 			TransformPosition();
-			fStlView->SetSTL(fStlObject, fStlObjectView);
+			fStlView->SetSTL(fStlObject);
 
 			fErrorTimeCounter = 0;
 			fStlLoading = false;
@@ -789,9 +789,6 @@ STLWindow::MessageReceived(BMessage *message)
 				stl_repair(fStlObject, 0, fExactFlag, 1, toleranceValue, 1, incrementValue, fNearbyFlag,
 					fIterationsValue, fRemoveUnconnectedFlag, fFillHolesFlag, fNormalDirectionsFlag,
 					fNormalValuesFlag, fReverseAllFlag, 0);
-				stl_repair(fStlObjectView, 0, fExactFlag, 1, toleranceValue, 1, incrementValue, fNearbyFlag,
-					fIterationsValue, fRemoveUnconnectedFlag, fFillHolesFlag, fNormalDirectionsFlag,
-					fNormalValuesFlag, fReverseAllFlag, 0);
 				fStlModified = true;
 				UpdateUI();
 			}
@@ -823,13 +820,14 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE_SET:
 		{
-			const char *value = message->FindString("value");
-			if (value != NULL && IsLoaded()) {
-				float scaleFactor = atof(value);
-				stl_scale(fStlObject, scaleFactor);
-				stl_scale(fStlObjectView, scaleFactor);
+			float value = message->FindFloat("value0");
+			if (IsLoaded()) {
+				
+				stl_scale(fStlObject, value);
+				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -847,18 +845,17 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE_SET_3:
 		{
-			const char *scaleX = message->FindString("value");
-			const char *scaleY = message->FindString("value2");
-			const char *scaleZ = message->FindString("value3");
-			if (scaleX != NULL && scaleY != NULL && scaleZ != NULL && IsLoaded()) {
-				float scaleVersor[3];
-				scaleVersor[0] = atof(scaleX);
-				scaleVersor[1] = atof(scaleY);
-				scaleVersor[2] = atof(scaleZ);
-				stl_scale_versor(fStlObject, scaleVersor);
-				stl_scale_versor(fStlObjectView, scaleVersor);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			
+			if (IsLoaded()) {
+				stl_scale_versor(fStlObject, values);
+				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -876,21 +873,22 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_ROTATE_SET:
 		{
-			const char *rotateX = message->FindString("value");
-			const char *rotateY = message->FindString("value2");
-			const char *rotateZ = message->FindString("value3");
-			if (rotateX != NULL && rotateY != NULL && rotateZ != NULL && IsLoaded()) {
-				float rotateXAngle = atof(rotateX);
-				float rotateYAngle = atof(rotateY);
-				float rotateZAngle = atof(rotateZ);
-				stl_rotate_x(fStlObject, rotateXAngle);
-				stl_rotate_x(fStlObjectView, rotateXAngle);
-				stl_rotate_y(fStlObject, rotateYAngle);
-				stl_rotate_y(fStlObjectView, rotateYAngle);
-				stl_rotate_z(fStlObject, rotateZAngle);
-				stl_rotate_z(fStlObjectView, rotateZAngle);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+
+			if (IsLoaded()) {
+				
+				stl_rotate_x(fStlObject, values[0]);
+				
+				stl_rotate_y(fStlObject, values[1]);
+				
+				stl_rotate_z(fStlObject, values[2]);
+				
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -918,27 +916,26 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_MOVE_TO:
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), 3, this, MSG_TOOLS_MOVE_TO_SET);
-			input->SetFloatValue(0, B_TRANSLATE("X:"), fStlObject->stats.min.x);
+			input->SetFloatValue(0, B_TRANSLATE("X:"), 0);
 			input->SetTextColor(0, {164, 255, 164});
-			input->SetFloatValue(1, B_TRANSLATE("Y:"), fStlObject->stats.min.y);
+			input->SetFloatValue(1, B_TRANSLATE("Y:"), 0);
 			input->SetTextColor(1, {255, 164, 164});
-			input->SetFloatValue(2, B_TRANSLATE("Z:"), fStlObject->stats.min.z);
+			input->SetFloatValue(2, B_TRANSLATE("Z:"), 0);
 			input->SetTextColor(2, {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_MOVE_TO_SET:
 		{
-			const char *x = message->FindString("value");
-			const char *y = message->FindString("value2");
-			const char *z = message->FindString("value3");
-			if (x != NULL && y != NULL && z != NULL && IsLoaded()) {
-				float xValue = atof(x);
-				float yValue = atof(y);
-				float zValue = atof(z);
-				stl_translate(fStlObject, xValue, yValue, zValue);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			if (IsLoaded()) {
+				stl_translate(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
@@ -956,23 +953,21 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_BY_SET:
 		{
-			const char *dx = message->FindString("value");
-			const char *dy = message->FindString("value2");
-			const char *dz = message->FindString("value3");
-			if (dx != NULL && dy != NULL && dz != NULL && IsLoaded()) {
-				float dxValue = atof(dx);
-				float dyValue = atof(dy);
-				float dzValue = atof(dz);
-				stl_translate_relative(fStlObject, dxValue, dyValue, dzValue);
+			float values[3];
+			values[0] = message->FindFloat("value0");
+			values[1] = message->FindFloat("value1");
+			values[2] = message->FindFloat("value2");
+			if (IsLoaded()) {
+				stl_translate_relative(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
 				UpdateUI();
+				fStlView->HidePreview();
 			}
 			break;
 		}
 		case MSG_TOOLS_MIRROR_XY:
 		{
 			stl_mirror_xy(fStlObject);
-			stl_mirror_xy(fStlObjectView);
 			fStlModified = true;
 			UpdateUI();
 			break;
@@ -980,7 +975,6 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_MIRROR_YZ:
 		{
 			stl_mirror_yz(fStlObject);
-			stl_mirror_yz(fStlObjectView);
 			fStlModified = true;
 			UpdateUI();
 			break;
@@ -988,11 +982,97 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_MIRROR_XZ:
 		{
 			stl_mirror_xz(fStlObject);
-			stl_mirror_xz(fStlObjectView);
 			fStlModified = true;
 			UpdateUI();
 			break;
 		}
+		case MSG_INPUT_VALUE_UPDATED:
+		{
+			int32 action = message->FindInt32("action");
+
+			switch(action) {
+				case MSG_TOOLS_SCALE_SET:
+				{
+					float s = message->FindFloat("value0");
+
+					glm::mat4 matrix;
+					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(s,s,s));
+
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+
+				case MSG_TOOLS_SCALE_SET_3:
+				{
+					float sx = message->FindFloat("value0");
+					float sy = message->FindFloat("value1");
+					float sz = message->FindFloat("value2");
+
+					glm::mat4 matrix;
+					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(sx,sy,sz));
+
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+				
+				case MSG_TOOLS_MOVE_BY_SET:
+				{
+					float tx = message->FindFloat("value0");
+					float ty = message->FindFloat("value1");
+					float tz = message->FindFloat("value2");
+
+					glm::mat4 matrix;
+					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+				
+				case MSG_TOOLS_MOVE_TO_SET:
+				{
+					float tx = message->FindFloat("value0");
+					float ty = message->FindFloat("value1");
+					float tz = message->FindFloat("value2");
+
+					tx-=fStlObject->stats.min.x;
+					ty-=fStlObject->stats.min.y;
+					tz-=fStlObject->stats.min.z;
+					glm::mat4 matrix;
+					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+					
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+
+				case MSG_TOOLS_ROTATE_SET:
+				{
+					float rx = message->FindFloat("value0");
+					float ry = message->FindFloat("value1");
+					float rz = message->FindFloat("value2");
+
+					rx = rx*M_PI/180.0f;
+					ry = ry*M_PI/180.0f;
+					rz = rz*M_PI/180.0f;
+
+					glm::mat4 matrix;
+					glm::mat4 mx,my,mz;
+					mx = glm::rotate(glm::mat4(1.0f),rx,glm::vec3(1.0,0.0,0.0));
+					my = glm::rotate(glm::mat4(1.0f),ry,glm::vec3(0.0,1.0,0.0));
+					mz = glm::rotate(glm::mat4(1.0f),rz,glm::vec3(0.0,0.0,1.0));
+
+					matrix = mz * my * mx;
+					fStlView->ShowPreview(glm::value_ptr(matrix));
+				}
+				break;
+			}
+			break;
+		}
+		
+		case MSG_INPUT_CANCEL:
+		{
+			fStlView->HidePreview();
+		}
+		
 		case MSG_VIEWMODE_SOLID:
 		case MSG_VIEWMODE_WIREFRAME:
 		{
@@ -1144,11 +1224,10 @@ STLWindow::UpdateUIStates(bool show)
 }
 
 void
-STLWindow::SetSTL(stl_file *stl, stl_file *stlView)
+STLWindow::SetSTL(stl_file *stl)
 {
 	fStlObject = stl;
-	fStlObjectView = stlView;
-	fStlView->SetSTL(stl, stlView);
+	fStlView->SetSTL(stl);
 }
 
 void
@@ -1174,15 +1253,9 @@ STLWindow::CloseFile(void)
 		SetTitle(MAIN_WIN_TITLE);
 		fStlValid = false;
 
-		stl_file* stl = fStlObject;
+		stl_close(fStlObject);
+		delete fStlObject;
 		fStlObject = NULL;
-		stl_close(stl);
-		free (stl);
-
-		stl = fStlObjectView;
-		fStlObjectView = NULL;
-		stl_close(stl);
-		free (stl);
 
 		fStlLogoView->SetText(B_TRANSLATE("Drop STL files here"));
 		fStlLogoView->SetTextColor(255, 255, 255);
@@ -1237,21 +1310,20 @@ STLWindow::UpdateStats(void)
 void
 STLWindow::TransformPosition()
 {
-
-	stl_translate(fStlObjectView, 0, 0, 0);
+	stl_translate(fStlObject, 0, 0, 0);
 
 	float xMaxExtent = 0;
 	float yMaxExtent = 0;
 	float zMaxExtent = 0;
 
-	for (int i = 0 ; i < fStlObjectView->stats.number_of_facets ; i++) {
+	for (int i = 0 ; i < fStlObject->stats.number_of_facets ; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (fStlObjectView->facet_start[i].vertex[j].x > xMaxExtent)
-				xMaxExtent = fStlObjectView->facet_start[i].vertex[0].x;
-			if (fStlObjectView->facet_start[i].vertex[j].y > yMaxExtent)
-				yMaxExtent = fStlObjectView->facet_start[i].vertex[0].y;
-			if (fStlObjectView->facet_start[i].vertex[j].z > zMaxExtent)
-				zMaxExtent = fStlObjectView->facet_start[i].vertex[0].z;
+			if (fStlObject->facet_start[i].vertex[j].x > xMaxExtent)
+				xMaxExtent = fStlObject->facet_start[i].vertex[0].x;
+			if (fStlObject->facet_start[i].vertex[j].y > yMaxExtent)
+				yMaxExtent = fStlObject->facet_start[i].vertex[0].y;
+			if (fStlObject->facet_start[i].vertex[j].z > zMaxExtent)
+				zMaxExtent = fStlObject->facet_start[i].vertex[0].z;
 		}
 	}
 
@@ -1267,7 +1339,7 @@ STLWindow::TransformPosition()
 	if ((zMaxExtent > yMaxExtent) && (zMaxExtent > xMaxExtent))
 		fMaxExtent = zMaxExtent;
 
-	stl_translate_relative(fStlObjectView, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
+	stl_translate_relative(fStlObject, -xMaxExtent / 2.0, -yMaxExtent / 2.0, -zMaxExtent / 2.0);
 }
 
 int32
@@ -1289,22 +1361,17 @@ STLWindow::_FileLoaderFunction(void *data)
 {
 	STLWindow *window = (STLWindow*)data;
 
-	stl_file *stl = (stl_file*)malloc(sizeof(stl_file));
-	memset(stl, 0, sizeof(stl_file));
-
-	stl_file *stlView = (stl_file*)malloc(sizeof(stl_file));
-	memset(stlView, 0, sizeof(stl_file));
+	stl_file *stl = new stl_file;
 
 	stl_open(stl, (char*)window->Filename().String());
-	stl_open(stlView, (char*)window->Filename().String());
 
-	if (stl_get_error(stl) || stl_get_error(stlView)) {
-		window->SetSTL(NULL, NULL);
+	if (stl_get_error(stl)) {
+		window->SetSTL(NULL);
 		window->PostMessage(MSG_FILE_OPEN_FAILED);
+		delete stl;
 	} else {
 		stl_fix_normal_values(stl);
-		stl_fix_normal_values(stlView);
-		window->SetSTL(stl, stlView);
+		window->SetSTL(stl);
 		window->PostMessage(MSG_FILE_OPENED);
 	}
 

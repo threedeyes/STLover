@@ -52,7 +52,7 @@ class STLWindow : public BWindow {
 		virtual void MessageReceived(BMessage *message);
 		virtual bool QuitRequested();
 
-		void SetSTL(stl_file *stl, stl_file *stlView);
+		void SetSTL(stl_file *stl);
 		void OpenFile(const char *file);
 		void CloseFile(void);
 		void UpdateStats(void);
@@ -140,7 +140,7 @@ class STLWindow : public BWindow {
 		float fMaxExtent;
 
 		stl_file *fStlObject;
-		stl_file *fStlObjectView;
+		//stl_file *fStlObjectView;
 };
 
 #endif
