@@ -11,7 +11,7 @@ Axis scaling…	STLoverMainWindow		Ridimensionamento assi…
 Best fit	STLoverMainWindow		Adatta al meglio
 Binary	STLoverMainWindow		Binario
 Bounding box	STLoverMainWindow		Riquadro di delimitazione
-By…	STLoverMainWindow		By…
+By…	STLoverMainWindow		Da…
 Cancel	STLoverMainWindow		Annulla
 Close	STLoverMainWindow		Chiudi
 Custom axis scale	STLoverMainWindow		Ridimensionamento assi personalizzato
@@ -21,7 +21,7 @@ Edit title	STLoverMainWindow		Modifica titolo
 Edit title…	STLoverMainWindow		Modifica titolo…
 File	STLoverMainWindow		File
 Front view	STLoverMainWindow		Vista frontale
-Geomview OFF	STLoverMainWindow		Geomview OFF
+Geomview OFF	STLoverMainWindow		Geomview DISATTIVATO
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Aiuto
 Loading…	STLoverMainWindow		Caricamento…
@@ -97,8 +97,8 @@ Only check for perfectly matched edges	STLoverRepairWindow		Controlla solamente 
 Remove facets that have 0 neighbors	STLoverRepairWindow		Rimuovi facce con 0 vicini
 Repair	STLoverRepairWindow		Ripara
 Reverse the directions of all facets and normals	STLoverRepairWindow		Inverti le direzioni di tutte le facce e delle normali
-Backward edges:	STLoverStatView		Backward edges:
-Degenerate facets:	STLoverStatView		Degenerate facets:
+Backward edges:	STLoverStatView		Bordi posteriori:
+Degenerate facets:	STLoverStatView		Sfaccettature deteriorate:
 Disconnected:	STLoverStatView		Disconnessi:
 Edges fixed:	STLoverStatView		Bordi riparati:
 Facet status	STLoverStatView		Stato facce

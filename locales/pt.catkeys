@@ -7,35 +7,35 @@ ASCII	STLoverMainWindow		ASCII
 Autodesk DXF	STLoverMainWindow		Autodesk DXF
 Axes	STLoverMainWindow		Eixos
 Axis scale	STLoverMainWindow		Escala dos eixos
-Axis scaling…	STLoverMainWindow		Axis scaling…
-Best fit	STLoverMainWindow		Best fit
+Axis scaling…	STLoverMainWindow		Dimensionamento de eixos...
+Best fit	STLoverMainWindow		Melhor ajuste
 Binary	STLoverMainWindow		Binário
-Bounding box	STLoverMainWindow		Bounding box
-By…	STLoverMainWindow		By…
+Bounding box	STLoverMainWindow		Caixa delimitadora
+By…	STLoverMainWindow		Por...
 Cancel	STLoverMainWindow		Cancelar
 Close	STLoverMainWindow		Fechar
-Custom axis scale	STLoverMainWindow		Custom axis scale
+Custom axis scale	STLoverMainWindow		Escala de eixo personalizada
 Don't save	STLoverMainWindow		Não guardar
-Drop STL files here	STLoverMainWindow		Drop STL files here
+Drop STL files here	STLoverMainWindow		Solte os arquivos STL aqui
 Edit title	STLoverMainWindow		Editar título
 Edit title…	STLoverMainWindow		Editar título…
 File	STLoverMainWindow		Ficheiro
 Front view	STLoverMainWindow		Vista frontal
-Geomview OFF	STLoverMainWindow		Geomview OFF
+Geomview OFF	STLoverMainWindow		Geomview DESLIGADO
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Ajuda
 Loading…	STLoverMainWindow		A carregar…
-Mirror	STLoverMainWindow		Mirror
-Mirror XY	STLoverMainWindow		Mirror XY
-Mirror XZ	STLoverMainWindow		Mirror XZ
-Mirror YZ	STLoverMainWindow		Mirror YZ
+Mirror	STLoverMainWindow		Espelho
+Mirror XY	STLoverMainWindow		Espelho XY
+Mirror XZ	STLoverMainWindow		Espelho XZ
+Mirror YZ	STLoverMainWindow		Espelho YZ
 Move	STLoverMainWindow		Mover
 Move by	STLoverMainWindow		Mover em
 Move to	STLoverMainWindow		Move para
-Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
+Move to top of OXY plane	STLoverMainWindow		Mover para o topo do plano OXY
 Open	STLoverMainWindow		Abrir
 Open…	STLoverMainWindow		Abrir…
-Plane OXY	STLoverMainWindow		Plane OXY
+Plane OXY	STLoverMainWindow		Plano OXY
 Quit	STLoverMainWindow		Sair
 Reload	STLoverMainWindow		Recarregar
 Repair	STLoverMainWindow		Reparar
@@ -51,79 +51,79 @@ Save as…	STLoverMainWindow		Guardar como…
 Save changes to document '%filename%' ?	STLoverMainWindow		Guardar alterações ao documento '%filename%' ?
 Scale	STLoverMainWindow		Escala
 Scale factor:	STLoverMainWindow		Fator de redimensionamento:
-Scale X factor:	STLoverMainWindow		Scale X factor:
-Scale Y factor:	STLoverMainWindow		Scale Y factor:
-Scale Z factor:	STLoverMainWindow		Scale Z factor:
+Scale X factor:	STLoverMainWindow		Fator X da escala:
+Scale Y factor:	STLoverMainWindow		Fator Y da escala:
+Scale Z factor:	STLoverMainWindow		Fator Z da escala:
 Scale…	STLoverMainWindow		Escala…
 Show axes	STLoverMainWindow		Mostrar eixos
-Show plane OXY	STLoverMainWindow		Show plane OXY
+Show plane OXY	STLoverMainWindow		Mostrar plano OXY
 Solid	STLoverMainWindow		Sólido
 Statistics	STLoverMainWindow		Estatísticas
 STL (ASCII)	STLoverMainWindow		STL (ASCII)
 STL (Binary)	STLoverMainWindow		STL (Binário)
 STL Title	STLoverMainWindow		Título STL
 Title:	STLoverMainWindow		Título:
-To (0,0,0)	STLoverMainWindow		To (0,0,0)
+To (0,0,0)	STLoverMainWindow		Para (0,0,0)
 To origin	STLoverMainWindow		Para a origem
-To top of OXY plane	STLoverMainWindow		To top of OXY plane
+To top of OXY plane	STLoverMainWindow		Para a parte superior do plano OXY
 To…	STLoverMainWindow		Para…
 Tools	STLoverMainWindow		Ferramentas
 Top view	STLoverMainWindow		Vista do topo
-Unknown file format!	STLoverMainWindow		Unknown file format!
+Unknown file format!	STLoverMainWindow		Formato de arquivo desconhecido!
 View	STLoverMainWindow		Vista
 VRML	STLoverMainWindow		VRML
-Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wavefront OBJ	STLoverMainWindow		Frente de onda OBJ
 Wireframe	STLoverMainWindow		Wireframe
-X-axis:	STLoverMainWindow		X-axis:
+X-axis:	STLoverMainWindow		Eixo X:
 X:	STLoverMainWindow		X:
-Y-axis:	STLoverMainWindow		Y-axis:
+Y-axis:	STLoverMainWindow		Eixo Y:
 Y:	STLoverMainWindow		Y:
-Z-axis:	STLoverMainWindow		Z-axis:
+Z-axis:	STLoverMainWindow		Eixo Z:
 Z:	STLoverMainWindow		Z:
-Zoom in	STLoverMainWindow		Zoom in
-Zoom out	STLoverMainWindow		Zoom out
-A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
+Zoom in	STLoverMainWindow		Ampliar
+Zoom out	STLoverMainWindow		Reduzir o zoom
+A file format native to the STereoLithography CAD software	STLoverApplication		Um formato de arquivo nativo do software CAD STereoLithography
 STL file	STLoverApplication		Ficheiro STL
-Add facets to fill holes	STLoverRepairWindow		Add facets to fill holes
-Amount to increment tolerance after iteration	STLoverRepairWindow		Amount to increment tolerance after iteration
-Cancel	STLoverRepairWindow		Cancel
-Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
-Check and fix normal values	STLoverRepairWindow		Check and fix normal values
-Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
-Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerance to use for nearby check
-Number of iterations for nearby check	STLoverRepairWindow		Number of iterations for nearby check
+Add facets to fill holes	STLoverRepairWindow		Adicione facetas para preencher buracos
+Amount to increment tolerance after iteration	STLoverRepairWindow		Quantidade de tolerância de incremento após a iteração
+Cancel	STLoverRepairWindow		Cancelar
+Check and fix direction of normals	STLoverRepairWindow		Verifique e corrija a direção dos normais
+Check and fix normal values	STLoverRepairWindow		Verificar e corrigir valores normais
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Encontre e conecte facetas próximas. Corrigir facetas ruins
+Initial tolerance to use for nearby check	STLoverRepairWindow		Tolerância inicial a ser usada para verificação próxima
+Number of iterations for nearby check	STLoverRepairWindow		Número de iterações para verificação nas proximidades
 OK	STLoverRepairWindow		OK
-Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfectly matched edges
-Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
-Repair	STLoverRepairWindow		Repair
-Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
-Backward edges:	STLoverStatView		Backward edges:
-Degenerate facets:	STLoverStatView		Degenerate facets:
-Disconnected:	STLoverStatView		Disconnected:
-Edges fixed:	STLoverStatView		Edges fixed:
-Facet status	STLoverStatView		Facet status
-Facets added:	STLoverStatView		Facets added:
-Facets removed:	STLoverStatView		Facets removed:
-Facets reversed:	STLoverStatView		Facets reversed:
-Facets:	STLoverStatView		Facets:
-File	STLoverStatView		File
-Height:	STLoverStatView		Height:
-Length:	STLoverStatView		Length:
+Only check for perfectly matched edges	STLoverRepairWindow		Verifique apenas se há bordas perfeitamente combinadas
+Remove facets that have 0 neighbors	STLoverRepairWindow		Remover facetas que tenham 0 vizinhos
+Repair	STLoverRepairWindow		Reparar
+Reverse the directions of all facets and normals	STLoverRepairWindow		Inverter as direções de todas as facetas e normais
+Backward edges:	STLoverStatView		Bordas para trás:
+Degenerate facets:	STLoverStatView		Facetas degeneradas:
+Disconnected:	STLoverStatView		Desconectado:
+Edges fixed:	STLoverStatView		Bordas fixas:
+Facet status	STLoverStatView		Status da faceta
+Facets added:	STLoverStatView		Facetas adicionadas:
+Facets removed:	STLoverStatView		Facetas removidas:
+Facets reversed:	STLoverStatView		Facetas invertidas:
+Facets:	STLoverStatView		Facetas:
+File	STLoverStatView		Arquivo
+Height:	STLoverStatView		Altura:
+Length:	STLoverStatView		Comprimento:
 Max X:	STLoverStatView		Max X:
 Max Y:	STLoverStatView		Max Y:
 Max Z:	STLoverStatView		Max Z:
-Min X:	STLoverStatView		Min X:
-Min Y:	STLoverStatView		Min Y:
-Min Z:	STLoverStatView		Min Z:
-Name:	STLoverStatView		Name:
-Normals fixed:	STLoverStatView		Normals fixed:
-Object size	STLoverStatView		Object size
-Parts:	STLoverStatView		Parts:
-Processing	STLoverStatView		Processing
-STL Type:	STLoverStatView		STL Type:
-Title:	STLoverStatView		Title:
+Min X:	STLoverStatView		Mínimo X:
+Min Y:	STLoverStatView		Mínimo Y:
+Min Z:	STLoverStatView		Mínimo Z:
+Name:	STLoverStatView		Nome:
+Normals fixed:	STLoverStatView		Normais fixos:
+Object size	STLoverStatView		Tamanho do objeto
+Parts:	STLoverStatView		Partes:
+Processing	STLoverStatView		Processamento
+STL Type:	STLoverStatView		Tipo STL:
+Title:	STLoverStatView		Título:
 Volume:	STLoverStatView		Volume:
-Width:	STLoverStatView		Width:
+Width:	STLoverStatView		Largura:
 Cancel	STLoverInputWindow		Cancelar
 OK	STLoverInputWindow		OK
 STLover	System name		STLover

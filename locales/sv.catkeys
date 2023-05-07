@@ -5,125 +5,125 @@
 About	STLoverMainWindow		Om
 ASCII	STLoverMainWindow		ASCII
 Autodesk DXF	STLoverMainWindow		Autodesk DXF
-Axes	STLoverMainWindow		Axes
-Axis scale	STLoverMainWindow		Axis scale
-Axis scaling…	STLoverMainWindow		Axis scaling…
-Best fit	STLoverMainWindow		Best fit
-Binary	STLoverMainWindow		Binary
-Bounding box	STLoverMainWindow		Bounding box
-By…	STLoverMainWindow		By…
-Cancel	STLoverMainWindow		Cancel
+Axes	STLoverMainWindow		Axlar
+Axis scale	STLoverMainWindow		Axelskala
+Axis scaling…	STLoverMainWindow		Axelskalning...
+Best fit	STLoverMainWindow		Bästa passform
+Binary	STLoverMainWindow		Binär
+Bounding box	STLoverMainWindow		Begränsande låda
+By…	STLoverMainWindow		Av…
+Cancel	STLoverMainWindow		Avbryt
 Close	STLoverMainWindow		Stäng
-Custom axis scale	STLoverMainWindow		Custom axis scale
-Don't save	STLoverMainWindow		Don't save
-Drop STL files here	STLoverMainWindow		Drop STL files here
-Edit title	STLoverMainWindow		Edit title
-Edit title…	STLoverMainWindow		Edit title…
+Custom axis scale	STLoverMainWindow		Anpassad axelskala
+Don't save	STLoverMainWindow		Spara inte
+Drop STL files here	STLoverMainWindow		Släpp STL-filer här
+Edit title	STLoverMainWindow		Redigera titel
+Edit title…	STLoverMainWindow		Redigera titel...
 File	STLoverMainWindow		Fil
-Front view	STLoverMainWindow		Front view
-Geomview OFF	STLoverMainWindow		Geomview OFF
+Front view	STLoverMainWindow		Frontvy
+Geomview OFF	STLoverMainWindow		Geomview AV
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Hjälp
 Loading…	STLoverMainWindow		Laddar…
-Mirror	STLoverMainWindow		Mirror
-Mirror XY	STLoverMainWindow		Mirror XY
-Mirror XZ	STLoverMainWindow		Mirror XZ
-Mirror YZ	STLoverMainWindow		Mirror YZ
-Move	STLoverMainWindow		Move
-Move by	STLoverMainWindow		Move by
-Move to	STLoverMainWindow		Move to
-Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
-Open	STLoverMainWindow		Open
-Open…	STLoverMainWindow		Open…
-Plane OXY	STLoverMainWindow		Plane OXY
-Quit	STLoverMainWindow		Quit
-Reload	STLoverMainWindow		Reload
-Repair	STLoverMainWindow		Repair
-Repair…	STLoverMainWindow		Repair…
-Reset	STLoverMainWindow		Reset
-Reset view	STLoverMainWindow		Reset view
-Right view	STLoverMainWindow		Right view
-Rotate	STLoverMainWindow		Rotate
-Rotate…	STLoverMainWindow		Rotate…
-Save	STLoverMainWindow		Save
-Save '%document%' as a '%format%' file as…	STLoverMainWindow		Save '%document%' as a '%format%' file as…
-Save as…	STLoverMainWindow		Save as…
-Save changes to document '%filename%' ?	STLoverMainWindow		Save changes to document '%filename%' ?
-Scale	STLoverMainWindow		Scale
-Scale factor:	STLoverMainWindow		Scale factor:
-Scale X factor:	STLoverMainWindow		Scale X factor:
-Scale Y factor:	STLoverMainWindow		Scale Y factor:
-Scale Z factor:	STLoverMainWindow		Scale Z factor:
-Scale…	STLoverMainWindow		Scale…
-Show axes	STLoverMainWindow		Show axes
-Show plane OXY	STLoverMainWindow		Show plane OXY
-Solid	STLoverMainWindow		Solid
-Statistics	STLoverMainWindow		Statistics
+Mirror	STLoverMainWindow		Spegel
+Mirror XY	STLoverMainWindow		Spegel XY
+Mirror XZ	STLoverMainWindow		Spegel XZ
+Mirror YZ	STLoverMainWindow		Spegel YZ
+Move	STLoverMainWindow		Flytta
+Move by	STLoverMainWindow		Flytta med
+Move to	STLoverMainWindow		Flytta till
+Move to top of OXY plane	STLoverMainWindow		Flytta till toppen av OXY-planet
+Open	STLoverMainWindow		Öppna
+Open…	STLoverMainWindow		Öppna…
+Plane OXY	STLoverMainWindow		Plan OXY
+Quit	STLoverMainWindow		Avsluta
+Reload	STLoverMainWindow		Ladda om
+Repair	STLoverMainWindow		Laga
+Repair…	STLoverMainWindow		Laga…
+Reset	STLoverMainWindow		Återställ
+Reset view	STLoverMainWindow		Återställ vy
+Right view	STLoverMainWindow		Höger vy
+Rotate	STLoverMainWindow		Rotera
+Rotate…	STLoverMainWindow		Rotera…
+Save	STLoverMainWindow		Spara
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Spara '%document%' som en '%format%' fil…
+Save as…	STLoverMainWindow		Spara som…
+Save changes to document '%filename%' ?	STLoverMainWindow		Spara ändringar i dokumentet '%filename%' ?
+Scale	STLoverMainWindow		Skala
+Scale factor:	STLoverMainWindow		Skalfaktor:
+Scale X factor:	STLoverMainWindow		Skala X-faktor:
+Scale Y factor:	STLoverMainWindow		Skala Y-faktor:
+Scale Z factor:	STLoverMainWindow		Skala Z-faktor:
+Scale…	STLoverMainWindow		Skala…
+Show axes	STLoverMainWindow		Visa axlar
+Show plane OXY	STLoverMainWindow		Visa plan OXY
+Solid	STLoverMainWindow		Fast
+Statistics	STLoverMainWindow		Statistik
 STL (ASCII)	STLoverMainWindow		STL (ASCII)
-STL (Binary)	STLoverMainWindow		STL (Binary)
-STL Title	STLoverMainWindow		STL Title
-Title:	STLoverMainWindow		Title:
-To (0,0,0)	STLoverMainWindow		To (0,0,0)
-To origin	STLoverMainWindow		To origin
-To top of OXY plane	STLoverMainWindow		To top of OXY plane
-To…	STLoverMainWindow		To…
-Tools	STLoverMainWindow		Tools
-Top view	STLoverMainWindow		Top view
-Unknown file format!	STLoverMainWindow		Unknown file format!
-View	STLoverMainWindow		View
+STL (Binary)	STLoverMainWindow		STL (Binär)
+STL Title	STLoverMainWindow		STL-titel
+Title:	STLoverMainWindow		Titel:
+To (0,0,0)	STLoverMainWindow		Till (0,0,0)
+To origin	STLoverMainWindow		Till ursprung
+To top of OXY plane	STLoverMainWindow		Till toppen av OXY-planet
+To…	STLoverMainWindow		Till…
+Tools	STLoverMainWindow		Verktyg
+Top view	STLoverMainWindow		Toppvy
+Unknown file format!	STLoverMainWindow		Okänt filformat!
+View	STLoverMainWindow		Se
 VRML	STLoverMainWindow		VRML
 Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
-Wireframe	STLoverMainWindow		Wireframe
-X-axis:	STLoverMainWindow		X-axis:
+Wireframe	STLoverMainWindow		Trådram
+X-axis:	STLoverMainWindow		X-axel:
 X:	STLoverMainWindow		X:
-Y-axis:	STLoverMainWindow		Y-axis:
+Y-axis:	STLoverMainWindow		Y-axel:
 Y:	STLoverMainWindow		Y:
-Z-axis:	STLoverMainWindow		Z-axis:
+Z-axis:	STLoverMainWindow		Z-axel:
 Z:	STLoverMainWindow		Z:
-Zoom in	STLoverMainWindow		Zoom in
-Zoom out	STLoverMainWindow		Zoom out
-A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
+Zoom in	STLoverMainWindow		Zooma in
+Zoom out	STLoverMainWindow		Zooma ut
+A file format native to the STereoLithography CAD software	STLoverApplication		Ett filformat som är inbyggt i STereoLithography CAD-programvaran
 STL file	STLoverApplication		STL fil
-Add facets to fill holes	STLoverRepairWindow		Add facets to fill holes
-Amount to increment tolerance after iteration	STLoverRepairWindow		Amount to increment tolerance after iteration
-Cancel	STLoverRepairWindow		Cancel
-Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
-Check and fix normal values	STLoverRepairWindow		Check and fix normal values
-Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
-Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerance to use for nearby check
-Number of iterations for nearby check	STLoverRepairWindow		Number of iterations for nearby check
+Add facets to fill holes	STLoverRepairWindow		Lägg till fasetter för att fylla hål
+Amount to increment tolerance after iteration	STLoverRepairWindow		Mängd för att öka toleransen efter iteration
+Cancel	STLoverRepairWindow		Avbryt
+Check and fix direction of normals	STLoverRepairWindow		Kontrollera och fixa riktningen för normalerna
+Check and fix normal values	STLoverRepairWindow		Kontrollera och fixa normala värden
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Hitta och koppla ihop närliggande aspekter. Rätta dåliga aspekter
+Initial tolerance to use for nearby check	STLoverRepairWindow		Initial tolerans att använda för närliggande kontroll
+Number of iterations for nearby check	STLoverRepairWindow		Antal iterationer för närliggande kontroll
 OK	STLoverRepairWindow		OK
-Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfectly matched edges
-Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
-Repair	STLoverRepairWindow		Repair
-Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
-Backward edges:	STLoverStatView		Backward edges:
-Degenerate facets:	STLoverStatView		Degenerate facets:
-Disconnected:	STLoverStatView		Disconnected:
-Edges fixed:	STLoverStatView		Edges fixed:
-Facet status	STLoverStatView		Facet status
-Facets added:	STLoverStatView		Facets added:
-Facets removed:	STLoverStatView		Facets removed:
-Facets reversed:	STLoverStatView		Facets reversed:
-Facets:	STLoverStatView		Facets:
-File	STLoverStatView		File
-Height:	STLoverStatView		Height:
-Length:	STLoverStatView		Length:
+Only check for perfectly matched edges	STLoverRepairWindow		Kontrollera endast efter perfekt matchade kanter
+Remove facets that have 0 neighbors	STLoverRepairWindow		Ta bort aspekter som har 0 grannar
+Repair	STLoverRepairWindow		Reparera
+Reverse the directions of all facets and normals	STLoverRepairWindow		Vänd om riktningarna för alla aspekter och normaler
+Backward edges:	STLoverStatView		Bakre kanter:
+Degenerate facets:	STLoverStatView		Degenererade aspekter:
+Disconnected:	STLoverStatView		Osammanhängande:
+Edges fixed:	STLoverStatView		Kanter fixade:
+Facet status	STLoverStatView		Aspekt status
+Facets added:	STLoverStatView		Tillagda aspekter:
+Facets removed:	STLoverStatView		Aspekter borttagna:
+Facets reversed:	STLoverStatView		Aspekter omvända:
+Facets:	STLoverStatView		Apekter:
+File	STLoverStatView		Fil
+Height:	STLoverStatView		Höjd:
+Length:	STLoverStatView		Längd:
 Max X:	STLoverStatView		Max X:
 Max Y:	STLoverStatView		Max Y:
 Max Z:	STLoverStatView		Max Z:
 Min X:	STLoverStatView		Min X:
 Min Y:	STLoverStatView		Min Y:
 Min Z:	STLoverStatView		Min Z:
-Name:	STLoverStatView		Name:
-Normals fixed:	STLoverStatView		Normals fixed:
-Object size	STLoverStatView		Object size
-Parts:	STLoverStatView		Parts:
-Processing	STLoverStatView		Processing
-STL Type:	STLoverStatView		STL Type:
-Title:	STLoverStatView		Title:
-Volume:	STLoverStatView		Volume:
-Width:	STLoverStatView		Width:
-Cancel	STLoverInputWindow		Cancel
+Name:	STLoverStatView		Namn:
+Normals fixed:	STLoverStatView		Normaler fixade:
+Object size	STLoverStatView		Objektstorlek
+Parts:	STLoverStatView		Delar:
+Processing	STLoverStatView		Bearbetning
+STL Type:	STLoverStatView		STL-typ:
+Title:	STLoverStatView		Titel:
+Volume:	STLoverStatView		Volym:
+Width:	STLoverStatView		Bredd:
+Cancel	STLoverInputWindow		Avbryt
 OK	STLoverInputWindow		OK
 STLover	System name		STLover

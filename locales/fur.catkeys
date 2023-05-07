@@ -1,0 +1,129 @@
+1	Friulian	application/x-vnd.stlover	3052238959
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Informazions
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		As
+Axis scale	STLoverMainWindow		Scjale dai as
+Axis scaling…	STLoverMainWindow		Scjaladure dai as...
+Best fit	STLoverMainWindow		Adatament miôr
+Binary	STLoverMainWindow		Binari
+Bounding box	STLoverMainWindow		Bounding box
+By…	STLoverMainWindow		Di…
+Cancel	STLoverMainWindow		Anule
+Close	STLoverMainWindow		Siere
+Custom axis scale	STLoverMainWindow		Scjale dal as personalizade
+Don't save	STLoverMainWindow		No sta salvâ
+Drop STL files here	STLoverMainWindow		Mole i files STL achì
+Edit title	STLoverMainWindow		Modifiche titul
+Edit title…	STLoverMainWindow		Modifiche titul…
+File	STLoverMainWindow		File
+Front view	STLoverMainWindow		Viodude frontâl
+Geomview OFF	STLoverMainWindow		Geomview OFF
+Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
+Help	STLoverMainWindow		Jutori
+Loading…	STLoverMainWindow		Daûr a cjariâ…
+Mirror	STLoverMainWindow		Spieli
+Mirror XY	STLoverMainWindow		Spieli XY
+Mirror XZ	STLoverMainWindow		Spieli XZ
+Mirror YZ	STLoverMainWindow		Spieli YZ
+Move	STLoverMainWindow		Môf
+Move by	STLoverMainWindow		Môf di
+Move to	STLoverMainWindow		Môf a
+Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
+Open	STLoverMainWindow		Vierç
+Open…	STLoverMainWindow		Vierç…
+Plane OXY	STLoverMainWindow		Plane OXY
+Quit	STLoverMainWindow		Jes
+Reload	STLoverMainWindow		Torne cjame
+Repair	STLoverMainWindow		Comede
+Repair…	STLoverMainWindow		Comede…
+Reset	STLoverMainWindow		Ripristine
+Reset view	STLoverMainWindow		Ripristine viodude
+Right view	STLoverMainWindow		Viodude diestre
+Rotate	STLoverMainWindow		Volte
+Rotate…	STLoverMainWindow		Volte…
+Save	STLoverMainWindow		Salve
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Salve '%document%' come un file '%format%' cun non…
+Save as…	STLoverMainWindow		Salve cun non…
+Save changes to document '%filename%' ?	STLoverMainWindow		Salvâ lis modifichis al document '%filename%' ?
+Scale	STLoverMainWindow		Scjale
+Scale factor:	STLoverMainWindow		Fatôr di scjale:
+Scale X factor:	STLoverMainWindow		Fatôr de scjale X:
+Scale Y factor:	STLoverMainWindow		Fatôr de scjale Y:
+Scale Z factor:	STLoverMainWindow		Fatôr de scjale Z:
+Scale…	STLoverMainWindow		Scjale…
+Show axes	STLoverMainWindow		Mostre i as
+Show plane OXY	STLoverMainWindow		Show plane OXY
+Solid	STLoverMainWindow		Solit
+Statistics	STLoverMainWindow		Statistichis
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binari)
+STL Title	STLoverMainWindow		Titul dal STL
+Title:	STLoverMainWindow		Titul:
+To (0,0,0)	STLoverMainWindow		A (0,0,0)
+To origin	STLoverMainWindow		Ae origjin
+To top of OXY plane	STLoverMainWindow		To top of OXY plane
+To…	STLoverMainWindow		A…
+Tools	STLoverMainWindow		Struments
+Top view	STLoverMainWindow		Viodude superiôr
+Unknown file format!	STLoverMainWindow		Formât di file no cognossût!
+View	STLoverMainWindow		Viodude
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
+Wireframe	STLoverMainWindow		Wireframe
+X-axis:	STLoverMainWindow		As-X:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		As-Y:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		As-Z:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Ingrandìs
+Zoom out	STLoverMainWindow		Impiçulìs
+A file format native to the STereoLithography CAD software	STLoverApplication		Un formât di file natîf al software CAD STereoLithography
+STL file	STLoverApplication		File STL
+Add facets to fill holes	STLoverRepairWindow		Add facets to fill holes
+Amount to increment tolerance after iteration	STLoverRepairWindow		Cuantitât di tolerance di aumentâ dopo de iterazion
+Cancel	STLoverRepairWindow		Anule
+Check and fix direction of normals	STLoverRepairWindow		Controle e comede la direzion dai normâi
+Check and fix normal values	STLoverRepairWindow		Controle e comede i valôrs normâi
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
+Initial tolerance to use for nearby check	STLoverRepairWindow		Tolerance iniziâl di doprâ pal control dongje
+Number of iterations for nearby check	STLoverRepairWindow		Numar di iterazions pal control dongje
+OK	STLoverRepairWindow		Va ben
+Only check for perfectly matched edges	STLoverRepairWindow		Controle dome pai ôrs che a corispuindin in maniere perfete
+Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
+Repair	STLoverRepairWindow		Comede
+Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
+Backward edges:	STLoverStatView		Backward edges:
+Degenerate facets:	STLoverStatView		Degenerate facets:
+Disconnected:	STLoverStatView		Disconetût:
+Edges fixed:	STLoverStatView		Ôrs comedâts:
+Facet status	STLoverStatView		Facet status
+Facets added:	STLoverStatView		Facets added:
+Facets removed:	STLoverStatView		Facets removed:
+Facets reversed:	STLoverStatView		Facets reversed:
+Facets:	STLoverStatView		Facets:
+File	STLoverStatView		File
+Height:	STLoverStatView		Altece:
+Length:	STLoverStatView		Lungjece:
+Max X:	STLoverStatView		Max X:
+Max Y:	STLoverStatView		Max Y:
+Max Z:	STLoverStatView		Max Z:
+Min X:	STLoverStatView		Min X:
+Min Y:	STLoverStatView		Min Y:
+Min Z:	STLoverStatView		Min Z:
+Name:	STLoverStatView		Non:
+Normals fixed:	STLoverStatView		Normals fixed:
+Object size	STLoverStatView		Dimension ogjet
+Parts:	STLoverStatView		Parts:
+Processing	STLoverStatView		Elaborazion
+STL Type:	STLoverStatView		Gjenar STL:
+Title:	STLoverStatView		Titul:
+Volume:	STLoverStatView		Volum:
+Width:	STLoverStatView		Largjece:
+Cancel	STLoverInputWindow		Anule
+OK	STLoverInputWindow		Va ben
+STLover	System name		STLover

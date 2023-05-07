@@ -20,8 +20,8 @@ Drop STL files here	STLoverMainWindow		STL dosyalarını buraya bırakın
 Edit title	STLoverMainWindow		Başlığı düzenle
 Edit title…	STLoverMainWindow		Başlığı düzenle…
 File	STLoverMainWindow		Dosya
-Front view	STLoverMainWindow		Önden görünüm
-Geomview OFF	STLoverMainWindow		Geomview OFF
+Front view	STLoverMainWindow		Önden görüntü
+Geomview OFF	STLoverMainWindow		Geometrik görüntü KAPALI
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Yardım
 Loading…	STLoverMainWindow		Yükleniyor…
@@ -41,8 +41,8 @@ Reload	STLoverMainWindow		Yeniden yükle
 Repair	STLoverMainWindow		Onar
 Repair…	STLoverMainWindow		Onar…
 Reset	STLoverMainWindow		Sıfırla
-Reset view	STLoverMainWindow		Görünümü sıfırla
-Right view	STLoverMainWindow		Sağdan görünüm
+Reset view	STLoverMainWindow		Görüntüyü sıfırla
+Right view	STLoverMainWindow		Sağdan görüntü
 Rotate	STLoverMainWindow		Döndür
 Rotate…	STLoverMainWindow		Döndür…
 Save	STLoverMainWindow		Kaydet
@@ -68,9 +68,9 @@ To origin	STLoverMainWindow		Kökene
 To top of OXY plane	STLoverMainWindow		OXY düzleminin en üstüne
 To…	STLoverMainWindow		Şuraya…
 Tools	STLoverMainWindow		Araçlar
-Top view	STLoverMainWindow		Yukarıdan görünüm
+Top view	STLoverMainWindow		Yukarıdan görüntü
 Unknown file format!	STLoverMainWindow		Bilinmeyen dosya biçimi!
-View	STLoverMainWindow		Görünüm
+View	STLoverMainWindow		Görüntü
 VRML	STLoverMainWindow		VRML
 Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
 Wireframe	STLoverMainWindow		İskelet
