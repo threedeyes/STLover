@@ -10,8 +10,8 @@ Axis scale	STLoverMainWindow		Échelle des axes
 Axis scaling…	STLoverMainWindow		Mise à, l’échelle des axes…
 Best fit	STLoverMainWindow		Optimisé
 Binary	STLoverMainWindow		Binaire
-Bounding box	STLoverMainWindow		Bounding box
-By…	STLoverMainWindow		Par…
+Bounding box	STLoverMainWindow		Boîte englobante
+By…	STLoverMainWindow		De...
 Cancel	STLoverMainWindow		Annuler
 Close	STLoverMainWindow		Fermer
 Custom axis scale	STLoverMainWindow		Échelle des axes personnalisée
@@ -32,9 +32,9 @@ Mirror YZ	STLoverMainWindow		Miroir YZ
 Move	STLoverMainWindow		Déplacer
 Move by	STLoverMainWindow		Déplacer de
 Move to	STLoverMainWindow		Déplacer vers
-Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
+Move to top of OXY plane	STLoverMainWindow		Déplacer au sommet du plan OXY
 Open	STLoverMainWindow		Ouvrir
-Open…	STLoverMainWindow		Ouverture…
+Open…	STLoverMainWindow		Ouvrir…
 Plane OXY	STLoverMainWindow		Plan OXY
 Quit	STLoverMainWindow		Quitter
 Reload	STLoverMainWindow		Recharger
@@ -73,7 +73,7 @@ Unknown file format!	STLoverMainWindow		Format de fichier inconnu !
 View	STLoverMainWindow		Vue
 VRML	STLoverMainWindow		VRML
 Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
-Wireframe	STLoverMainWindow		Fils de fer
+Wireframe	STLoverMainWindow		Fil de fer
 X-axis:	STLoverMainWindow		Axe-X :
 X:	STLoverMainWindow		X :
 Y-axis:	STLoverMainWindow		Axe-Y :
@@ -82,13 +82,13 @@ Z-axis:	STLoverMainWindow		Axe-Z :
 Z:	STLoverMainWindow		Z :
 Zoom in	STLoverMainWindow		Rapprocher
 Zoom out	STLoverMainWindow		Éloigner
-A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
+A file format native to the STereoLithography CAD software	STLoverApplication		Un format de fichier natif au logiciel STereoLithography CAD
 STL file	STLoverApplication		Fichier STL
 Add facets to fill holes	STLoverRepairWindow		Ajouter des facettes pour remplir les vides
-Amount to increment tolerance after iteration	STLoverRepairWindow		Amount to increment tolerance after iteration
+Amount to increment tolerance after iteration	STLoverRepairWindow		Montant d’incrémentation de la tolérance après itération
 Cancel	STLoverRepairWindow		Annuler
-Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
-Check and fix normal values	STLoverRepairWindow		Check and fix normal values
+Check and fix direction of normals	STLoverRepairWindow		Vérifier et corriger la direction des normales
+Check and fix normal values	STLoverRepairWindow		Vérifier et corriger les valeurs des normales
 Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Chercher et connecter les facettes proches. Corriger les facettes incorrectes.
 Initial tolerance to use for nearby check	STLoverRepairWindow		Tolérance initiale à utiliser pour la vérification de proximité
 Number of iterations for nearby check	STLoverRepairWindow		Nombre d'itérations pour la vérification de proximité
@@ -96,15 +96,15 @@ OK	STLoverRepairWindow		D’accord
 Only check for perfectly matched edges	STLoverRepairWindow		Ne vérifier que les bords correspondant parfaitement
 Remove facets that have 0 neighbors	STLoverRepairWindow		Supprimer les facettes n'ayant aucune voisine.
 Repair	STLoverRepairWindow		Réparer
-Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
-Backward edges:	STLoverStatView		Backward edges:
-Degenerate facets:	STLoverStatView		Degenerate facets:
-Disconnected:	STLoverStatView		Déconnecté(e)s:
-Edges fixed:	STLoverStatView		Bords ajustés :
-Facet status	STLoverStatView		Facet status
+Reverse the directions of all facets and normals	STLoverRepairWindow		Inverser les directions de toutes les facettes et normales
+Backward edges:	STLoverStatView		Arêtes inversées :
+Degenerate facets:	STLoverStatView		Facettes invalides :
+Disconnected:	STLoverStatView		Déconnectées :
+Edges fixed:	STLoverStatView		Arêtes ajustées :
+Facet status	STLoverStatView		Status des facettes
 Facets added:	STLoverStatView		Facettes ajoutées :
 Facets removed:	STLoverStatView		Facettes supprimées :
-Facets reversed:	STLoverStatView		Facettes annulées : / Facettes retournées :
+Facets reversed:	STLoverStatView		Facettes retournées :
 Facets:	STLoverStatView		Facettes :
 File	STLoverStatView		Fichier
 Height:	STLoverStatView		Hauteur :
@@ -116,11 +116,11 @@ Min X:	STLoverStatView		Min X :
 Min Y:	STLoverStatView		Min Y :
 Min Z:	STLoverStatView		Min Z :
 Name:	STLoverStatView		Nom :
-Normals fixed:	STLoverStatView		Normals fixed:
+Normals fixed:	STLoverStatView		Normales corrigées :
 Object size	STLoverStatView		Dimensions de l’objet
-Parts:	STLoverStatView		Parts:
-Processing	STLoverStatView		Processing
-STL Type:	STLoverStatView		Type STL :
+Parts:	STLoverStatView		Pièces :
+Processing	STLoverStatView		Traitement
+STL Type:	STLoverStatView		Type de STL :
 Title:	STLoverStatView		Titre :
 Volume:	STLoverStatView		Volume :
 Width:	STLoverStatView		Largeur :
