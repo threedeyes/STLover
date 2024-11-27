@@ -30,8 +30,12 @@
 #include <IconUtils.h>
 #include <Catalog.h>
 
+#define GL_VERSION_4_6 1
+#define GL_GLEXT_PROTOTYPES 1
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glext.h>
+#include <GLView.h>
 
 #include <private/interface/WindowStack.h>
 

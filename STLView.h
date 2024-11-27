@@ -27,19 +27,24 @@
 #include <OS.h>
 
 #include <admesh/stl.h>
+#include <vector>
+
+class STLWindow;
 
 class STLView : public BGLView {
 	public:
 		STLView(BRect frame, uint32 type);
 		~STLView();
+
 		virtual void AttachedToWindow(void);
 		virtual void MessageReceived(BMessage *message);
 		virtual void FrameResized(float w, float h);
 		virtual void MouseDown(BPoint point);
 		virtual void MouseUp(BPoint point);
-		virtual void MouseMoved(BPoint p, uint32 transit,const BMessage *message);
+		virtual void MouseMoved(BPoint p, uint32 transit, const BMessage *message);
 
 		void SetSTL(stl_file *stl);
+		void Reload(void);
 		void Reset(bool scale = true, bool rotate = true, bool pan = true);
 		void ShowAxes(bool show) { showAxes = show; }
 		void ShowBoundingBox(bool show) { showBox = show; }
@@ -53,20 +58,30 @@ class STLView : public BGLView {
 		float YRotate() { return yRotate; }
 		float ScaleFactor() { return scaleFactor; }
 
-		void SetXRotate(float value) { xRotate = value; needUpdate = true;}
-		void SetYRotate(float value) { yRotate = value; needUpdate = true;}
-		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true;}
+		void SetXRotate(float value) { xRotate = value; needUpdate = true; }
+		void SetYRotate(float value) { yRotate = value; needUpdate = true; }
+		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true; }
 
 		void ShowPreview(float *matrix);
-		void HidePreview() { fShowPreview = false;}
+		void HidePreview() { fShowPreview = false; }
+
 	private:
+		GLuint m_vao = 0;
+		GLuint m_vertexVBO = 0;
+		GLuint m_normalVBO = 0;
+		size_t m_vertexCount = 0;
+		bool m_buffersInitialized = false;
+
+		void InitializeSTLBuffers();
+		void CleanupBuffers();
+
+		static void Billboard();
 		void DrawBox(void);
 		void DrawAxis(void);
 		void DrawOXY(float margin = 30.0);
-
 		void SetupProjection(void);
-		
-		void DrawSTL() { DrawSTL({128,128,128});}
+
+		void DrawSTL() { DrawSTL({128,128,128}); }
 		void DrawSTL(rgb_color color);
 
 		BRect boundRect;
@@ -77,7 +92,6 @@ class STLView : public BGLView {
 		bigtime_t lastMouseClickTime;
 
 		STLWindow *stlWindow;
-
 		stl_file* stlObject;
 
 		float xRotate;
@@ -96,4 +110,4 @@ class STLView : public BGLView {
 		bool viewOrtho;
 };
 
-#endif
+#endif // STLOVER_VIEW

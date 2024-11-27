@@ -800,6 +800,7 @@ STLWindow::MessageReceived(BMessage *message)
 					fIterationsValue, fRemoveUnconnectedFlag, fFillHolesFlag, fNormalDirectionsFlag,
 					fNormalValuesFlag, fReverseAllFlag, 0);
 				fStlModified = true;
+				fStlView->Reload();
 				UpdateUI();
 			}
 			break;
@@ -838,6 +839,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fStlModified = true;
 				UpdateUI();
 				fStlView->HidePreview();
+				fStlView->Reload();
 			}
 			break;
 		}
@@ -866,6 +868,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fStlModified = true;
 				UpdateUI();
 				fStlView->HidePreview();
+				fStlView->Reload();
 			}
 			break;
 		}
@@ -899,6 +902,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fStlModified = true;
 				UpdateUI();
 				fStlView->HidePreview();
+				fStlView->Reload();
 			}
 			break;
 		}
@@ -906,6 +910,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_translate(fStlObject, -fStlObject->stats.size.x / 2, -fStlObject->stats.size.y / 2, -fStlObject->stats.size.z / 2);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
@@ -913,6 +918,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_translate(fStlObject, -fStlObject->stats.size.x / 2, -fStlObject->stats.size.y / 2, 0);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
@@ -920,6 +926,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_translate(fStlObject, 0, 0, 0);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
@@ -946,6 +953,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fStlModified = true;
 				UpdateUI();
 				fStlView->HidePreview();
+				fStlView->Reload();
 			}
 			break;
 		}
@@ -972,6 +980,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fStlModified = true;
 				UpdateUI();
 				fStlView->HidePreview();
+				fStlView->Reload();
 			}
 			break;
 		}
@@ -979,6 +988,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_mirror_xy(fStlObject);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
@@ -986,6 +996,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_mirror_yz(fStlObject);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
@@ -993,6 +1004,7 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			stl_mirror_xz(fStlObject);
 			fStlModified = true;
+			fStlView->Reload();
 			UpdateUI();
 			break;
 		}
