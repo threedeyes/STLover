@@ -28,6 +28,9 @@
 
 #include <admesh/stl.h>
 #include <vector>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 class STLWindow;
 
@@ -72,7 +75,6 @@ class STLView : public BGLView {
 		GLuint axesVBO = 0;
 		GLuint oxyVAO = 0;
 		GLuint oxyVBO = 0;
-
 		GLuint stlVAO = 0;
 		GLuint stlVertexVBO = 0;
 		GLuint stlNormalVBO = 0;
@@ -84,19 +86,31 @@ class STLView : public BGLView {
 
 		bool m_buffersInitialized = false;
 
+		GLuint shaderProgram;
+		GLuint lineShaderProgram;
+		GLint modelLoc, viewLoc, projLoc, colorLoc;
+
+		glm::mat4 modelMatrix;
+		glm::mat4 viewMatrix;
+		glm::mat4 projectionMatrix;
+
 		void InitializeBuffers();
 		void CleanupBuffers();
 
-		static void Billboard();
-		void DrawAxisLabel(float x, float y, float z,
-				const char* label, float r, float g, float b);
 		void DrawBox(void);
 		void DrawAxis(void);
 		void DrawOXY(void);
+		void DrawAxisLabel(float x, float y, float z,
+				const char* label, float r, float g, float b);
+		void Billboard();
 		void SetupProjection(void);
 
 		void DrawSTL() { DrawSTL({128,128,128}); }
 		void DrawSTL(rgb_color color);
+
+		void InitShaders();
+		GLuint CompileShader(GLenum type, const char* source);
+		GLuint CreateShaderProgram(const char* vertexSource, const char* fragmentSource);
 
 		BRect boundRect;
 		BBitmap *appIcon;
