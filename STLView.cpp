@@ -21,6 +21,7 @@
 
 #include <GL/gl.h>
 #include <GL/glu.h>
+#include <GL/glut.h>
 #include <GL/glext.h>
 #include <GLView.h>
 
@@ -56,34 +57,59 @@ STLView::~STLView()
 	delete appIcon;
 }
 
-void STLView::CleanupBuffers() {
-	if (m_vao) {
-		glDeleteVertexArrays(1, &m_vao);
-		m_vao = 0;
+void
+STLView::CleanupBuffers()
+{
+	if (stlVAO) {
+		glDeleteVertexArrays(1, &stlVAO);
+		stlVAO = 0;
 	}
-	if (m_vertexVBO) {
-		glDeleteBuffers(1, &m_vertexVBO);
-		m_vertexVBO = 0;
+	if (stlVertexVBO) {
+		glDeleteBuffers(1, &stlVertexVBO);
+		stlVertexVBO = 0;
 	}
-	if (m_normalVBO) {
-		glDeleteBuffers(1, &m_normalVBO);
-		m_normalVBO = 0;
+	if (stlNormalVBO) {
+		glDeleteBuffers(1, &stlNormalVBO);
+		stlNormalVBO = 0;
 	}
+	if (boxVAO) {
+		glDeleteVertexArrays(1, &boxVAO);
+		glDeleteBuffers(1, &boxVBO);
+		boxVAO = 0;
+		boxVBO = 0;
+	}
+	if (axesVAO) {
+		glDeleteVertexArrays(1, &axesVAO);
+		glDeleteBuffers(1, &axesVBO);
+		axesVAO = 0;
+		axesVBO = 0;
+	}
+	if (oxyVAO) {
+		glDeleteVertexArrays(1, &oxyVAO);
+		glDeleteBuffers(1, &oxyVBO);
+		oxyVAO = 0;
+		oxyVBO = 0;
+	}
+
 	m_buffersInitialized = false;
 }
 
-void STLView::InitializeSTLBuffers() {
-	if (m_buffersInitialized || !stlObject) return;
+void
+STLView::InitializeBuffers()
+{
+	if (m_buffersInitialized || !stlObject)
+		return;
 
-	glGenVertexArrays(1, &m_vao);
-	glGenBuffers(1, &m_vertexVBO);
-	glGenBuffers(1, &m_normalVBO);
+	// STL
+	glGenVertexArrays(1, &stlVAO);
+	glGenBuffers(1, &stlVertexVBO);
+	glGenBuffers(1, &stlNormalVBO);
 
-	glBindVertexArray(m_vao);
+	glBindVertexArray(stlVAO);
 
 	std::vector<float> vertices;
 	std::vector<float> normals;
-	m_vertexCount = stlObject->stats.number_of_facets * 3;
+	stlVertexCount = stlObject->stats.number_of_facets * 3;
 
 	for (size_t i = 0; i < stlObject->stats.number_of_facets; i++) {
 		for (int j = 0; j < 3; j++) {
@@ -99,19 +125,94 @@ void STLView::InitializeSTLBuffers() {
 		}
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_vertexVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, stlVertexVBO);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float),
 				vertices.data(), GL_STATIC_DRAW);
 	glVertexPointer(3, GL_FLOAT, 0, nullptr);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glBindBuffer(GL_ARRAY_BUFFER, m_normalVBO);
+	glBindBuffer(GL_ARRAY_BUFFER, stlNormalVBO);
 	glBufferData(GL_ARRAY_BUFFER, normals.size() * sizeof(float),
 				normals.data(), GL_STATIC_DRAW);
 	glNormalPointer(GL_FLOAT, 0, nullptr);
 	glEnableClientState(GL_NORMAL_ARRAY);
 
 	glBindVertexArray(0);
+
+	// Box
+	stl_vertex min = stlObject->stats.min;
+	stl_vertex size = stlObject->stats.size;
+	boxVertices = {
+		min.x, min.y, min.z, min.x + size.x, min.y, min.z,
+		min.x + size.x, min.y, min.z, min.x + size.x, min.y + size.y, min.z,
+		min.x + size.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z,
+		min.x, min.y + size.y, min.z, min.x, min.y, min.z,
+
+		min.x, min.y, min.z + size.z, min.x + size.x, min.y, min.z + size.z,
+		min.x + size.x, min.y, min.z + size.z, min.x + size.x, min.y + size.y, min.z + size.z,
+		min.x + size.x, min.y + size.y, min.z + size.z, min.x, min.y + size.y, min.z + size.z,
+		min.x, min.y + size.y, min.z + size.z, min.x, min.y, min.z + size.z,
+
+		min.x, min.y, min.z, min.x, min.y, min.z + size.z,
+		min.x + size.x, min.y, min.z, min.x + size.x, min.y, min.z + size.z,
+		min.x + size.x, min.y + size.y, min.z, min.x + size.x, min.y + size.y, min.z + size.z,
+		min.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z + size.z
+	};
+
+	glGenVertexArrays(1, &boxVAO);
+	glGenBuffers(1, &boxVBO);
+	glBindVertexArray(boxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
+	glBufferData(GL_ARRAY_BUFFER, boxVertices.size() * sizeof(float),
+			boxVertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
+	// Axes
+	axisVertices = {
+		0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // X
+		0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,  // Y
+		0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f   // Z
+	};
+
+	glGenVertexArrays(1, &axesVAO);
+	glGenBuffers(1, &axesVBO);
+	glBindVertexArray(axesVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, axesVBO);
+	glBufferData(GL_ARRAY_BUFFER, axisVertices.size() * sizeof(float),
+			axisVertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
+	// OXY
+	oxyVertices.clear();
+	float margin = 30.0f;
+	float xMin = round((stlObject->stats.min.x - margin) / 10.0) * 10.0;
+	float xMax = round((stlObject->stats.max.x + margin) / 10.0) * 10.0;
+	float yMin = round((stlObject->stats.min.y - margin) / 10.0) * 10.0;
+	float yMax = round((stlObject->stats.max.y + margin) / 10.0) * 10.0;
+
+	for (float x = xMin; x <= xMax; x += 10) {
+		oxyVertices.push_back(x); oxyVertices.push_back(yMin); oxyVertices.push_back(0.0f);
+		oxyVertices.push_back(x); oxyVertices.push_back(yMax); oxyVertices.push_back(0.0f);
+	}
+	for (float y = yMin; y <= yMax; y += 10) {
+		oxyVertices.push_back(xMin); oxyVertices.push_back(y); oxyVertices.push_back(0.0f);
+		oxyVertices.push_back(xMax); oxyVertices.push_back(y); oxyVertices.push_back(0.0f);
+	}
+
+	glGenVertexArrays(1, &oxyVAO);
+	glGenBuffers(1, &oxyVBO);
+	glBindVertexArray(oxyVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, oxyVBO);
+	glBufferData(GL_ARRAY_BUFFER, oxyVertices.size() * sizeof(float),
+			oxyVertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, nullptr);
+	glEnableVertexAttribArray(0);
+	glBindVertexArray(0);
+
 	m_buffersInitialized = true;
 }
 
@@ -255,7 +356,7 @@ STLView::SetSTL(stl_file *stl)
 	CleanupBuffers();
 	stlObject = stl;
 	SetupProjection();
-	InitializeSTLBuffers();
+	InitializeBuffers();
 	Reset();
 	UnlockGL();
 }
@@ -265,80 +366,28 @@ STLView::Reload(void)
 {
 	LockGL();
 	CleanupBuffers();
-	InitializeSTLBuffers();
+	InitializeBuffers();
 	UnlockGL();
 }
 
 void
-STLView::DrawBox(void)
+STLView::DrawBox()
 {
-	stl_vertex min = stlObject->stats.min;
-	stl_vertex size = stlObject->stats.size;
-
-	glLineWidth(1);
-	glColor4f (0.9, 0.25, 0.6, 1);
-
-	glBegin(GL_LINE_LOOP);
-	glVertex3f(min.x, min.y, min.z);
-	glVertex3f(min.x + size.x, min.y, min.z);
-	glVertex3f(min.x + size.x, min.y + size.y, min.z);
-	glVertex3f(min.x, min.y + size.y, min.z);
-	glEnd();
-
-	glBegin(GL_LINE_LOOP);
-	glVertex3f(min.x, min.y, min.z + size.z);
-	glVertex3f(min.x + size.x, min.y, min.z + size.z);
-	glVertex3f(min.x + size.x, min.y + size.y, min.z + size.z);
-	glVertex3f(min.x, min.y + size.y, min.z + size.z);
-	glEnd();
-
-	glBegin(GL_LINES);
-	glVertex3f(min.x, min.y, min.z);
-	glVertex3f(min.x, min.y, min.z + size.z);
-	glVertex3f(min.x + size.x, min.y, min.z);
-	glVertex3f(min.x + size.x, min.y, min.z + size.z);
-	glVertex3f(min.x + size.x, min.y + size.y, min.z);
-	glVertex3f(min.x + size.x, min.y + size.y, min.z + size.z);
-	glVertex3f(min.x, min.y + size.y, min.z);
-	glVertex3f(min.x, min.y + size.y, min.z + size.z);
-	glEnd();
+	glBindVertexArray(boxVAO);
+	glColor4f(0.9f, 0.25f, 0.6f, 1.0f);
+	glDrawArrays(GL_LINES, 0, boxVertices.size() / 3);
+	glBindVertexArray(0);
 }
 
 void
-STLView::DrawOXY(float margin)
+STLView::DrawOXY()
 {
-	/* 
-	TODO: check this
-	*/
-	float xShift = stlObject->stats.min.x - stlObject->stats.min.x;
-	float yShift = stlObject->stats.min.y - stlObject->stats.min.y;
-	float zShift = stlObject->stats.min.z - stlObject->stats.min.z;
-
-	float xMin = lroundf((stlObject->stats.min.x + xShift) / 10.0) * 10.0 - margin;
-	float xMax = lroundf((stlObject->stats.max.x + xShift) / 10.0) * 10.0 + margin;
-	float yMin = lroundf((stlObject->stats.min.y + yShift) / 10.0) * 10.0 - margin;
-	float yMax = lroundf((stlObject->stats.max.y + yShift) / 10.0) * 10.0 + margin;
-
-	glLineWidth(1);
-	glBegin(GL_LINES);
-	for (float r = xMin; r <= xMax; r += 10) {
-		if (fabs(r) < 0.0001)
-			glColor4f (1, 0, 0, 1);
-		else
-			glColor4f (0.1, 0.1, 1, 1);
-		glVertex3f(xShift - r, yShift - yMin, zShift);
-		glVertex3f(xShift - r, yShift - yMax, zShift);
-	}
-	for (float r = yMin; r <= yMax; r += 10) {
-		if (fabs(r) < 0.0001)
-			glColor4f (0, 1, 0, 1);
-		else
-			glColor4f (0.1, 0.1, 1, 1);
-		glVertex3f(xShift - xMin , yShift - r, zShift);
-		glVertex3f(xShift - xMax, yShift - r, zShift);
-	}
-	glEnd();
+	glBindVertexArray(oxyVAO);
+	glColor4f(0.1f, 0.1f, 1.0f, 1.0f);
+	glDrawArrays(GL_LINES, 0, oxyVertices.size() / 3);
+	glBindVertexArray(0);
 }
+
 
 void
 STLView::Billboard()
@@ -348,12 +397,7 @@ STLView::Billboard()
 
 	for (int i = 0; i < 3; i++) {
 		for (int j = 0; j < 3; j++) {
-			if (i == j) {
-				matrix[i * 4 + j] = 1.0f;
-			}
-			else {
-				matrix[i * 4 + j] = 0.0f;
-			}
+			matrix[i * 4 + j] = (i == j) ? 1.0f : 0.0f;
 		}
 	}
 
@@ -361,106 +405,60 @@ STLView::Billboard()
 }
 
 void
-STLView::DrawAxis(void)
+STLView::DrawAxis()
 {
-	double alpha = std::abs(cos(xRotate * M_PI / 180.0));
-	double beta = std::abs(cos(yRotate * M_PI / 180.0));
+	glBindVertexArray(axesVAO);
+	glColor3f(1.0f, 0.0f, 0.0f);
+	glDrawArrays(GL_LINES, 0, 2);
+	glColor3f(0.0f, 1.0f, 0.0f);
+	glDrawArrays(GL_LINES, 2, 2);
+	glColor3f(0.0f, 0.0f, 1.0f);
+	glDrawArrays(GL_LINES, 4, 2);
+	glBindVertexArray(0);
 
-	glLineWidth(1);
-
-	// Y axis
-	glBegin(GL_LINES);
-	glColor4f (1, 0, 0, 1);
-	glVertex3f(0,0,0);
-	glVertex3f(0,1,0);
-	glEnd();
-
-	if (std::abs(1.0 - beta) > 0.03 || alpha > 0.03) {
-		glPushMatrix();
-		glTranslatef(0, 1.5, 0);
-		
-		Billboard();
-		
-		glScalef(0.025, 0.025, 0.025);
-		
-		glBegin(GL_LINES);
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, 1, 0);
-		
-		glVertex3f(0, 1, 0);
-		glVertex3f(0.5, 1.5, 0);
-		
-		glVertex3f(0, 1, 0);
-		glVertex3f(-0.5, 1.5, 0);
-		glEnd();
-		glPopMatrix();
-	}
-	// X axis
-	glBegin(GL_LINES);
-	glColor4f (0, 1, 0, 1);
-	glVertex3f(0, 0, 0);
-	glVertex3f(1, 0, 0);
-	glEnd();
-	
-	if (beta > 0.03 || alpha > 0.03) {
-		glPushMatrix();
-		glTranslatef(1.5, 0, 0);
-		
-		Billboard();
-		
-		glScalef(0.025, 0.025, 0.025);
-		
-		glBegin(GL_LINES);
-		glVertex3f(-0.75, 0, 0);
-		glVertex3f(0.75, 1.5, 0);
-		
-		glVertex3f(0.75, 0, 0);
-		glVertex3f(-0.75, 1.5, 0);
-		glEnd();
-		glPopMatrix();
-	}
-	// Z axis
-	glBegin(GL_LINES);
-	glColor4f (0.1, 0.1, 1, 1);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0, 0, 1);
-	glEnd();
-	
-	if (std::abs(1.0 - alpha) > 0.03) {
-		glPushMatrix();
-		glTranslatef(0, 0, 1.5);
-		
-		Billboard();
-		
-		glScalef(0.025, 0.025, 0.025);
-		
-		glBegin(GL_LINES);
-		glVertex3f(0.75, 0, 0);
-		glVertex3f(-0.75, 0, 0);
-		
-		glVertex3f(-0.75, 0, 0);
-		glVertex3f(0.75, 1, 0);
-		
-		glVertex3f(0.75, 1, 0);
-		glVertex3f(-0.75, 1, 0);
-		glEnd();
-		glPopMatrix();
-	}
+	glPushMatrix();
+	glDisable(GL_DEPTH_TEST);
+	DrawAxisLabel(1.1f, 0.0f, 0.0f, "X", 1.0f, 0.0f, 0.0f);
+	DrawAxisLabel(0.0f, 1.1f, 0.0f, "Y", 0.0f, 1.0f, 0.0f);
+	DrawAxisLabel(0.0f, 0.0f, 1.1f, "Z", 0.0f, 0.0f, 1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glPopMatrix();
 }
 
-void STLView::DrawSTL(rgb_color color) {
-	if (!m_buffersInitialized) return;
+void
+STLView::DrawAxisLabel(float x, float y, float z, const char* label, float r, float g, float b) {
+	glPushMatrix();
+	glTranslatef(x, y, z);
+	Billboard();
+	glColor3f(r, g, b);
+	float textWidth = 0.0f;
+	for (const char* c = label; *c != '\0'; c++) {
+		textWidth += glutStrokeWidth(GLUT_STROKE_ROMAN, *c);
+	}
+	textWidth *= 0.0003f;
+	glTranslatef(-textWidth / 2.0f, 0.0f, 0.0f);
+	glScalef(0.0003f, 0.0003f, 0.0003f);
+	for (const char* c = label; *c != '\0'; c++) {
+		glutStrokeCharacter(GLUT_STROKE_ROMAN, *c);
+	}
+	glPopMatrix();
+}
 
-	glBindVertexArray(m_vao);
+void
+STLView::DrawSTL(rgb_color color)
+{
+	if (!m_buffersInitialized)
+		return;
 
+	glBindVertexArray(stlVAO);
 	glColor3ub(color.red, color.green, color.blue);
-
-	glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
-
+	glDrawArrays(GL_TRIANGLES, 0, stlVertexCount);
 	glBindVertexArray(0);
 }
 
-void STLView::Render(void) {
+void
+STLView::Render(void)
+{
 	if (!needUpdate)
 		return;
 
@@ -472,24 +470,22 @@ void STLView::Render(void) {
 		glEnable(GL_DEPTH_TEST);
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
-		
+
 		glShadeModel(GL_FLAT);
-		
+
 		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 		glMatrixMode(GL_MODELVIEW);
 		glLoadIdentity();
 
-		if (viewOrtho) {
+		if (viewOrtho)
 			glTranslatef(xPan, yPan, stlWindow->GetZDepth());
-		}
-		else {
+		else
 			glTranslatef(xPan, yPan, stlWindow->GetZDepth() + scaleFactor);
-		}
 
 		glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 		glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
-		
+
 		glPolygonMode(GL_FRONT_AND_BACK,
 			viewMode == MSG_VIEWMODE_WIREFRAME ? GL_LINE : GL_FILL);
 
@@ -509,7 +505,7 @@ void STLView::Render(void) {
 		glDisable(GL_LIGHTING);
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-		
+
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_LINE_SMOOTH);
@@ -517,34 +513,34 @@ void STLView::Render(void) {
 
 		if (showOXY)
 			DrawOXY();
-			
+
 		if (showBox)
 			DrawBox();
-		
+
 		if (showAxes) {
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			
+
 			float aspect = (float)boundRect.Width()/(float)boundRect.Height();
 			float fx = aspect * 0.8f;;
 			float fy = -0.8f;
-			
+
 			glOrtho(-aspect, aspect, -1, 1, 0.01, 1000);
-			
+
 			glMatrixMode(GL_MODELVIEW);
-			
+
 			glLoadIdentity();
-			
+
 			glTranslatef(fx, fy, -1);
 			glScalef(0.1f, 0.1f, 0.1f);
 			glRotatef(xRotate, 1.0f, 0.0f, 0.0f);
 			glRotatef(yRotate, 0.0f, 0.0f, 1.0f);
 			DrawAxis();
 		}
-		
+
 		glDisable(GL_LINE_SMOOTH);
 		glDisable(GL_BLEND);
-		
+
 		SwapBuffers();
 		UnlockGL();
 	}

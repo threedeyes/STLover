@@ -66,19 +66,33 @@ class STLView : public BGLView {
 		void HidePreview() { fShowPreview = false; }
 
 	private:
-		GLuint m_vao = 0;
-		GLuint m_vertexVBO = 0;
-		GLuint m_normalVBO = 0;
-		size_t m_vertexCount = 0;
+		GLuint boxVAO = 0;
+		GLuint boxVBO = 0;
+		GLuint axesVAO = 0;
+		GLuint axesVBO = 0;
+		GLuint oxyVAO = 0;
+		GLuint oxyVBO = 0;
+
+		GLuint stlVAO = 0;
+		GLuint stlVertexVBO = 0;
+		GLuint stlNormalVBO = 0;
+		size_t stlVertexCount = 0;
+
+		std::vector<float> boxVertices;
+		std::vector<float> axisVertices;
+		std::vector<float> oxyVertices;
+
 		bool m_buffersInitialized = false;
 
-		void InitializeSTLBuffers();
+		void InitializeBuffers();
 		void CleanupBuffers();
 
 		static void Billboard();
+		void DrawAxisLabel(float x, float y, float z,
+				const char* label, float r, float g, float b);
 		void DrawBox(void);
 		void DrawAxis(void);
-		void DrawOXY(float margin = 30.0);
+		void DrawOXY(void);
 		void SetupProjection(void);
 
 		void DrawSTL() { DrawSTL({128,128,128}); }
