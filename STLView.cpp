@@ -110,6 +110,8 @@ STLView::InitializeBuffers()
 	std::vector<float> vertices;
 	std::vector<float> normals;
 	stlVertexCount = stlObject->stats.number_of_facets * 3;
+	vertices.reserve(stlVertexCount * 3);
+	normals.reserve(stlVertexCount * 3);
 
 	for (size_t i = 0; i < stlObject->stats.number_of_facets; i++) {
 		for (int j = 0; j < 3; j++) {
