@@ -930,11 +930,11 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_TOOLS_MOVE_TO:
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), this, MSG_TOOLS_MOVE_TO_SET);
-			input->AddFloatField("x", B_TRANSLATE("X:"), 0.0);
+			input->AddFloatField("x", B_TRANSLATE("X:"), fStlObject->stats.min.x);
 			input->SetFieldBackgroundColor("x", {164, 255, 164});
-			input->AddFloatField("y", B_TRANSLATE("Y:"), 0.0);
+			input->AddFloatField("y", B_TRANSLATE("Y:"), fStlObject->stats.min.y);
 			input->SetFieldBackgroundColor("y", {255, 164, 164});
-			input->AddFloatField("z", B_TRANSLATE("Z:"), 0.0);
+			input->AddFloatField("z", B_TRANSLATE("Z:"), fStlObject->stats.min.z);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
 			break;
