@@ -684,9 +684,11 @@ STLView::Render(void)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		if (fShowPreview) {
+			glm::mat4 matrix = modelMatrix;
 			glm::mat4 previewMatrix = glm::make_mat4(fPreviewMatrix);
 			modelMatrix = previewMatrix * modelMatrix;
 			DrawSTL({128, 101, 0});
+			modelMatrix = matrix;
 		} else {
 			DrawSTL();
 		}
