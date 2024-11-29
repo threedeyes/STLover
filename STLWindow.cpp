@@ -807,14 +807,14 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_EDIT_TITLE:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("STL Title"), 1, this, MSG_TOOLS_TITLE_SET);
-			input->SetTextValue(0, B_TRANSLATE("Title:"), (const char*)fStlObject->stats.header);
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("STL Title"), this, MSG_TOOLS_TITLE_SET);
+			input->AddTextField("title", B_TRANSLATE("Title:"), (const char*)fStlObject->stats.header);
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_TITLE_SET:
 		{
-			const char *value = message->FindString("value");
+			const char *value = message->FindString("title");
 			if (value != NULL && IsLoaded()) {
 				snprintf(fStlObject->stats.header, 80, value);
 				fStlModified = true;
@@ -824,14 +824,14 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Scale"), 1, this, MSG_TOOLS_SCALE_SET);
-			input->SetTextValue(0, B_TRANSLATE("Scale factor:"), "1.0");
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Scale"), this, MSG_TOOLS_SCALE_SET);
+			input->AddFloatField("scale", B_TRANSLATE("Scale factor:"), 1.0);
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_SCALE_SET:
 		{
-			float value = message->FindFloat("value0");
+			float value = message->FindFloat("scale");
 			if (IsLoaded()) {
 				
 				stl_scale(fStlObject, value);
@@ -845,22 +845,22 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_SCALE_3:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Custom axis scale"), 3, this, MSG_TOOLS_SCALE_SET_3);
-			input->SetTextValue(0, B_TRANSLATE("Scale X factor:"), "1.0");
-			input->SetTextColor(0, {164, 255, 164});
-			input->SetTextValue(1, B_TRANSLATE("Scale Y factor:"), "1.0");
-			input->SetTextColor(1, {255, 164, 164});
-			input->SetTextValue(2, B_TRANSLATE("Scale Z factor:"), "1.0");
-			input->SetTextColor(2, {164, 164, 255});
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Custom axis scale"), this, MSG_TOOLS_SCALE_SET_3);
+			input->AddFloatField("x", B_TRANSLATE("Scale X factor:"), 1.0);
+			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->AddFloatField("y", B_TRANSLATE("Scale Y factor:"), 1.0);
+			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->AddFloatField("z", B_TRANSLATE("Scale Z factor:"), 1.0);
+			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_SCALE_SET_3:
 		{
 			float values[3];
-			values[0] = message->FindFloat("value0");
-			values[1] = message->FindFloat("value1");
-			values[2] = message->FindFloat("value2");
+			values[0] = message->FindFloat("x");
+			values[1] = message->FindFloat("y");
+			values[2] = message->FindFloat("z");
 			
 			if (IsLoaded()) {
 				stl_scale_versor(fStlObject, values);
@@ -874,29 +874,26 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_ROTATE:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Rotate"), 3, this, MSG_TOOLS_ROTATE_SET);
-			input->SetTextValue(0, B_TRANSLATE("X-axis:"), "0.0");
-			input->SetTextColor(0, {164, 255, 164});
-			input->SetTextValue(1, B_TRANSLATE("Y-axis:"), "0.0");
-			input->SetTextColor(1, {255, 164, 164});
-			input->SetTextValue(2, B_TRANSLATE("Z-axis:"), "0.0");
-			input->SetTextColor(2, {164, 164, 255});
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Rotate"), this, MSG_TOOLS_ROTATE_SET);
+			input->AddSliderField("x", B_TRANSLATE("X-axis:"), 0, -180, 180);
+			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->AddSliderField("y", B_TRANSLATE("Y-axis:"), 0, -180, 180);
+			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->AddSliderField("z", B_TRANSLATE("Z-axis:"), 0, -180, 180);
+			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_ROTATE_SET:
 		{
 			float values[3];
-			values[0] = message->FindFloat("value0");
-			values[1] = message->FindFloat("value1");
-			values[2] = message->FindFloat("value2");
+			values[0] = message->FindFloat("x");
+			values[1] = message->FindFloat("y");
+			values[2] = message->FindFloat("z");
 
 			if (IsLoaded()) {
-				
 				stl_rotate_x(fStlObject, values[0]);
-				
 				stl_rotate_y(fStlObject, values[1]);
-				
 				stl_rotate_z(fStlObject, values[2]);
 				
 				fStlModified = true;
@@ -932,22 +929,22 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_TO:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), 3, this, MSG_TOOLS_MOVE_TO_SET);
-			input->SetFloatValue(0, B_TRANSLATE("X:"), 0);
-			input->SetTextColor(0, {164, 255, 164});
-			input->SetFloatValue(1, B_TRANSLATE("Y:"), 0);
-			input->SetTextColor(1, {255, 164, 164});
-			input->SetFloatValue(2, B_TRANSLATE("Z:"), 0);
-			input->SetTextColor(2, {164, 164, 255});
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), this, MSG_TOOLS_MOVE_TO_SET);
+			input->AddFloatField("x", B_TRANSLATE("X:"), 0.0);
+			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->AddFloatField("y", B_TRANSLATE("Y:"), 0.0);
+			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->AddFloatField("z", B_TRANSLATE("Z:"), 0.0);
+			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_MOVE_TO_SET:
 		{
 			float values[3];
-			values[0] = message->FindFloat("value0");
-			values[1] = message->FindFloat("value1");
-			values[2] = message->FindFloat("value2");
+			values[0] = message->FindFloat("x");
+			values[1] = message->FindFloat("y");
+			values[2] = message->FindFloat("z");
 			if (IsLoaded()) {
 				stl_translate(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
@@ -959,22 +956,22 @@ STLWindow::MessageReceived(BMessage *message)
 		}
 		case MSG_TOOLS_MOVE_BY:
 		{
-			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move by"), 3, this, MSG_TOOLS_MOVE_BY_SET);
-			input->SetFloatValue(0, B_TRANSLATE("∆X:"), 0);
-			input->SetTextColor(0, {164, 255, 164});
-			input->SetFloatValue(1, B_TRANSLATE("∆Y:"), 0);
-			input->SetTextColor(1, {255, 164, 164});
-			input->SetFloatValue(2, B_TRANSLATE("∆Z:"), 0);
-			input->SetTextColor(2, {164, 164, 255});
+			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move by"), this, MSG_TOOLS_MOVE_BY_SET);
+			input->AddFloatField("x", B_TRANSLATE("∆X:"), 0.0);
+			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->AddFloatField("y", B_TRANSLATE("∆Y:"), 0.0);
+			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->AddFloatField("z", B_TRANSLATE("∆Z:"), 0.0);
+			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
 			break;
 		}
 		case MSG_TOOLS_MOVE_BY_SET:
 		{
 			float values[3];
-			values[0] = message->FindFloat("value0");
-			values[1] = message->FindFloat("value1");
-			values[2] = message->FindFloat("value2");
+			values[0] = message->FindFloat("x");
+			values[1] = message->FindFloat("y");
+			values[2] = message->FindFloat("z");
 			if (IsLoaded()) {
 				stl_translate_relative(fStlObject, values[0], values[1], values[2]);
 				fStlModified = true;
@@ -1015,10 +1012,10 @@ STLWindow::MessageReceived(BMessage *message)
 			switch(action) {
 				case MSG_TOOLS_SCALE_SET:
 				{
-					float s = message->FindFloat("value0");
+					float s = message->FindFloat("scale");
 
 					glm::mat4 matrix;
-					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(s,s,s));
+					matrix = glm::scale(glm::mat4(1.0f), glm::vec3(s,s,s));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
@@ -1026,12 +1023,12 @@ STLWindow::MessageReceived(BMessage *message)
 
 				case MSG_TOOLS_SCALE_SET_3:
 				{
-					float sx = message->FindFloat("value0");
-					float sy = message->FindFloat("value1");
-					float sz = message->FindFloat("value2");
+					float sx = message->FindFloat("x");
+					float sy = message->FindFloat("y");
+					float sz = message->FindFloat("z");
 
 					glm::mat4 matrix;
-					matrix = glm::scale(glm::mat4(1.0f),glm::vec3(sx,sy,sz));
+					matrix = glm::scale(glm::mat4(1.0f), glm::vec3(sx,sy,sz));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
@@ -1039,12 +1036,12 @@ STLWindow::MessageReceived(BMessage *message)
 				
 				case MSG_TOOLS_MOVE_BY_SET:
 				{
-					float tx = message->FindFloat("value0");
-					float ty = message->FindFloat("value1");
-					float tz = message->FindFloat("value2");
+					float tx = message->FindFloat("x");
+					float ty = message->FindFloat("y");
+					float tz = message->FindFloat("z");
 
 					glm::mat4 matrix;
-					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+					matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tx,ty,tz));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
@@ -1052,15 +1049,15 @@ STLWindow::MessageReceived(BMessage *message)
 				
 				case MSG_TOOLS_MOVE_TO_SET:
 				{
-					float tx = message->FindFloat("value0");
-					float ty = message->FindFloat("value1");
-					float tz = message->FindFloat("value2");
+					float tx = message->FindFloat("x");
+					float ty = message->FindFloat("y");
+					float tz = message->FindFloat("z");
 
 					tx-=fStlObject->stats.min.x;
 					ty-=fStlObject->stats.min.y;
 					tz-=fStlObject->stats.min.z;
 					glm::mat4 matrix;
-					matrix = glm::translate(glm::mat4(1.0f),glm::vec3(tx,ty,tz));
+					matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tx,ty,tz));
 					
 					fStlView->ShowPreview(glm::value_ptr(matrix));
 				}
@@ -1068,19 +1065,19 @@ STLWindow::MessageReceived(BMessage *message)
 
 				case MSG_TOOLS_ROTATE_SET:
 				{
-					float rx = message->FindFloat("value0");
-					float ry = message->FindFloat("value1");
-					float rz = message->FindFloat("value2");
+					float rx = message->FindFloat("x");
+					float ry = message->FindFloat("y");
+					float rz = message->FindFloat("z");
 
-					rx = rx*M_PI/180.0f;
-					ry = ry*M_PI/180.0f;
-					rz = rz*M_PI/180.0f;
+					rx = rx * M_PI / 180.0f;
+					ry = ry * M_PI / 180.0f;
+					rz = rz * M_PI / 180.0f;
 
 					glm::mat4 matrix;
-					glm::mat4 mx,my,mz;
-					mx = glm::rotate(glm::mat4(1.0f),rx,glm::vec3(1.0,0.0,0.0));
-					my = glm::rotate(glm::mat4(1.0f),ry,glm::vec3(0.0,1.0,0.0));
-					mz = glm::rotate(glm::mat4(1.0f),rz,glm::vec3(0.0,0.0,1.0));
+					glm::mat4 mx, my, mz;
+					mx = glm::rotate(glm::mat4(1.0f), rx, glm::vec3(1.0,0.0,0.0));
+					my = glm::rotate(glm::mat4(1.0f), ry, glm::vec3(0.0,1.0,0.0));
+					mz = glm::rotate(glm::mat4(1.0f), rz, glm::vec3(0.0,0.0,1.0));
 
 					matrix = mz * my * mx;
 					fStlView->ShowPreview(glm::value_ptr(matrix));

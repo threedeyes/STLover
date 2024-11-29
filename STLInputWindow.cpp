@@ -22,165 +22,326 @@
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
-STLInputWindow::STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId)
-	: BWindow(BRect(0, 0, 640, 480), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
-	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_NOT_CLOSABLE),
+STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messageId)
+	: BWindow(BRect(0, 0, 300, 200), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
+		B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fParentWindow(target),
 	fTargetMessenger(target),
-	fValues(count),
 	fMessageId(messageId)
 {
-	if (fValues != 1 && fValues != 3)
-		fValues = 1;
-
-	fValueControl = new BTextControl("value", "", NULL);
-	fValueControl->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
-	fValueControl->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
-
-	if (fValues == 3) {
-		fValueControl2 = new BTextControl("value2", "", NULL);
-		fValueControl2->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
-		fValueControl2->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
-
-		fValueControl3 = new BTextControl("value3", "", NULL);
-		fValueControl3->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
-		fValueControl3->SetAlignment(B_ALIGN_LEFT, B_ALIGN_LEFT);
-	}
-
 	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
+}
+
+STLInputWindow::~STLInputWindow()
+{
+	fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
+}
+
+void
+STLInputWindow::AddTextField(const char* name, const char* label, const char* defaultValue)
+{
+	FieldInfo field = {TEXT_FIELD, name, label, defaultValue, nullptr, 0, 0,
+			BStringList(), {255, 255, 255, 255}, false};
+	BTextControl* control = new BTextControl("", defaultValue, NULL);
+	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
+	field.control = control;
+	fFields.push_back(field);
+}
+
+
+void
+STLInputWindow::AddIntegerField(const char* name, const char* label, int defaultValue, int minValue, int maxValue)
+{
+	BString defaultValueStr;
+	defaultValueStr << defaultValue;
+	FieldInfo field = {INTEGER_FIELD, name, label, defaultValueStr, nullptr, (float)minValue, (float)maxValue,
+			BStringList(), {255, 255, 255, 255}, false};
+	BSpinner* spinner = new BSpinner(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED));
+	spinner->SetRange(minValue, maxValue);
+	spinner->SetValue(defaultValue);
+	field.control = spinner;
+	fFields.push_back(field);
+}
+
+void
+STLInputWindow::AddFloatField(const char* name, const char* label, float defaultValue, float minValue, float maxValue)
+{
+	BString defaultValueStr;
+	defaultValueStr.SetToFormat("%.2f", defaultValue);
+	FieldInfo field = {FLOAT_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
+			BStringList(), {255, 255, 255, 255}, false};
+	BTextControl* control = new BTextControl("", defaultValueStr, NULL);
+	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
+	control->SetAlignment(B_ALIGN_RIGHT, B_ALIGN_LEFT);
+	field.control = control;
+	fFields.push_back(field);
+}
+
+void
+STLInputWindow::AddSliderField(const char* name, const char* label, float defaultValue, float minValue, float maxValue)
+{
+	BString defaultValueStr;
+	defaultValueStr << defaultValue;
+	BString minValueStr;
+	minValueStr.SetToFormat("%g", minValue);
+	BString maxValueStr;
+	maxValueStr.SetToFormat("%g", maxValue);
+
+	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
+			BStringList(), {255, 255, 255, 255}, false};
+	BSlider* slider = new BSlider(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
+			B_HORIZONTAL, B_TRIANGLE_THUMB);
+	slider->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
+	slider->SetLimitLabels(minValueStr.String(), maxValueStr.String());
+	slider->SetHashMarks(B_HASH_MARKS_TOP);
+	slider->SetHashMarkCount((maxValue - minValue) / 10);
+	slider->SetValue(defaultValue);
+	field.control = slider;
+	fFields.push_back(field);
+}
+
+void
+STLInputWindow::CreateLayout()
+{
+	float padding = be_control_look->DefaultItemSpacing();
+
+	BLayoutBuilder::Grid<> layoutBuilder(this, padding, padding);
+	layoutBuilder.SetInsets(padding, padding, padding, padding);
+
+	int32 row = 0;
+	for (auto& field : fFields) {
+		layoutBuilder.Add(new BStringView("label", field.label), 0, row);
+		layoutBuilder.Add(field.control, 2, row, 3);
+		if (field.hasCustomBackgroundColor) {
+			ApplyBackgroundColor(field.control, field.backgroundColor);
+		}
+		row++;
+	}
 
 	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(MSG_INPUT_CANCEL));
+	BButton* resetButton = new BButton(B_TRANSLATE("Reset"), new BMessage(MSG_INPUT_RESET));
 
-	float padding = be_control_look->DefaultItemSpacing();
-	if (fValues == 1) {
-		BLayoutBuilder::Grid<>(this, padding, padding)
-			.SetInsets(padding, padding, padding, padding)
-			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
-			.Add(BSpaceLayoutItem::CreateGlue(), 0, 1)
-			.Add(cancelButton, 4, 1)
-			.Add(fOkButton, 5, 1);
-	}
-	if (fValues == 3) {
-		BLayoutBuilder::Grid<>(this, padding, padding)
-			.SetInsets(padding, padding, padding, padding)
-			.AddTextControl(fValueControl, 0, 0, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
-			.AddTextControl(fValueControl2, 0, 1, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
-			.AddTextControl(fValueControl3, 0, 2, B_ALIGN_HORIZONTAL_UNSET, 1, 5)
-			.Add(BSpaceLayoutItem::CreateGlue(), 0, 3)
-			.Add(cancelButton, 4, 3)
-			.Add(fOkButton, 5, 3);
-	}
+	layoutBuilder.Add(resetButton, 0, row);
+	layoutBuilder.Add(BSpaceLayoutItem::CreateGlue(), 1, row, 2);
+	layoutBuilder.Add(cancelButton, 3, row);
+	layoutBuilder.Add(fOkButton, 4, row);
 
 	fOkButton->MakeDefault(true);
-	fValueControl->MakeFocus(true);
 
-	ResizeToPreferred();
+	if (!fFields.empty()) {
+		fFields[0].control->MakeFocus(true);
+	}
+
+	SetDefaultButton(fOkButton);
 }
 
 void
 STLInputWindow::Show()
 {
-	BView *stlView = fParentWindow->FindView("STLView");
-	BRect viewRect = stlView == NULL ? fParentWindow->Frame() : stlView->ConvertToScreen(stlView->Bounds());
-	viewRect.InsetBy(INPUT_WINDOW_ALIGN_MARGIN, INPUT_WINDOW_ALIGN_MARGIN);
+	CreateLayout();
+
+	BView* stlView = fParentWindow->FindView("STLView");
+	BRect viewRect = stlView == nullptr ? fParentWindow->Frame() : stlView->ConvertToScreen(stlView->Bounds());
+	viewRect.InsetBy(20, 20);
 
 	MoveTo(viewRect.right - Bounds().Width(), viewRect.bottom - Bounds().Height());
+
+	fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
 
 	BWindow::Show();
 }
 
-void
-STLInputWindow::SetTextValue(uint32 valueNum, const char *label, const char *value)
+BMessage*
+STLInputWindow::MakeMessage(uint32 what)
 {
-	if (valueNum < 0 || valueNum > 2)
-		return;
-	if (valueNum == 0) {
-		fValueControl->SetLabel(label);
-		fValueControl->SetText(value);
-	} else if (valueNum == 1) {
-		fValueControl2->SetLabel(label);
-		fValueControl2->SetText(value);
-	} else {
-		fValueControl3->SetLabel(label);
-		fValueControl3->SetText(value);
+	BMessage* message = new BMessage(what);
+
+	if (what == MSG_INPUT_VALUE_UPDATED)
+		message->AddInt32("action", fMessageId);
+
+	for (const auto& field : fFields) {
+		switch (field.type) {
+			case TEXT_FIELD:
+				message->AddString(field.name, ((BTextControl*)field.control)->Text());
+				break;
+			case FLOAT_FIELD:
+				message->AddFloat(field.name, atof(((BTextControl*)field.control)->Text()));
+				break;
+			case INTEGER_FIELD:
+				message->AddInt32(field.name, ((BSpinner*)field.control)->Value());
+				break;
+			case SLIDER_FIELD:
+				message->AddFloat(field.name, ((BSlider*)field.control)->Value());
+				break;
+		}
 	}
+
+	return message;
 }
 
-void
-STLInputWindow::SetIntValue(uint32 valueNum, const char *label, int value)
-{
-	BString strValue;
-	strValue << value;
-	SetTextValue(valueNum, label, strValue.String());
-}
-
-void
-STLInputWindow::SetFloatValue(uint32 valueNum, const char *label, float value)
-{
-	BString strValue;
-	strValue << value;
-	SetTextValue(valueNum, label, strValue.String());
-}
-
-void
-STLInputWindow::SetTextColor(uint32 valueNum, rgb_color color)
-{
-	if (valueNum < 0 || valueNum > 2)
-		return;
-	if (valueNum == 0)
-		fValueControl->TextView()->SetViewColor(color);
-	else if (valueNum == 1)
-		fValueControl2->TextView()->SetViewColor(color);
-	else
-		fValueControl3->TextView()->SetViewColor(color);
-}
-		
 void
 STLInputWindow::MessageReceived(BMessage* message)
 {
 	switch (message->what) {
 		case MSG_INPUT_VALUE_UPDATED:
 		{
-			BMessage *msg = new BMessage(MSG_INPUT_VALUE_UPDATED);
-			msg->AddInt32("action",fMessageId);
-			msg->AddFloat("value0", atof(fValueControl->Text()));
-			if (fValues == 3) {
-				msg->AddFloat("value1", atof(fValueControl2->Text()));
-				msg->AddFloat("value2", atof(fValueControl3->Text()));
-			}
-			fTargetMessenger.SendMessage(msg);
-			
-			/* Is this really working? */
-			bool enabled = fValueControl->Text() != NULL && fValueControl->Text()[0] != '\0';
-			if (fOkButton->IsEnabled() != enabled)
-				fOkButton->SetEnabled(enabled);
+			if (IsValid())
+				fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+
+			fOkButton->SetEnabled(IsValid());
 			break;
 		}
-
 		case MSG_INPUT_OK:
 		{
-			BMessage *msg = new BMessage(fMessageId);
-			
-			msg->AddFloat("value0", atof(fValueControl->Text()));
-			if (fValues == 3) {
-				msg->AddFloat("value1", atof(fValueControl2->Text()));
-				msg->AddFloat("value2", atof(fValueControl3->Text()));
-			}
-			fTargetMessenger.SendMessage(msg);
+			fTargetMessenger.SendMessage(MakeMessage(fMessageId));
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		}
-
 		case MSG_INPUT_CANCEL:
 		{
 			fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
 			PostMessage(B_QUIT_REQUESTED);
 			break;
 		}
-
+		case MSG_INPUT_RESET:
+		{
+			for (const auto& field : fFields) {
+				switch (field.type) {
+				case TEXT_FIELD:
+				case FLOAT_FIELD:
+					((BTextControl*)field.control)->SetText(field.defaultValue);
+					break;
+				case INTEGER_FIELD:
+					((BSpinner*)field.control)->SetValue(atoi(field.defaultValue));
+					break;
+				case SLIDER_FIELD:
+					((BSlider*)field.control)->SetValue(atoi(field.defaultValue));
+					break;
+				}
+			}
+			fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+			fOkButton->SetEnabled(IsValid());
+			break;
+		}
 		default:
 			BWindow::MessageReceived(message);
 			break;
 	}
+}
+
+FieldInfo*
+STLInputWindow::FindField(const char* name)
+{
+	for (auto& field : fFields) {
+		if (field.name == name) {
+			return &field;
+		}
+	}
+	return nullptr;
+}
+
+void
+STLInputWindow::SetTextFieldValue(const char* name, const char* value)
+{
+	FieldInfo* field = FindField(name);
+	if (field && field->type == TEXT_FIELD) {
+		BTextControl* control = dynamic_cast<BTextControl*>(field->control);
+		if (control) {
+			control->SetText(value);
+		}
+	}
+}
+
+void
+STLInputWindow::SetIntegerFieldValue(const char* name, int value)
+{
+	FieldInfo* field = FindField(name);
+	if (field && field->type == INTEGER_FIELD) {
+		BSpinner* spinner = dynamic_cast<BSpinner*>(field->control);
+		if (spinner) {
+			spinner->SetValue(value);
+		}
+	}
+}
+
+void
+STLInputWindow::SetFloatFieldValue(const char* name, float value)
+{
+	FieldInfo* field = FindField(name);
+	if (field && field->type == FLOAT_FIELD) {
+		BTextControl* control = dynamic_cast<BTextControl*>(field->control);
+		if (control) {
+			BString text;
+			text.SetToFormat("%.2f", value);
+			control->SetText(text);
+		}
+	}
+}
+
+void
+STLInputWindow::SetSliderFieldValue(const char* name, float value)
+{
+	FieldInfo* field = FindField(name);
+	if (field && field->type == SLIDER_FIELD) {
+		BSlider* control = dynamic_cast<BSlider*>(field->control);
+		if (control) {
+			control->SetValue(value);
+		}
+	}
+}
+
+void
+STLInputWindow::SetFieldBackgroundColor(const char* name, rgb_color color)
+{
+	FieldInfo* field = FindField(name);
+	if (field) {
+		field->backgroundColor = color;
+		field->hasCustomBackgroundColor = true;
+		if (field->control) {
+			ApplyBackgroundColor(field->control, color);
+		}
+	}
+}
+
+void
+STLInputWindow::ApplyBackgroundColor(BView* control, rgb_color color)
+{
+	if (BTextControl* textControl = dynamic_cast<BTextControl*>(control)) {
+		textControl->TextView()->SetViewColor(color);
+		textControl->TextView()->SetLowColor(color);
+	} else if (BSlider* slider = dynamic_cast<BSlider*>(control)) {
+		slider->SetBarColor(color);
+	} else if (BSpinner* slider = dynamic_cast<BSpinner*>(control)) {
+		slider->TextView()->SetViewColor(color);
+		slider->TextView()->SetLowColor(color);
+	}
+
+	if (control->Parent())
+		control->Parent()->Invalidate();
+}
+
+bool
+STLInputWindow::IsValid()
+{
+	bool allFieldsValid = true;
+	for (const auto& field : fFields) {
+		switch (field.type) {
+			case FLOAT_FIELD:
+			{
+				BTextControl* control = dynamic_cast<BTextControl*>(field.control);
+				if (!IsFloat(control->Text()))
+					allFieldsValid = false;
+
+				break;
+			}
+			case TEXT_FIELD:
+			case INTEGER_FIELD:
+			case SLIDER_FIELD:
+				break;
+		}
+		if (!allFieldsValid)
+			break;
+	}
+	return allFieldsValid;
 }

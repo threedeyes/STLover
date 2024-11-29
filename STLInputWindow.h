@@ -22,36 +22,88 @@
 #include <Messenger.h>
 #include <Mime.h>
 #include <String.h>
+#include <View.h>
 #include <Window.h>
 #include <Button.h>
 #include <String.h>
+#include <StringList.h>
 #include <TextControl.h>
+#include <StringView.h>
+#include <PopUpMenu.h>
 #include <LayoutBuilder.h>
 #include <ControlLook.h>
+#include <GraphicsDefs.h>
+#include <Spinner.h>
+
+#include <iostream>
+#include <sstream>
+#include <vector>
+
+enum FieldType {
+	TEXT_FIELD,
+	INTEGER_FIELD,
+	FLOAT_FIELD,
+	SLIDER_FIELD
+};
+
+struct FieldInfo {
+	FieldType type;
+	BString name;
+	BString label;
+	BString defaultValue;
+	BView* control;
+	float minValue;
+	float maxValue;
+	BStringList options;
+	rgb_color backgroundColor;
+	bool hasCustomBackgroundColor;
+};
+
+static bool
+IsFloat(const char* text)
+{
+	std::string str = text;
+	std::istringstream iss(str);
+	float f;
+	iss >> std::noskipws >> f;
+	return iss.eof() && !iss.fail();
+}
 
 class STLInputWindow : public BWindow {
 	public:
-		STLInputWindow(const char* title, uint32 count, BWindow* target, uint32 messageId);
-		virtual ~STLInputWindow() { };
+		STLInputWindow(const char* title, BWindow* target, uint32 messageId);
+		virtual ~STLInputWindow();
 
 		virtual void MessageReceived(BMessage* message);
-		virtual	void Show();
+		virtual void Show();
 
-		void SetTextValue(uint32 valueNum, const char *label, const char *value);
-		void SetIntValue(uint32 valueNum, const char *label, int value);
-		void SetFloatValue(uint32 valueNum, const char *label, float value);
-		void SetTextColor(uint32 valueNum, rgb_color color);
+		void AddTextField(const char* name, const char* label, const char* defaultValue = "");
+		void AddIntegerField(const char* name, const char* label, int defaultValue = 0,
+				int minValue = INT_MIN, int maxValue = INT_MAX);
+		void AddFloatField(const char* name, const char* label, float defaultValue = 0.0f,
+				float minValue = -FLT_MAX, float maxValue = FLT_MAX);
+		void AddSliderField(const char* name, const char* label, float defaultValue = 0.0f,
+				float minValue = 0.0f, float maxValue = 100.0f);
+
+		void SetTextFieldValue(const char* name, const char* value);
+		void SetIntegerFieldValue(const char* name, int value);
+		void SetFloatFieldValue(const char* name, float value);
+		void SetSliderFieldValue(const char* name, float value);
+
+		void SetFieldBackgroundColor(const char* name, rgb_color color);
 
 	private:
-		BWindow *fParentWindow;
+		FieldInfo* FindField(const char* name);
+		void CreateLayout();
+		void ApplyBackgroundColor(BView* control, rgb_color color);
+		BMessage* MakeMessage(uint32 what);
+		bool IsValid();
+
+		BWindow* fParentWindow;
 		BMessenger fTargetMessenger;
-		BString fValue;
-		BTextControl *fValueControl;
-		BTextControl *fValueControl2;
-		BTextControl *fValueControl3;
-		BButton *fOkButton;
+		BButton* fOkButton;
 		uint32 fMessageId;
-		uint32 fValues;
+		std::vector<FieldInfo> fFields;
 };
 
 #endif
