@@ -1018,9 +1018,8 @@ STLWindow::MessageReceived(BMessage *message)
 					matrix = glm::scale(glm::mat4(1.0f), glm::vec3(s,s,s));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
+					break;
 				}
-				break;
-
 				case MSG_TOOLS_SCALE_SET_3:
 				{
 					float sx = message->FindFloat("x");
@@ -1031,9 +1030,8 @@ STLWindow::MessageReceived(BMessage *message)
 					matrix = glm::scale(glm::mat4(1.0f), glm::vec3(sx,sy,sz));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
+					break;
 				}
-				break;
-				
 				case MSG_TOOLS_MOVE_BY_SET:
 				{
 					float tx = message->FindFloat("x");
@@ -1044,9 +1042,8 @@ STLWindow::MessageReceived(BMessage *message)
 					matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tx,ty,tz));
 
 					fStlView->ShowPreview(glm::value_ptr(matrix));
+					break;
 				}
-				break;
-				
 				case MSG_TOOLS_MOVE_TO_SET:
 				{
 					float tx = message->FindFloat("x");
@@ -1060,9 +1057,8 @@ STLWindow::MessageReceived(BMessage *message)
 					matrix = glm::translate(glm::mat4(1.0f), glm::vec3(tx,ty,tz));
 					
 					fStlView->ShowPreview(glm::value_ptr(matrix));
-				}
-				break;
-
+					break;
+				}		
 				case MSG_TOOLS_ROTATE_SET:
 				{
 					float rx = message->FindFloat("x");
@@ -1081,17 +1077,19 @@ STLWindow::MessageReceived(BMessage *message)
 
 					matrix = mz * my * mx;
 					fStlView->ShowPreview(glm::value_ptr(matrix));
+					break;
 				}
-				break;
+				default:
+					break;
 			}
 			break;
-		}
-		
+		}	
 		case MSG_INPUT_CANCEL:
 		{
 			fStlView->HidePreview();
+			UpdateUI();
+			break;
 		}
-		
 		case MSG_VIEWMODE_SOLID:
 		case MSG_VIEWMODE_WIREFRAME:
 		{
