@@ -86,28 +86,26 @@ STLView::InitShaders()
 		out vec4 FragColor;
 
 		uniform vec3 objectColor;
-		uniform vec3 lightPos;
 		uniform vec3 viewPos;
 
 		void main()
 		{
-			vec3 lightColor = vec3(1.0, 1.0, 1.0);
-
-			float ambientStrength = 0.75;
-			vec3 ambient = ambientStrength * lightColor;
-
+			vec3 lightPos = vec3(0.0, 200.0, 0.0);
 			vec3 norm = normalize(Normal);
 			vec3 lightDir = normalize(lightPos - FragPos);
-			float diff = max(dot(norm, lightDir), 0.0);
-			vec3 diffuse = diff * lightColor;
-
-			float specularStrength = 0.9;
 			vec3 viewDir = normalize(viewPos - FragPos);
-			vec3 reflectDir = reflect(-lightDir, norm);
-			float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-			vec3 specular = specularStrength * spec * lightColor;
 
-			vec3 result = (ambient + diffuse + specular) * objectColor;
+			float ambientStrength = 0.6;
+			vec3 ambient = ambientStrength * vec3(1.0);
+
+			float diff = max(dot(norm, lightDir), 0.0);
+			diff = pow(diff, 0.6);
+			vec3 diffuse = diff * vec3(1.2);
+
+			float backLight = max(-dot(norm, lightDir), 0.0) * 1.5;
+
+			vec3 result = (ambient + diffuse + backLight) * objectColor;
+
 			FragColor = vec4(result, 1.0);
 		}
 	)";
@@ -146,6 +144,7 @@ STLView::InitShaders()
 	viewLoc = glGetUniformLocation(shaderProgram, "view");
 	projLoc = glGetUniformLocation(shaderProgram, "projection");
 	colorLoc = glGetUniformLocation(shaderProgram, "objectColor");
+	viewPosLoc = glGetUniformLocation(shaderProgram, "viewPos");
 }
 
 GLuint
@@ -640,12 +639,7 @@ STLView::DrawSTL(rgb_color color)
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 	glUniform3f(colorLoc, color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f);
-
-	GLint lightPosLoc = glGetUniformLocation(shaderProgram, "lightPos");
-	GLint viewPosLoc = glGetUniformLocation(shaderProgram, "viewPos");
-	glm::vec3 lightPos(-1000.0f, -1000.0f, 1000.0f);
 	glm::vec3 viewPos(0.0f, 0.0f, stlWindow->GetZDepth() + scaleFactor);
-	glUniform3fv(lightPosLoc, 1, glm::value_ptr(lightPos));
 	glUniform3fv(viewPosLoc, 1, glm::value_ptr(viewPos));
 
 	glBindVertexArray(stlVAO);

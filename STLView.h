@@ -88,7 +88,11 @@ class STLView : public BGLView {
 
 		GLuint shaderProgram;
 		GLuint lineShaderProgram;
-		GLint modelLoc, viewLoc, projLoc, colorLoc;
+		GLint modelLoc;
+		GLint viewLoc;
+		GLint projLoc;
+		GLint colorLoc;
+		GLint viewPosLoc;
 
 		glm::mat4 modelMatrix;
 		glm::mat4 viewMatrix;
