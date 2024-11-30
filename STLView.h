@@ -49,9 +49,9 @@ class STLView : public BGLView {
 		void SetSTL(stl_file *stl);
 		void Reload(void);
 		void Reset(bool scale = true, bool rotate = true, bool pan = true);
-		void ShowAxes(bool show) { showAxes = show; }
+		void ShowAxes(bool show) { showAxes = show; if (m_buffersInitialized)Reload(); }
 		void ShowBoundingBox(bool show) { showBox = show; }
-		void ShowOXY(bool show) { showOXY = show; }
+		void ShowOXY(bool show) { showOXY = show; if (m_buffersInitialized)Reload(); }
 		void SetViewMode(uint32 mode) { viewMode = mode; }
 		void SetOrthographic(bool ortho) { viewOrtho = ortho; SetupProjection(); };
 		void Render(void);
@@ -80,9 +80,14 @@ class STLView : public BGLView {
 		GLuint stlNormalVBO = 0;
 		size_t stlVertexCount = 0;
 
-		std::vector<float> boxVertices;
+		struct ColoredVertex {
+			float x, y, z;
+			float r, g, b;
+		};
+
+		std::vector<ColoredVertex> boxVertices;
+		std::vector<ColoredVertex> oxyVertices;
 		std::vector<float> axisVertices;
-		std::vector<float> oxyVertices;
 
 		bool m_buffersInitialized = false;
 
@@ -100,6 +105,9 @@ class STLView : public BGLView {
 
 		void InitializeBuffers();
 		void CleanupBuffers();
+
+		void GenerateBoxBuffers();
+		void GenerateOXYGridBuffers();
 
 		void DrawBox(void);
 		void DrawAxis(void);

@@ -113,22 +113,25 @@ STLView::InitShaders()
 	const char* lineVertexShaderSource = R"(
 		#version 330 core
 		layout (location = 0) in vec3 aPos;
+		layout (location = 1) in vec3 aColor;
+		out vec3 Color;
 		uniform mat4 model;
 		uniform mat4 view;
 		uniform mat4 projection;
 		void main()
 		{
 			gl_Position = projection * view * model * vec4(aPos, 1.0);
+			Color = aColor;
 		}
 	)";
 
 	const char* lineFragmentShaderSource = R"(
 		#version 330 core
+		in vec3 Color;
 		out vec4 FragColor;
-		uniform vec3 lineColor;
 		void main()
 		{
-			FragColor = vec4(lineColor, 1.0);
+			FragColor = vec4(Color, 1.0);
 		}
 	)";
 
@@ -284,36 +287,6 @@ STLView::InitializeBuffers()
 
 	glBindVertexArray(0);
 
-	// Box
-	stl_vertex min = stlObject->stats.min;
-	stl_vertex size = stlObject->stats.size;
-	boxVertices = {
-		min.x, min.y, min.z, min.x + size.x, min.y, min.z,
-		min.x + size.x, min.y, min.z, min.x + size.x, min.y + size.y, min.z,
-		min.x + size.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z,
-		min.x, min.y + size.y, min.z, min.x, min.y, min.z,
-
-		min.x, min.y, min.z + size.z, min.x + size.x, min.y, min.z + size.z,
-		min.x + size.x, min.y, min.z + size.z, min.x + size.x, min.y + size.y, min.z + size.z,
-		min.x + size.x, min.y + size.y, min.z + size.z, min.x, min.y + size.y, min.z + size.z,
-		min.x, min.y + size.y, min.z + size.z, min.x, min.y, min.z + size.z,
-
-		min.x, min.y, min.z, min.x, min.y, min.z + size.z,
-		min.x + size.x, min.y, min.z, min.x + size.x, min.y, min.z + size.z,
-		min.x + size.x, min.y + size.y, min.z, min.x + size.x, min.y + size.y, min.z + size.z,
-		min.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z + size.z
-	};
-
-	glGenVertexArrays(1, &boxVAO);
-	glGenBuffers(1, &boxVBO);
-	glBindVertexArray(boxVAO);
-	glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
-	glBufferData(GL_ARRAY_BUFFER, boxVertices.size() * sizeof(float),
-			boxVertices.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(0);
-	glBindVertexArray(0);
-
 	// Axes
 	axisVertices = {
 		0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,  // X
@@ -331,34 +304,95 @@ STLView::InitializeBuffers()
 	glEnableVertexAttribArray(0);
 	glBindVertexArray(0);
 
+	// Box
+	GenerateBoxBuffers();
+
 	// OXY
+	GenerateOXYGridBuffers();
+
+	m_buffersInitialized = true;
+}
+
+void
+STLView::GenerateBoxBuffers()
+{
+	boxVertices.clear();
+
+	stl_vertex min = stlObject->stats.min;
+	stl_vertex size = stlObject->stats.size;
+
+	auto addLine = [this](float x1, float y1, float z1, float x2, float y2, float z2) {
+		boxVertices.push_back({x1, y1, z1, 0.9f, 0.25f, 0.6f});
+		boxVertices.push_back({x2, y2, z2, 0.9f, 0.25f, 0.6f});
+	};
+
+	addLine(min.x, min.y, min.z, min.x + size.x, min.y, min.z);
+	addLine(min.x + size.x, min.y, min.z, min.x + size.x, min.y + size.y, min.z);
+	addLine(min.x + size.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z);
+	addLine(min.x, min.y + size.y, min.z, min.x, min.y, min.z);
+
+	addLine(min.x, min.y, min.z + size.z, min.x + size.x, min.y, min.z + size.z);
+	addLine(min.x + size.x, min.y, min.z + size.z, min.x + size.x, min.y + size.y, min.z + size.z);
+	addLine(min.x + size.x, min.y + size.y, min.z + size.z, min.x, min.y + size.y, min.z + size.z);
+	addLine(min.x, min.y + size.y, min.z + size.z, min.x, min.y, min.z + size.z);
+
+	addLine(min.x, min.y, min.z, min.x, min.y, min.z + size.z);
+	addLine(min.x + size.x, min.y, min.z, min.x + size.x, min.y, min.z + size.z);
+	addLine(min.x + size.x, min.y + size.y, min.z, min.x + size.x, min.y + size.y, min.z + size.z);
+	addLine(min.x, min.y + size.y, min.z, min.x, min.y + size.y, min.z + size.z);
+
+	glGenVertexArrays(1, &boxVAO);
+	glGenBuffers(1, &boxVBO);
+	glBindVertexArray(boxVAO);
+	glBindBuffer(GL_ARRAY_BUFFER, boxVBO);
+	glBufferData(GL_ARRAY_BUFFER, boxVertices.size() * sizeof(ColoredVertex), boxVertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)0);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
+	glBindVertexArray(0);
+}
+
+void
+STLView::GenerateOXYGridBuffers()
+{
 	oxyVertices.clear();
+
 	float margin = 30.0f;
 	float xMin = round((stlObject->stats.min.x - margin) / 10.0) * 10.0;
 	float xMax = round((stlObject->stats.max.x + margin) / 10.0) * 10.0;
 	float yMin = round((stlObject->stats.min.y - margin) / 10.0) * 10.0;
 	float yMax = round((stlObject->stats.max.y + margin) / 10.0) * 10.0;
 
-	for (float x = xMin; x <= xMax; x += 10) {
-		oxyVertices.push_back(x); oxyVertices.push_back(yMin); oxyVertices.push_back(0.0f);
-		oxyVertices.push_back(x); oxyVertices.push_back(yMax); oxyVertices.push_back(0.0f);
-	}
-	for (float y = yMin; y <= yMax; y += 10) {
-		oxyVertices.push_back(xMin); oxyVertices.push_back(y); oxyVertices.push_back(0.0f);
-		oxyVertices.push_back(xMax); oxyVertices.push_back(y); oxyVertices.push_back(0.0f);
-	}
+	auto addLine = [this](float x1, float y1, float x2, float y2) {
+		if (std::abs(x1) < 0.001f && std::abs(x2) < 0.001f && showAxes) {
+			oxyVertices.push_back({x1, y1, 0.0f, 1.0, 0, 0});
+			oxyVertices.push_back({x2, y2, 0.0f, 1.0, 0, 0});
+		} else if (std::abs(y1) < 0.001f && std::abs(y2) < 0.001f && showAxes) {
+			oxyVertices.push_back({x1, y1, 0.0f, 0, 1.0, 0});
+			oxyVertices.push_back({x2, y2, 0.0f, 0, 1.0, 0});
+		} else {
+			oxyVertices.push_back({x1, y1, 0.0f, 0, 0, 1.0});
+			oxyVertices.push_back({x2, y2, 0.0f, 0, 0, 1.0});
+		}
+	};
+
+	for (float x = xMin; x <= xMax; x += 10)
+		addLine(x, yMin, x, yMax);
+
+	for (float y = yMin; y <= yMax; y += 10)
+		addLine(xMin, y, xMax, y);
 
 	glGenVertexArrays(1, &oxyVAO);
 	glGenBuffers(1, &oxyVBO);
 	glBindVertexArray(oxyVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, oxyVBO);
-	glBufferData(GL_ARRAY_BUFFER, oxyVertices.size() * sizeof(float),
-			oxyVertices.data(), GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glBufferData(GL_ARRAY_BUFFER, oxyVertices.size() * sizeof(ColoredVertex), oxyVertices.data(), GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)0);
 	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(ColoredVertex), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 	glBindVertexArray(0);
-
-	m_buffersInitialized = true;
 }
 
 void
@@ -513,10 +547,9 @@ STLView::DrawBox()
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3f(colorLoc, 0.9f, 0.25f, 0.6f);
 
 	glBindVertexArray(boxVAO);
-	glDrawArrays(GL_LINES, 0, boxVertices.size() / 3);
+	glDrawArrays(GL_LINES, 0, boxVertices.size());
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
@@ -528,10 +561,9 @@ STLView::DrawOXY()
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3f(colorLoc, 0.1f, 0.1f, 1.0f);
 
 	glBindVertexArray(oxyVAO);
-	glDrawArrays(GL_LINES, 0, oxyVertices.size() / 3);
+	glDrawArrays(GL_LINES, 0, oxyVertices.size());
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
@@ -564,9 +596,9 @@ STLView::DrawAxis()
 	glDisable(GL_DEPTH_TEST);
 
 	glBindVertexArray(axesVAO);
-	glColor3f(1.0f, 0.0f, 0.0f);
-	glDrawArrays(GL_LINES, 0, 2);
 	glColor3f(0.0f, 1.0f, 0.0f);
+	glDrawArrays(GL_LINES, 0, 2);
+	glColor3f(1.0f, 0.0f, 0.0f);
 	glDrawArrays(GL_LINES, 2, 2);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glDrawArrays(GL_LINES, 4, 2);
@@ -577,10 +609,10 @@ STLView::DrawAxis()
 	double eps = 0.035;
 
 	if (beta > eps * 2.0f|| alpha > eps * 2.0f)
-		DrawAxisLabel(1.2f, 0.0f, 0.0f, "X", 1.0f, 0.0f, 0.0f);
+		DrawAxisLabel(1.2f, 0.0f, 0.0f, "X", 0.0f, 1.0f, 0.0f);
 
 	if (std::abs(1.0 - beta) > eps || alpha > eps)
-		DrawAxisLabel(0.0f, 1.2f, 0.0f, "Y", 0.0f, 1.0f, 0.0f);
+		DrawAxisLabel(0.0f, 1.2f, 0.0f, "Y", 1.0f, 0.0f, 0.0f);
 
 	if (std::abs(1.0 - alpha) > eps)
 		DrawAxisLabel(0.0f, 0.0f, 1.2f, "Z", 0.0f, 0.0f, 1.0f);
