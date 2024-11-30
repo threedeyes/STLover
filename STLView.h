@@ -110,7 +110,7 @@ class STLView : public BGLView {
 		void SetupProjection(void);
 
 		void DrawSTL() { DrawSTL({128,128,128}); }
-		void DrawSTL(rgb_color color);
+		void DrawSTL(rgb_color color, float alpha = 1.0);
 
 		void InitShaders();
 		GLuint CompileShader(GLenum type, const char* source);

@@ -85,7 +85,7 @@ STLView::InitShaders()
 		in vec3 Normal;
 		out vec4 FragColor;
 
-		uniform vec3 objectColor;
+		uniform vec4 objectColor;
 		uniform vec3 viewPos;
 
 		void main()
@@ -104,9 +104,9 @@ STLView::InitShaders()
 
 			float backLight = max(-dot(norm, lightDir), 0.0) * 1.5;
 
-			vec3 result = (ambient + diffuse + backLight) * objectColor;
+			vec3 result = (ambient + diffuse + backLight) * objectColor.rgb;
 
-			FragColor = vec4(result, 1.0);
+			FragColor = vec4(result, objectColor.a);
 		}
 	)";
 
@@ -628,7 +628,7 @@ STLView::Billboard()
 }
 
 void
-STLView::DrawSTL(rgb_color color)
+STLView::DrawSTL(rgb_color color, float alpha)
 {
 	if (!m_buffersInitialized)
 		return;
@@ -638,7 +638,7 @@ STLView::DrawSTL(rgb_color color)
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(modelMatrix));
 	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
 	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
-	glUniform3f(colorLoc, color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f);
+	glUniform4f(colorLoc, color.red / 255.0f, color.green / 255.0f, color.blue / 255.0f, alpha);
 	glm::vec3 viewPos(0.0f, 0.0f, stlWindow->GetZDepth() + scaleFactor);
 	glUniform3fv(viewPosLoc, 1, glm::value_ptr(viewPos));
 
@@ -683,20 +683,21 @@ STLView::Render(void)
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		if (fShowPreview) {
+			DrawSTL();
 			glm::mat4 matrix = modelMatrix;
 			glm::mat4 previewMatrix = glm::make_mat4(fPreviewMatrix);
 			modelMatrix = previewMatrix * modelMatrix;
-			DrawSTL({128, 101, 0});
+			DrawSTL({128, 101, 0}, 0.3);
 			modelMatrix = matrix;
 		} else {
 			DrawSTL();
 		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 
