@@ -88,6 +88,7 @@ class STLWindow : public BWindow {
 		BMenu *fMenuToolsScale;
 		BMenu *fMenuToolsMove;
 		BMenu *fMenuHelp;
+		BMenu *fMenuAxes;
 		BMenuItem *fMenuItemOpen;
 		BMenuItem *fMenuItemReload;
 		BMenuItem *fMenuItemClose;
@@ -96,6 +97,8 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemWireframe;
 		BMenuItem *fMenuItemShowBox;
 		BMenuItem *fMenuItemShowAxes;
+		BMenuItem *fMenuItemShowAxesPlane;
+		BMenuItem *fMenuItemShowAxesCompass;
 		BMenuItem *fMenuItemShowOXY;
 		BMenuItem *fMenuItemOrthographicView;
 		BMenuItem *fMenuItemStat;
@@ -123,6 +126,8 @@ class STLWindow : public BWindow {
 		bool fShowBoundingBox;
 		bool fShowWireframe;
 		bool fShowAxes;
+		bool fShowAxesPlane;
+		bool fShowAxesCompass;
 		bool fShowOXY;
 		bool fViewOrtho;
 
@@ -141,7 +146,6 @@ class STLWindow : public BWindow {
 		float fMaxExtent;
 
 		stl_file *fStlObject;
-		//stl_file *fStlObjectView;
 };
 
 #endif

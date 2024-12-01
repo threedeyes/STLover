@@ -42,6 +42,8 @@ STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "STLView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
 	needUpdate(true),
 	showAxes(false),
+	showAxesPlane(true),
+	showAxesCompass(true),
 	showBox(false),
 	showOXY(false),
 	fShowPreview(false),
@@ -365,10 +367,10 @@ STLView::GenerateOXYGridBuffers()
 	float yMax = round((stlObject->stats.max.y + margin) / 10.0) * 10.0;
 
 	auto addLine = [this](float x1, float y1, float x2, float y2) {
-		if (std::abs(x1) < 0.001f && std::abs(x2) < 0.001f && showAxes) {
+		if (std::abs(x1) < 0.001f && std::abs(x2) < 0.001f && showAxes && showAxesPlane) {
 			oxyVertices.push_back({x1, y1, 0.0f, 1.0, 0, 0});
 			oxyVertices.push_back({x2, y2, 0.0f, 1.0, 0, 0});
-		} else if (std::abs(y1) < 0.001f && std::abs(y2) < 0.001f && showAxes) {
+		} else if (std::abs(y1) < 0.001f && std::abs(y2) < 0.001f && showAxes && showAxesPlane) {
 			oxyVertices.push_back({x1, y1, 0.0f, 0, 1.0, 0});
 			oxyVertices.push_back({x2, y2, 0.0f, 0, 1.0, 0});
 		} else {
@@ -739,7 +741,7 @@ STLView::Render(void)
 		if (showBox)
 			DrawBox();
 
-		if (showAxes)
+		if (showAxes && showAxesCompass)
 			DrawAxis();
 
 		glDisable(GL_LINE_SMOOTH);

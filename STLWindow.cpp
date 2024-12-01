@@ -41,6 +41,8 @@ STLWindow::STLWindow()
 	fShowWireframe(false),
 	fShowBoundingBox(false),
 	fShowAxes(false),
+	fShowAxesPlane(true),
+	fShowAxesCompass(true),
 	fShowOXY(false),
 	fExactFlag(false),
 	fNearbyFlag(false),
@@ -61,6 +63,7 @@ STLWindow::STLWindow()
 	fMenuFile = new BMenu(B_TRANSLATE("File"));
 	fMenuFileSaveAs = new BMenu(B_TRANSLATE("Save as" B_UTF8_ELLIPSIS));
 	fMenuView = new BMenu(B_TRANSLATE("View"));
+	fMenuAxes = new BMenu(B_TRANSLATE("Axes"));
 	fMenuTools = new BMenu(B_TRANSLATE("Tools"));
 	fMenuToolsMirror = new BMenu(B_TRANSLATE("Mirror"));
 	fMenuToolsScale = new BMenu(B_TRANSLATE("Scale"));
@@ -92,6 +95,12 @@ STLWindow::STLWindow()
 	fMenuBar->AddItem(fMenuFile);
 	fMenuFile->SetTargetForItems(this);
 
+	fMenuItemShowAxesPlane = new BMenuItem(B_TRANSLATE("Plane"), new BMessage(MSG_VIEWMODE_AXES_PLANE));
+	fMenuAxes->AddItem(fMenuItemShowAxesPlane);
+	fMenuItemShowAxesCompass = new BMenuItem(B_TRANSLATE("Compass"), new BMessage(MSG_VIEWMODE_AXES_COMPASS));
+	fMenuAxes->AddItem(fMenuItemShowAxesCompass);
+	fMenuAxes->SetTargetForItems(this);
+
 	fMenuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
 	fMenuView->AddItem(fMenuItemSolid);
 	fMenuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
@@ -100,7 +109,7 @@ STLWindow::STLWindow()
 	fMenuItemOrthographicView = new BMenuItem(B_TRANSLATE("Orthographic projection"), new BMessage(MSG_VIEWMODE_ORTHO));
 	fMenuView->AddItem(fMenuItemOrthographicView);
 	fMenuView->AddSeparatorItem();
-	fMenuItemShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
+	fMenuItemShowAxes = new BMenuItem(fMenuAxes, new BMessage(MSG_VIEWMODE_AXES));
 	fMenuView->AddItem(fMenuItemShowAxes);
 	fMenuItemShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
 	fMenuView->AddItem(fMenuItemShowOXY);
@@ -271,6 +280,8 @@ STLWindow::LoadSettings(void)
 
 		bool _fShowBoundingBox = false;
 		bool _fShowAxes = false;
+		bool _fShowAxesPlane = true;
+		bool _fShowAxesCompass = true;
 		bool _showStat = false;
 		bool _fShowWireframe = false;
 		bool _fShowOXY = false;
@@ -279,6 +290,8 @@ STLWindow::LoadSettings(void)
 
 		file.ReadAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
 		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_fShowAxes, sizeof(bool));
+		file.ReadAttr("ShowAxesPlane", B_BOOL_TYPE, 0, &_fShowAxesPlane, sizeof(bool));
+		file.ReadAttr("ShowAxesCompass", B_BOOL_TYPE, 0, &_fShowAxesCompass, sizeof(bool));
 		file.ReadAttr("ShowOXY", B_BOOL_TYPE, 0, &_fShowOXY, sizeof(bool));
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStat", B_BOOL_TYPE, 0, &_showStat, sizeof(bool));
@@ -300,7 +313,9 @@ STLWindow::LoadSettings(void)
 		fStlView->ShowBoundingBox(fShowBoundingBox);
 
 		fShowAxes = _fShowAxes;
-		fStlView->ShowAxes(fShowAxes);
+		fShowAxesPlane = _fShowAxesPlane;
+		fShowAxesCompass = _fShowAxesCompass;
+		fStlView->ShowAxes(fShowAxes, fShowAxesPlane, fShowAxesCompass);
 
 		fShowOXY = _fShowOXY;
 		fStlView->ShowOXY(fShowOXY);
@@ -337,6 +352,8 @@ STLWindow::SaveSettings(void)
 		file.WriteAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
 
 		file.WriteAttr("ShowAxes", B_BOOL_TYPE, 0, &fShowAxes, sizeof(bool));
+		file.WriteAttr("ShowAxesPlane", B_BOOL_TYPE, 0, &fShowAxesPlane, sizeof(bool));
+		file.WriteAttr("ShowAxesCompass", B_BOOL_TYPE, 0, &fShowAxesCompass, sizeof(bool));
 		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &fShowOXY, sizeof(bool));
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &fShowStat, sizeof(bool));
@@ -681,7 +698,31 @@ STLWindow::MessageReceived(BMessage *message)
 		case MSG_VIEWMODE_AXES:
 		{
 			fShowAxes = !fShowAxes;
-			fStlView->ShowAxes(fShowAxes);
+			if (fShowAxes && !fShowAxesPlane && !fShowAxesCompass) {
+				fShowAxesPlane = true;
+				fShowAxesCompass = true;
+			}
+			fStlView->ShowAxes(fShowAxes, fShowAxesPlane, fShowAxesCompass);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_AXES_PLANE:
+		{
+			fShowAxesPlane = !fShowAxesPlane;
+			if (fShowAxes && !fShowAxesPlane && !fShowAxesCompass) {
+				fShowAxes = false;
+			}
+			fStlView->ShowAxes(fShowAxes, fShowAxesPlane, fShowAxesCompass);
+			UpdateUI();
+			break;
+		}
+		case MSG_VIEWMODE_AXES_COMPASS:
+		{
+			fShowAxesCompass = !fShowAxesCompass;
+			if (fShowAxes && !fShowAxesPlane && !fShowAxesCompass) {
+				fShowAxes = false;
+			}
+			fStlView->ShowAxes(fShowAxes, fShowAxesPlane, fShowAxesCompass);
 			UpdateUI();
 			break;
 		}
@@ -1144,15 +1185,15 @@ STLWindow::MessageReceived(BMessage *message)
 			menu->AddItem(_menuItemWireframe);
 			menu->AddSeparatorItem();
 
-			BMenuItem *_menuItemfShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
-			_menuItemfShowAxes->SetMarked(fShowAxes);
-			BMenuItem *_menuItemfShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
-			_menuItemfShowOXY->SetMarked(fShowOXY);
+			BMenuItem *_menuItemShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
+			_menuItemShowAxes->SetMarked(fShowAxes);
+			BMenuItem *_menuItemShowOXY = new BMenuItem(B_TRANSLATE("Plane OXY"), new BMessage(MSG_VIEWMODE_OXY));
+			_menuItemShowOXY->SetMarked(fShowOXY);
 			BMenuItem *_menuItemShowBox = new BMenuItem(B_TRANSLATE("Bounding box"), new BMessage(MSG_VIEWMODE_BOUNDING_BOX));
 			_menuItemShowBox->SetMarked(fShowBoundingBox);
 
-			menu->AddItem(_menuItemfShowAxes);
-			menu->AddItem(_menuItemfShowOXY);
+			menu->AddItem(_menuItemShowAxes);
+			menu->AddItem(_menuItemShowOXY);
 			menu->AddItem(_menuItemShowBox);
 			menu->AddSeparatorItem();
 			menu->AddItem(new BMenuItem(B_TRANSLATE("Reset"), new BMessage(MSG_VIEWMODE_RESETPOS), 'R'));
@@ -1197,6 +1238,10 @@ STLWindow::UpdateUIStates(bool show)
 	fMenuItemSave->SetEnabled(show && fStlModified);
 	fMenuItemShowBox->SetMarked(fShowBoundingBox);
 	fMenuItemShowAxes->SetMarked(fShowAxes);
+	fMenuItemShowAxesPlane->SetMarked(fShowAxesPlane);
+	fMenuItemShowAxesCompass->SetMarked(fShowAxesCompass);
+	fMenuItemShowAxesPlane->SetEnabled(fShowAxes);
+	fMenuItemShowAxesCompass->SetEnabled(fShowAxes);
 	fMenuItemShowOXY->SetMarked(fShowOXY);
 	fMenuItemSolid->SetMarked(!fShowWireframe);
 	fMenuItemWireframe->SetMarked(fShowWireframe);
