@@ -30,6 +30,7 @@
 #include <TextControl.h>
 #include <StringView.h>
 #include <PopUpMenu.h>
+#include <GroupView.h>
 #include <LayoutBuilder.h>
 #include <ControlLook.h>
 #include <GraphicsDefs.h>
@@ -43,7 +44,8 @@ enum FieldType {
 	TEXT_FIELD,
 	INTEGER_FIELD,
 	FLOAT_FIELD,
-	SLIDER_FIELD
+	SLIDER_FIELD,
+	GROUP_FIELD
 };
 
 struct FieldInfo {
@@ -54,9 +56,9 @@ struct FieldInfo {
 	BView* control;
 	float minValue;
 	float maxValue;
-	BStringList options;
 	rgb_color backgroundColor;
 	bool hasCustomBackgroundColor;
+	int32 groupCount;
 };
 
 static bool
@@ -84,6 +86,7 @@ class STLInputWindow : public BWindow {
 				float minValue = -FLT_MAX, float maxValue = FLT_MAX);
 		void AddSliderField(const char* name, const char* label, float defaultValue = 0.0f,
 				float minValue = 0.0f, float maxValue = 100.0f);
+		void AddGroup(const char* name, const char* label, int32 count);
 
 		void SetTextFieldValue(const char* name, const char* value);
 		void SetIntegerFieldValue(const char* name, int value);

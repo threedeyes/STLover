@@ -42,7 +42,7 @@ void
 STLInputWindow::AddTextField(const char* name, const char* label, const char* defaultValue)
 {
 	FieldInfo field = {TEXT_FIELD, name, label, defaultValue, nullptr, 0, 0,
-			BStringList(), {255, 255, 255, 255}, false};
+			{255, 255, 255, 255}, false, 0};
 	BTextControl* control = new BTextControl("", defaultValue, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	field.control = control;
@@ -56,7 +56,7 @@ STLInputWindow::AddIntegerField(const char* name, const char* label, int default
 	BString defaultValueStr;
 	defaultValueStr << defaultValue;
 	FieldInfo field = {INTEGER_FIELD, name, label, defaultValueStr, nullptr, (float)minValue, (float)maxValue,
-			BStringList(), {255, 255, 255, 255}, false};
+			{255, 255, 255, 255}, false, 0};
 	BSpinner* spinner = new BSpinner(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED));
 	spinner->SetRange(minValue, maxValue);
 	spinner->SetValue(defaultValue);
@@ -70,7 +70,7 @@ STLInputWindow::AddFloatField(const char* name, const char* label, float default
 	BString defaultValueStr;
 	defaultValueStr.SetToFormat("%.2f", defaultValue);
 	FieldInfo field = {FLOAT_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
-			BStringList(), {255, 255, 255, 255}, false};
+			{255, 255, 255, 255}, false, 0};
 	BTextControl* control = new BTextControl("", defaultValueStr, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	control->SetAlignment(B_ALIGN_RIGHT, B_ALIGN_LEFT);
@@ -89,7 +89,7 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 	maxValueStr.SetToFormat("%g", maxValue);
 
 	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
-			BStringList(), {255, 255, 255, 255}, false};
+			{255, 255, 255, 255}, false, 0};
 	BSlider* slider = new BSlider(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
 			B_HORIZONTAL, B_TRIANGLE_THUMB);
 	slider->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
@@ -102,6 +102,15 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 }
 
 void
+STLInputWindow::AddGroup(const char* name, const char* label, int32 count)
+{
+	FieldInfo field = {GROUP_FIELD, name, label, "", nullptr, 0, 0,	{255, 255, 255, 255}, false, count};
+	BGroupView* group = new BGroupView(name, B_HORIZONTAL, 1);
+	field.control = group;
+	fFields.push_back(field);
+}
+
+void
 STLInputWindow::CreateLayout()
 {
 	float padding = be_control_look->DefaultItemSpacing();
@@ -110,11 +119,25 @@ STLInputWindow::CreateLayout()
 	layoutBuilder.SetInsets(padding, padding, padding, padding);
 
 	int32 row = 0;
-	for (auto& field : fFields) {
+	for (int32 i = 0; i < fFields.size(); i++) {
+		FieldInfo field = fFields[i];
 		layoutBuilder.Add(new BStringView("label", field.label), 0, row);
-		layoutBuilder.Add(field.control, 2, row, 3);
-		if (field.hasCustomBackgroundColor) {
-			ApplyBackgroundColor(field.control, field.backgroundColor);
+		if (field.type == GROUP_FIELD) {
+			BGroupView *group = (BGroupView*)field.control;
+			layoutBuilder.Add(group, 2, row, 3);
+			int32 groupSize = field.groupCount;
+			for (int32 j = 1; j <= groupSize; j++) {
+				field = fFields[i + j];
+				group->AddChild(field.control);
+				if (field.hasCustomBackgroundColor)
+					ApplyBackgroundColor(field.control, field.backgroundColor);
+			}
+			i += groupSize + 1;
+		} else {
+			layoutBuilder.Add(new BStringView("label", field.label), 0, row);
+			layoutBuilder.Add(field.control, 2, row, 3);
+			if (field.hasCustomBackgroundColor)
+				ApplyBackgroundColor(field.control, field.backgroundColor);
 		}
 		row++;
 	}
