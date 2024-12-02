@@ -94,6 +94,13 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 		parentRect.top + ((parentRect.Height() - Frame().Height()) / 2.0));
 }
 
+bool
+STLRepairWindow::QuitRequested()
+{
+	fTarget.SendMessage(MSG_INPUT_CANCEL);
+	return true;
+}
+
 void
 STLRepairWindow::MessageReceived(BMessage* message)
 {

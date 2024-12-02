@@ -35,6 +35,7 @@ class STLRepairWindow : public BWindow {
 		STLRepairWindow(BWindow* target, uint32 messageId, BMessage *options);
 		virtual ~STLRepairWindow() { };
 
+		virtual bool QuitRequested();
 		virtual void MessageReceived(BMessage* message);
 
 	private:
