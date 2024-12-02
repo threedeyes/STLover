@@ -22,12 +22,13 @@
 #undef  B_TRANSLATION_CONTEXT
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
-STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messageId)
+STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messageId, uint32 buttons)
 	: BWindow(BRect(0, 0, 300, 200), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
 		B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fParentWindow(target),
 	fTargetMessenger(target),
-	fMessageId(messageId)
+	fMessageId(messageId),
+	fButtons(buttons)
 {
 	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
@@ -35,14 +36,13 @@ STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messag
 
 STLInputWindow::~STLInputWindow()
 {
-	fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
 }
 
 void
 STLInputWindow::AddTextField(const char* name, const char* label, const char* defaultValue)
 {
 	FieldInfo field = {TEXT_FIELD, name, label, defaultValue, nullptr, 0, 0,
-			{255, 255, 255, 255}, false, 0};
+			{255, 255, 255, 255}, false, true, 0};
 	BTextControl* control = new BTextControl("", defaultValue, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	field.control = control;
@@ -56,7 +56,7 @@ STLInputWindow::AddIntegerField(const char* name, const char* label, int default
 	BString defaultValueStr;
 	defaultValueStr << defaultValue;
 	FieldInfo field = {INTEGER_FIELD, name, label, defaultValueStr, nullptr, (float)minValue, (float)maxValue,
-			{255, 255, 255, 255}, false, 0};
+			{255, 255, 255, 255}, false, true, 0};
 	BSpinner* spinner = new BSpinner(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED));
 	spinner->SetRange(minValue, maxValue);
 	spinner->SetValue(defaultValue);
@@ -70,7 +70,7 @@ STLInputWindow::AddFloatField(const char* name, const char* label, float default
 	BString defaultValueStr;
 	defaultValueStr.SetToFormat("%.2f", defaultValue);
 	FieldInfo field = {FLOAT_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
-			{255, 255, 255, 255}, false, 0};
+			{255, 255, 255, 255}, false, true, 0};
 	BTextControl* control = new BTextControl("", defaultValueStr, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	control->SetAlignment(B_ALIGN_RIGHT, B_ALIGN_LEFT);
@@ -89,7 +89,7 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 	maxValueStr.SetToFormat("%g", maxValue);
 
 	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
-			{255, 255, 255, 255}, false, 0};
+			{255, 255, 255, 255}, false, true, 0};
 	BSlider* slider = new BSlider(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
 			B_HORIZONTAL, B_TRIANGLE_THUMB);
 	slider->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
@@ -104,7 +104,7 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 void
 STLInputWindow::AddGroup(const char* name, const char* label, int32 count)
 {
-	FieldInfo field = {GROUP_FIELD, name, label, "", nullptr, 0, 0,	{255, 255, 255, 255}, false, count};
+	FieldInfo field = {GROUP_FIELD, name, label, "", nullptr, 0, 0,	{255, 255, 255, 255}, false, false, count};
 	BGroupView* group = new BGroupView(name, B_HORIZONTAL, 1);
 	field.control = group;
 	fFields.push_back(field);
@@ -129,13 +129,15 @@ STLInputWindow::CreateLayout()
 			for (int32 j = 1; j <= groupSize; j++) {
 				field = fFields[i + j];
 				group->AddChild(field.control);
+				ApplyFieldEditable(field.control, field.editable);
 				if (field.hasCustomBackgroundColor)
 					ApplyBackgroundColor(field.control, field.backgroundColor);
 			}
-			i += groupSize + 1;
+			i += groupSize;
 		} else {
 			layoutBuilder.Add(new BStringView("label", field.label), 0, row);
 			layoutBuilder.Add(field.control, 2, row, 3);
+			ApplyFieldEditable(field.control, field.editable);
 			if (field.hasCustomBackgroundColor)
 				ApplyBackgroundColor(field.control, field.backgroundColor);
 		}
@@ -144,13 +146,23 @@ STLInputWindow::CreateLayout()
 
 	BButton* cancelButton = new BButton(B_TRANSLATE("Cancel"), new BMessage(MSG_INPUT_CANCEL));
 	BButton* resetButton = new BButton(B_TRANSLATE("Reset"), new BMessage(MSG_INPUT_RESET));
+	BButton* closeButton = new BButton(B_TRANSLATE("Close"), new BMessage(MSG_INPUT_OK));
 
-	layoutBuilder.Add(resetButton, 0, row);
+	if (fButtons & BUTTON_RESET)
+		layoutBuilder.Add(resetButton, 0, row);
+
 	layoutBuilder.Add(BSpaceLayoutItem::CreateGlue(), 1, row, 2);
-	layoutBuilder.Add(cancelButton, 3, row);
-	layoutBuilder.Add(fOkButton, 4, row);
 
-	fOkButton->MakeDefault(true);
+	if (fButtons & BUTTON_CANCEL)
+		layoutBuilder.Add(cancelButton, 3, row);
+
+	if (fButtons & BUTTON_OK) {
+		layoutBuilder.Add(fOkButton, 4, row);
+		fOkButton->MakeDefault(true);
+	} else if (fButtons & BUTTON_CLOSE) {
+		layoutBuilder.Add(closeButton, 4, row);
+		closeButton->MakeDefault(true);
+	}
 
 	if (!fFields.empty()) {
 		fFields[0].control->MakeFocus(true);
@@ -173,6 +185,16 @@ STLInputWindow::Show()
 	fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
 
 	BWindow::Show();
+}
+
+bool
+STLInputWindow::QuitRequested()
+{
+	if (fButtons & BUTTON_CLOSE)
+		fTargetMessenger.SendMessage(MakeMessage(fMessageId));
+	else
+		fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
+	return true;
 }
 
 BMessage*
@@ -267,50 +289,62 @@ STLInputWindow::FindField(const char* name)
 void
 STLInputWindow::SetTextFieldValue(const char* name, const char* value)
 {
-	FieldInfo* field = FindField(name);
-	if (field && field->type == TEXT_FIELD) {
-		BTextControl* control = dynamic_cast<BTextControl*>(field->control);
-		if (control) {
-			control->SetText(value);
+	if (LockWithTimeout(1000) == B_OK) {
+		FieldInfo* field = FindField(name);
+		if (field && field->type == TEXT_FIELD) {
+			BTextControl* control = dynamic_cast<BTextControl*>(field->control);
+			if (control) {
+				control->SetText(value);
+			}
 		}
+		UnlockLooper();
 	}
 }
 
 void
 STLInputWindow::SetIntegerFieldValue(const char* name, int value)
 {
-	FieldInfo* field = FindField(name);
-	if (field && field->type == INTEGER_FIELD) {
-		BSpinner* spinner = dynamic_cast<BSpinner*>(field->control);
-		if (spinner) {
-			spinner->SetValue(value);
+	if (LockWithTimeout(1000) == B_OK) {
+		FieldInfo* field = FindField(name);
+		if (field && field->type == INTEGER_FIELD) {
+			BSpinner* spinner = dynamic_cast<BSpinner*>(field->control);
+			if (spinner) {
+				spinner->SetValue(value);
+			}
 		}
+		UnlockLooper();
 	}
 }
 
 void
 STLInputWindow::SetFloatFieldValue(const char* name, float value)
 {
-	FieldInfo* field = FindField(name);
-	if (field && field->type == FLOAT_FIELD) {
-		BTextControl* control = dynamic_cast<BTextControl*>(field->control);
-		if (control) {
-			BString text;
-			text.SetToFormat("%.2f", value);
-			control->SetText(text);
+	if (LockWithTimeout(1000) == B_OK) {
+		FieldInfo* field = FindField(name);
+		if (field && field->type == FLOAT_FIELD) {
+			BTextControl* control = dynamic_cast<BTextControl*>(field->control);
+			if (control) {
+				BString text;
+				text.SetToFormat("%.2f", value);
+				control->SetText(text);
+			}
 		}
+		UnlockLooper();
 	}
 }
 
 void
 STLInputWindow::SetSliderFieldValue(const char* name, float value)
 {
-	FieldInfo* field = FindField(name);
-	if (field && field->type == SLIDER_FIELD) {
-		BSlider* control = dynamic_cast<BSlider*>(field->control);
-		if (control) {
-			control->SetValue(value);
+	if (LockWithTimeout(1000) == B_OK) {
+		FieldInfo* field = FindField(name);
+		if (field && field->type == SLIDER_FIELD) {
+			BSlider* control = dynamic_cast<BSlider*>(field->control);
+			if (control) {
+				control->SetValue(value);
+			}
 		}
+		UnlockLooper();
 	}
 }
 
@@ -328,6 +362,18 @@ STLInputWindow::SetFieldBackgroundColor(const char* name, rgb_color color)
 }
 
 void
+STLInputWindow::SetFieldEditable(const char*name, bool editable)
+{
+	FieldInfo* field = FindField(name);
+	if (field) {
+		field->editable = editable;
+		if (field->control) {
+			ApplyFieldEditable(field->control, editable);
+		}
+	}
+}
+
+void
 STLInputWindow::ApplyBackgroundColor(BView* control, rgb_color color)
 {
 	if (BTextControl* textControl = dynamic_cast<BTextControl*>(control)) {
@@ -335,13 +381,27 @@ STLInputWindow::ApplyBackgroundColor(BView* control, rgb_color color)
 		textControl->TextView()->SetLowColor(color);
 	} else if (BSlider* slider = dynamic_cast<BSlider*>(control)) {
 		slider->SetBarColor(color);
-	} else if (BSpinner* slider = dynamic_cast<BSpinner*>(control)) {
-		slider->TextView()->SetViewColor(color);
-		slider->TextView()->SetLowColor(color);
+	} else if (BSpinner* spinner = dynamic_cast<BSpinner*>(control)) {
+		spinner->TextView()->SetViewColor(color);
+		spinner->TextView()->SetLowColor(color);
 	}
 
 	if (control->Parent())
 		control->Parent()->Invalidate();
+}
+
+void
+STLInputWindow::ApplyFieldEditable(BView* control, bool editable)
+{
+	if (control) {
+		if (BTextControl* textControl = dynamic_cast<BTextControl*>(control)) {
+			textControl->TextView()->MakeEditable(editable);
+		} else if (BSlider* slider = dynamic_cast<BSlider*>(control)) {
+			slider->SetEnabled(editable);
+		} else if (BSpinner* spinner = dynamic_cast<BSpinner*>(control)) {
+			spinner->TextView()->MakeEditable(editable);
+		}
+	}
 }
 
 bool

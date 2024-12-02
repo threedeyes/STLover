@@ -40,6 +40,11 @@
 #include <sstream>
 #include <vector>
 
+#define BUTTON_OK		0x01
+#define BUTTON_CANCEL	0x02
+#define BUTTON_RESET	0x04
+#define BUTTON_CLOSE	0x08
+
 enum FieldType {
 	TEXT_FIELD,
 	INTEGER_FIELD,
@@ -58,6 +63,7 @@ struct FieldInfo {
 	float maxValue;
 	rgb_color backgroundColor;
 	bool hasCustomBackgroundColor;
+	bool editable;
 	int32 groupCount;
 };
 
@@ -73,10 +79,12 @@ IsFloat(const char* text)
 
 class STLInputWindow : public BWindow {
 	public:
-		STLInputWindow(const char* title, BWindow* target, uint32 messageId);
+		STLInputWindow(const char* title, BWindow* target, uint32 messageId,
+				uint32 buttons = BUTTON_OK | BUTTON_CANCEL | BUTTON_RESET);
 		virtual ~STLInputWindow();
 
 		virtual void MessageReceived(BMessage* message);
+		virtual	bool QuitRequested();
 		virtual void Show();
 
 		void AddTextField(const char* name, const char* label, const char* defaultValue = "");
@@ -94,11 +102,13 @@ class STLInputWindow : public BWindow {
 		void SetSliderFieldValue(const char* name, float value);
 
 		void SetFieldBackgroundColor(const char* name, rgb_color color);
+		void SetFieldEditable(const char*name, bool editable);
 
 	private:
 		FieldInfo* FindField(const char* name);
 		void CreateLayout();
 		void ApplyBackgroundColor(BView* control, rgb_color color);
+		void ApplyFieldEditable(BView* control, bool editable);
 		BMessage* MakeMessage(uint32 what);
 		bool IsValid();
 
@@ -106,6 +116,7 @@ class STLInputWindow : public BWindow {
 		BMessenger fTargetMessenger;
 		BButton* fOkButton;
 		uint32 fMessageId;
+		uint32 fButtons;
 		std::vector<FieldInfo> fFields;
 };
 
