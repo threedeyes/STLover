@@ -23,7 +23,7 @@
 #define B_TRANSLATION_CONTEXT          "STLoverInputWindow"
 
 STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messageId, uint32 buttons)
-	: BWindow(BRect(0, 0, 300, 200), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_APP_WINDOW_FEEL,
+	: BWindow(BRect(0, 0, 300, 200), title, B_FLOATING_WINDOW_LOOK, B_FLOATING_SUBSET_WINDOW_FEEL,
 		B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fParentWindow(target),
 	fTargetMessenger(target),
@@ -32,6 +32,11 @@ STLInputWindow::STLInputWindow(const char* title, BWindow* target, uint32 messag
 {
 	fOkButton = new BButton(B_TRANSLATE("OK"), new BMessage(MSG_INPUT_OK));
 	fOkButton->SetEnabled(false);
+
+	if (fParentWindow != NULL)
+		AddToSubset(fParentWindow);
+	else
+		SetFeel(B_FLOATING_APP_WINDOW_FEEL);
 }
 
 STLInputWindow::~STLInputWindow()

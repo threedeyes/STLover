@@ -23,7 +23,7 @@
 #define B_TRANSLATION_CONTEXT          "STLoverRepairWindow"
 
 STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *options)
-	: BWindow(BRect(100, 100, 400, 400), B_TRANSLATE("Repair"), B_FLOATING_WINDOW_LOOK, B_FLOATING_ALL_WINDOW_FEEL,
+	: BWindow(BRect(100, 100, 400, 400), B_TRANSLATE("Repair"), B_FLOATING_WINDOW_LOOK, B_FLOATING_SUBSET_WINDOW_FEEL,
 	B_NOT_ZOOMABLE | B_NOT_RESIZABLE | B_ASYNCHRONOUS_CONTROLS | B_AUTO_UPDATE_SIZE_LIMITS | B_CLOSE_ON_ESCAPE),
 	fTarget(target),
 	fMessageId(messageId),
@@ -92,6 +92,11 @@ STLRepairWindow::STLRepairWindow(BWindow* target, uint32 messageId, BMessage *op
 	BRect parentRect = target->Frame();
 	MoveTo(parentRect.left + ((parentRect.Width() - Frame().Width()) / 2.0),
 		parentRect.top + ((parentRect.Height() - Frame().Height()) / 2.0));
+
+	if (target != NULL)
+		AddToSubset(target);
+	else
+		SetFeel(B_FLOATING_APP_WINDOW_FEEL);
 }
 
 bool
