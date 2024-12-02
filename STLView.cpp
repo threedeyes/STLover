@@ -48,7 +48,11 @@ STLView::STLView(BRect frame, uint32 type)
 	showOXY(false),
 	fShowPreview(false),
 	viewOrtho(false),
-	m_buffersInitialized(false)
+	m_buffersInitialized(false),
+	measureMode(false),
+	lastMousePos3dValid(false),
+	measureStartPointValid(false),
+	measureEndPointValid(false)
 {
 	appIcon = STLoverApplication::GetIcon(NULL, 164);
 	InitShaders();
@@ -467,6 +471,30 @@ STLView::MouseMoved(BPoint p, uint32 transit, const BMessage *message)
 	uint32 buttons = 0;
 	GetMouse(&p, &buttons, false);
 
+	if (measureMode && !isMeasureSkip) {
+		if (measureStartPointValid && buttons & B_PRIMARY_MOUSE_BUTTON) {
+			measureEndPointValid = lastMousePos3dValid;
+			if (lastMousePos3dValid)
+				measureEndPoint = lastMousePos3d;
+		}
+
+		float distance = (measureStartPointValid && measureEndPointValid) ?
+		glm::distance(measureStartPoint, measureEndPoint) : 0.0f;
+		BMessage *message = new BMessage(MSG_TOOLS_MEASURE_UPDATE);
+		message->AddFloat("x1", measureStartPointValid ? measureStartPoint.x : 0.0f);
+		message->AddFloat("y1", measureStartPointValid ? measureStartPoint.y : 0.0f);
+		message->AddFloat("z1", measureStartPointValid ? measureStartPoint.z : 0.0f);
+		message->AddFloat("x2", measureEndPointValid ? measureEndPoint.x : 0.0f);
+		message->AddFloat("y2", measureEndPointValid ? measureEndPoint.y : 0.0f);
+		message->AddFloat("z2", measureEndPointValid ? measureEndPoint.z : 0.0f);
+		message->AddFloat("distance", distance);
+		Window()->PostMessage(message);
+
+		lastMousePos = p;
+		needUpdate = true;
+		return;
+	}
+
 	if (buttons & B_PRIMARY_MOUSE_BUTTON && lastMouseButtons != 0) {
 		yRotate -= (lastMousePos.x - p.x) * 0.4;
 		xRotate -= (lastMousePos.y - p.y) * 0.4;
@@ -484,6 +512,23 @@ STLView::MouseMoved(BPoint p, uint32 transit, const BMessage *message)
 void
 STLView::MouseDown(BPoint p)
 {
+	if (measureMode) {
+		if (lastMousePos3dValid) {
+			if (measureStartPointValid && measureEndPointValid) {
+				measureStartPointValid = false;
+				measureEndPointValid = false;
+			}
+			if (!measureStartPointValid) {
+				measureStartPoint = lastMousePos3d;
+				measureStartPointValid = true;
+			}
+			isMeasureSkip = false;
+			needUpdate = true;
+		} else {
+			isMeasureSkip = true;
+		}
+	}
+
 	lastMousePos = p;
 	lastMouseClickTime = system_time();
 	lastMouseButtons = Window()->CurrentMessage()->FindInt32("buttons");
@@ -496,7 +541,7 @@ STLView::MouseUp(BPoint p)
 	if ((lastMouseButtons & B_SECONDARY_MOUSE_BUTTON) &&
 		(system_time() - lastMouseClickTime) < 250000)
 		Window()->PostMessage(MSG_POPUP_MENU);
-
+	isMeasureSkip = false;
 	lastMouseButtons = 0;
 }
 
@@ -627,7 +672,69 @@ STLView::DrawAxis()
 }
 
 void
-STLView::DrawAxisLabel(float x, float y, float z, const char* label, float r, float g, float b) {
+STLView::DrawMeasure(void)
+{
+	glUseProgram(0);
+	glPushAttrib(GL_ALL_ATTRIB_BITS);
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadMatrixf(glm::value_ptr(projectionMatrix));
+	glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
+	glLoadMatrixf(glm::value_ptr(viewMatrix * modelMatrix));
+
+	glm::vec3 pickedPoint;
+	lastMousePos3dValid = ScreenToPoint3d(lastMousePos, pickedPoint);
+	if (lastMousePos3dValid)
+		lastMousePos3d = pickedPoint;
+
+	glDisable(GL_DEPTH_TEST);
+
+	if (measureStartPointValid && measureEndPointValid) {
+		glEnable(GL_LINE_STIPPLE);
+		glLineStipple(1, 0x0F0F);
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glLineWidth(1.5f);
+		glBegin(GL_LINES);
+		glVertex3fv(glm::value_ptr(measureStartPoint));
+		glVertex3fv(glm::value_ptr(measureEndPoint));
+		glEnd();
+		glDisable(GL_LINE_STIPPLE);
+	}
+	if (lastMousePos3dValid && !measureStartPointValid && !isMeasureSkip) {
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glPointSize(6.0f);
+		glBegin(GL_POINTS);
+		glVertex3fv(glm::value_ptr(lastMousePos3d));
+		glEnd();
+	}
+	if (measureStartPointValid) {
+		glColor3f(0.0f, 1.0f, 0.0f);
+		glPointSize(6.0f);
+		glBegin(GL_POINTS);
+		glVertex3fv(glm::value_ptr(measureStartPoint));
+		glEnd();
+	}
+	if (measureEndPointValid) {
+		glColor3f(1.0f, 0.0f, 0.0f);
+		glPointSize(6.0f);
+		glBegin(GL_POINTS);
+		glVertex3fv(glm::value_ptr(measureEndPoint));
+		glEnd();
+	}
+
+	glEnable(GL_DEPTH_TEST);
+
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glPopMatrix();
+	glPopAttrib();
+}
+
+void
+STLView::DrawAxisLabel(float x, float y, float z, const char* label, float r, float g, float b)
+{
 	   glPushMatrix();
 	   glTranslatef(x, y, z);
 	   Billboard();
@@ -728,12 +835,19 @@ STLView::Render(void)
 			DrawSTL({128, 101, 0}, 0.3);
 			modelMatrix = matrix;
 		} else {
-			DrawSTL();
+			if (measureMode)
+				DrawSTL({128, 128, 128}, 0.5);
+			else
+				DrawSTL();
 		}
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		glEnable(GL_POINT_SMOOTH);
 		glEnable(GL_LINE_SMOOTH);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+
+		if (measureMode)
+			DrawMeasure();
 
 		if (showOXY)
 			DrawOXY();
@@ -745,6 +859,7 @@ STLView::Render(void)
 			DrawAxis();
 
 		glDisable(GL_LINE_SMOOTH);
+		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_BLEND);
 
 		SwapBuffers();
@@ -752,9 +867,47 @@ STLView::Render(void)
 	}
 }
 
-void STLView::ShowPreview(float *matrix)
+void
+STLView::ShowPreview(float *matrix)
 {
 	std::memcpy(fPreviewMatrix, matrix, sizeof(float) * 16);
 	fShowPreview = true;
 	RenderUpdate();
+}
+
+void
+STLView::SetMeasureMode(bool enable)
+{
+	measureMode = enable;
+	isMeasureSkip = false;
+	lastMousePos3dValid = false;
+	measureStartPointValid = false;
+	measureEndPointValid = false;
+	needUpdate = true;
+}
+
+bool
+STLView::ScreenToPoint3d(BPoint screenPoint, glm::vec3& point3d)
+{
+	GLint viewport[4];
+	GLdouble modelview[16], projection[16];
+	GLfloat winX, winY, winZ;
+	GLdouble posX, posY, posZ;
+
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+	glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+	winX = screenPoint.x;
+	winY = viewport[3] - screenPoint.y;
+
+	glReadPixels(int(winX), int(winY), 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+
+	if (winZ == 1.0f)
+		return false;
+
+	gluUnProject(winX, winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+
+	point3d = glm::vec3(posX, posY, posZ);
+	return true;
 }

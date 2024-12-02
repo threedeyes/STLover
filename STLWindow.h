@@ -42,6 +42,7 @@ class STLView;
 class STLLogoView;
 class STLStatView;
 class STLStatWindow;
+class STLInputWindow;
 class STLToolBar;
 
 class STLWindow : public BWindow {
@@ -116,6 +117,7 @@ class STLWindow : public BWindow {
 		STLToolBar *fToolBar;
 		STLToolBar *fViewToolBar;
 		STLStatView *fStatView;
+		STLInputWindow *fMeasureWindow;
 
 		bool fRenderWork;
 
@@ -130,6 +132,7 @@ class STLWindow : public BWindow {
 		bool fShowAxesCompass;
 		bool fShowOXY;
 		bool fViewOrtho;
+		bool fMeasureMode;
 
 		int32 fExactFlag;
 		int32 fNearbyFlag;

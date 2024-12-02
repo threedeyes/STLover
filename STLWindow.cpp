@@ -35,6 +35,7 @@ STLWindow::STLWindow()
 	: BWindow(BRect(100, 100, 100 + 720, 100 + 512), MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
+	fMeasureWindow(NULL),
 	fStlModified(false),
 	fStlLoading(false),
 	fShowStat(false),
@@ -44,6 +45,8 @@ STLWindow::STLWindow()
 	fShowAxesPlane(true),
 	fShowAxesCompass(true),
 	fShowOXY(false),
+	fViewOrtho(false),
+	fMeasureMode(false),
 	fExactFlag(false),
 	fNearbyFlag(false),
 	fRemoveUnconnectedFlag(false),
@@ -180,6 +183,8 @@ STLWindow::STLWindow()
 	fToolBar->AddAction(MSG_TOOLS_ROTATE, this, STLoverApplication::GetIcon("rotate", TOOLBAR_ICON_SIZE), B_TRANSLATE("Rotate"));
 	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), B_TRANSLATE("Repair"));
+	fToolBar->AddSeparator();
+	fToolBar->AddAction(MSG_TOOLS_MEASURE, this, STLoverApplication::GetIcon("tool-measure", TOOLBAR_ICON_SIZE), B_TRANSLATE("Ruller"));
 	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_VIEWMODE_STAT, this, STLoverApplication::GetIcon("stat", TOOLBAR_ICON_SIZE), B_TRANSLATE("Statistics"));
 	fToolBar->AddGlue();
@@ -801,6 +806,67 @@ STLWindow::MessageReceived(BMessage *message)
 			OpenFile(fOpenedFileName.String());
 			break;
 		}
+		case MSG_TOOLS_MEASURE:
+		{
+			fMeasureMode = !fMeasureMode;
+
+			if (fMeasureMode) {
+				fMeasureWindow = new STLInputWindow(B_TRANSLATE("Measure"), this, MSG_TOOLS_MEASURE_CLOSE, BUTTON_CLOSE);
+				fMeasureWindow->AddGroup("from", B_TRANSLATE("From:"), 3);
+				fMeasureWindow->AddFloatField("x1", "", 0.0);
+				fMeasureWindow->SetFieldEditable("x1", false);
+				fMeasureWindow->SetFieldBackgroundColor("x1", {164, 255, 164});
+				fMeasureWindow->AddFloatField("y1", "", 0.0);
+				fMeasureWindow->SetFieldEditable("y1", false);
+				fMeasureWindow->SetFieldBackgroundColor("y1", {164, 255, 164});
+				fMeasureWindow->AddFloatField("z1", "", 1.0);
+				fMeasureWindow->SetFieldEditable("z1", false);
+				fMeasureWindow->SetFieldBackgroundColor("z1", {164, 255, 164});
+				fMeasureWindow->AddGroup("to", B_TRANSLATE("To:"), 3);
+				fMeasureWindow->AddFloatField("x2", "", 0.0);
+				fMeasureWindow->SetFieldEditable("x2", false);
+				fMeasureWindow->SetFieldBackgroundColor("x2", {255, 164, 164});
+				fMeasureWindow->AddFloatField("y2", "", 0.0);
+				fMeasureWindow->SetFieldEditable("y2", false);
+				fMeasureWindow->SetFieldBackgroundColor("y2", {255, 164, 164});
+				fMeasureWindow->AddFloatField("z2", "", 1.0);
+				fMeasureWindow->SetFieldEditable("z2", false);
+				fMeasureWindow->SetFieldBackgroundColor("z2", {255, 164, 164});
+				fMeasureWindow->AddFloatField("distance", B_TRANSLATE("Distance:"), 0.0);
+				fMeasureWindow->SetFieldEditable("distance", false);
+				fMeasureWindow->Show();
+			} else {
+				if (fMeasureWindow) {
+					fMeasureWindow->Lock();
+					fMeasureWindow->Quit();
+					fMeasureWindow = NULL;
+				}
+			}
+
+			fStlView->SetMeasureMode(fMeasureMode);
+			UpdateUI();
+			break;
+		}
+		case MSG_TOOLS_MEASURE_CLOSE:
+		{
+			fMeasureMode = false;
+			fStlView->SetMeasureMode(fMeasureMode);
+			UpdateUI();
+			break;
+		}
+		case MSG_TOOLS_MEASURE_UPDATE:
+		{
+			if (fMeasureMode) {
+				fMeasureWindow->SetFloatFieldValue("x1", message->FindFloat("x1"));
+				fMeasureWindow->SetFloatFieldValue("y1", message->FindFloat("y1"));
+				fMeasureWindow->SetFloatFieldValue("z1", message->FindFloat("z1"));
+				fMeasureWindow->SetFloatFieldValue("x2", message->FindFloat("x2"));
+				fMeasureWindow->SetFloatFieldValue("y2", message->FindFloat("y2"));
+				fMeasureWindow->SetFloatFieldValue("z2", message->FindFloat("z2"));
+				fMeasureWindow->SetFloatFieldValue("distance", message->FindFloat("distance"));
+			}
+			break;
+		}
 		case MSG_VIEWMODE_STAT:
 		{
 			fShowStat = !fShowStat;
@@ -822,6 +888,7 @@ STLWindow::MessageReceived(BMessage *message)
 			options->AddFloat("incrementValue", fStlObject->stats.bounding_diameter / 10000.0);
 			STLRepairWindow *repairDialog = new STLRepairWindow(this, MSG_TOOLS_REPAIR_DO, options);
 			repairDialog->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_REPAIR_DO:
@@ -851,6 +918,7 @@ STLWindow::MessageReceived(BMessage *message)
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("STL Title"), this, MSG_TOOLS_TITLE_SET);
 			input->AddTextField("title", B_TRANSLATE("Title:"), (const char*)fStlObject->stats.header);
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_TITLE_SET:
@@ -868,6 +936,7 @@ STLWindow::MessageReceived(BMessage *message)
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Scale"), this, MSG_TOOLS_SCALE_SET);
 			input->AddFloatField("scale", B_TRANSLATE("Scale factor:"), 1.0);
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_SCALE_SET:
@@ -894,6 +963,7 @@ STLWindow::MessageReceived(BMessage *message)
 			input->AddFloatField("z", B_TRANSLATE("Scale Z factor:"), 1.0);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_SCALE_SET_3:
@@ -923,6 +993,7 @@ STLWindow::MessageReceived(BMessage *message)
 			input->AddSliderField("z", B_TRANSLATE("Z-axis:"), 0, -180, 180);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_ROTATE_SET:
@@ -978,6 +1049,7 @@ STLWindow::MessageReceived(BMessage *message)
 			input->AddFloatField("z", B_TRANSLATE("Z:"), fStlObject->stats.min.z);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_MOVE_TO_SET:
@@ -1005,6 +1077,7 @@ STLWindow::MessageReceived(BMessage *message)
 			input->AddFloatField("z", B_TRANSLATE("∆Z:"), 0.0);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
+			UpdateUIStates(false);
 			break;
 		}
 		case MSG_TOOLS_MOVE_BY_SET:
@@ -1263,6 +1336,8 @@ STLWindow::UpdateUIStates(bool show)
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_TO, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_BY, show);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MOVE_MIDDLE, show);
+	fToolBar->SetActionPressed(MSG_TOOLS_MEASURE, fMeasureMode);
+	fToolBar->SetActionEnabled(MSG_TOOLS_MEASURE, show);
 
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_WIREFRAME_TOGGLE, show);
 	fViewToolBar->SetActionPressed(MSG_VIEWMODE_WIREFRAME_TOGGLE, fShowWireframe);

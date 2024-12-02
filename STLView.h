@@ -76,11 +76,34 @@ class STLView : public BGLView {
 		void SetXRotate(float value) { xRotate = value; needUpdate = true; }
 		void SetYRotate(float value) { yRotate = value; needUpdate = true; }
 		void SetScaleFactor(float value) { scaleFactor = value; needUpdate = true; }
+		void SetMeasureMode(bool enable);
 
 		void ShowPreview(float *matrix);
 		void HidePreview() { fShowPreview = false; }
 
 	private:
+		void InitShaders();
+		GLuint CompileShader(GLenum type, const char* source);
+		GLuint CreateShaderProgram(const char* vertexSource, const char* fragmentSource);
+
+		void InitializeBuffers();
+		void CleanupBuffers();
+		void GenerateBoxBuffers();
+		void GenerateOXYGridBuffers();
+
+		void DrawBox(void);
+		void DrawAxis(void);
+		void DrawMeasure(void);
+		void DrawOXY(void);
+		void DrawAxisLabel(float x, float y, float z,
+				const char* label, float r, float g, float b);
+		void DrawSTL() { DrawSTL({128,128,128}); }
+		void DrawSTL(rgb_color color, float alpha = 1.0);
+
+		void Billboard();
+		void SetupProjection(void);
+		bool ScreenToPoint3d(BPoint screenPoint, glm::vec3& point3d);
+
 		GLuint boxVAO = 0;
 		GLuint boxVBO = 0;
 		GLuint axesVAO = 0;
@@ -115,26 +138,15 @@ class STLView : public BGLView {
 		glm::mat4 viewMatrix;
 		glm::mat4 projectionMatrix;
 
-		void InitializeBuffers();
-		void CleanupBuffers();
-
-		void GenerateBoxBuffers();
-		void GenerateOXYGridBuffers();
-
-		void DrawBox(void);
-		void DrawAxis(void);
-		void DrawOXY(void);
-		void DrawAxisLabel(float x, float y, float z,
-				const char* label, float r, float g, float b);
-		void Billboard();
-		void SetupProjection(void);
-
-		void DrawSTL() { DrawSTL({128,128,128}); }
-		void DrawSTL(rgb_color color, float alpha = 1.0);
-
-		void InitShaders();
-		GLuint CompileShader(GLenum type, const char* source);
-		GLuint CreateShaderProgram(const char* vertexSource, const char* fragmentSource);
+		bool measureMode;
+		bool isMeasureSkip = false;
+		int32 measureMouseState = 0;
+		glm::vec3 measureStartPoint;
+		glm::vec3 measureEndPoint;
+		glm::vec3 lastMousePos3d;
+		bool lastMousePos3dValid;
+		bool measureStartPointValid;
+		bool measureEndPointValid;
 
 		BRect boundRect;
 		BBitmap *appIcon;
