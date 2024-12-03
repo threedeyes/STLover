@@ -187,9 +187,9 @@ STLInputWindow::Show()
 	BRect viewRect = stlView == nullptr ? fParentWindow->Frame() : stlView->ConvertToScreen(stlView->Bounds());
 	viewRect.InsetBy(20, 20);
 
-	BWindow::Show();
+	Layout(true);
 
-	ResizeToPreferred();
+	BWindow::Show();
 
 	MoveTo(viewRect.right - Frame().Width(), viewRect.bottom - Frame().Height());
 
@@ -203,6 +203,7 @@ STLInputWindow::QuitRequested()
 		fTargetMessenger.SendMessage(MakeMessage(fMessageId));
 	else
 		fTargetMessenger.SendMessage(MSG_INPUT_CANCEL);
+
 	return true;
 }
 
