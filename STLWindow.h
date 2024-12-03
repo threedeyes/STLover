@@ -107,6 +107,7 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemEditTitle;
 		BMenuItem *fMenuItemRotate;
 		BMenuItem *fMenuItemRepair;
+		BMenuItem *fMenuItemMeasure;
 		BFilePanel *fOpenFilePanel;
 		BFilePanel *fSaveFilePanel;
 

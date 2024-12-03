@@ -152,6 +152,9 @@ STLWindow::STLWindow()
 	fMenuTools->AddSeparatorItem();
 	fMenuItemRepair = new BMenuItem(B_TRANSLATE("Repair" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_REPAIR));
 	fMenuTools->AddItem(fMenuItemRepair);
+	fMenuTools->AddSeparatorItem();
+	fMenuItemMeasure = new BMenuItem(B_TRANSLATE("Measure" B_UTF8_ELLIPSIS), new BMessage(MSG_TOOLS_MEASURE));
+	fMenuTools->AddItem(fMenuItemMeasure);
 
 	fMenuBar->AddItem(fMenuView);
 	fMenuView->SetTargetForItems(this);
@@ -184,7 +187,7 @@ STLWindow::STLWindow()
 	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_TOOLS_REPAIR, this, STLoverApplication::GetIcon("tools-wizard", TOOLBAR_ICON_SIZE), B_TRANSLATE("Repair"));
 	fToolBar->AddSeparator();
-	fToolBar->AddAction(MSG_TOOLS_MEASURE, this, STLoverApplication::GetIcon("tool-measure", TOOLBAR_ICON_SIZE), B_TRANSLATE("Ruller"));
+	fToolBar->AddAction(MSG_TOOLS_MEASURE, this, STLoverApplication::GetIcon("tool-measure", TOOLBAR_ICON_SIZE), B_TRANSLATE("Measure"));
 	fToolBar->AddSeparator();
 	fToolBar->AddAction(MSG_VIEWMODE_STAT, this, STLoverApplication::GetIcon("stat", TOOLBAR_ICON_SIZE), B_TRANSLATE("Statistics"));
 	fToolBar->AddGlue();
