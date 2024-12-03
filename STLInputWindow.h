@@ -109,7 +109,7 @@ class STLInputWindow : public BWindow {
 		void CreateLayout();
 		void ApplyBackgroundColor(BView* control, rgb_color color);
 		void ApplyFieldEditable(BView* control, bool editable);
-		BMessage* MakeMessage(uint32 what);
+		BMessage* MakeMessage(uint32 what, uint32 extended = 0);
 		bool IsValid();
 
 		BWindow* fParentWindow;

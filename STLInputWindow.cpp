@@ -208,9 +208,11 @@ STLInputWindow::QuitRequested()
 }
 
 BMessage*
-STLInputWindow::MakeMessage(uint32 what)
+STLInputWindow::MakeMessage(uint32 what, uint32 extended)
 {
 	BMessage* message = new BMessage(what);
+
+	message->AddInt32("extended", extended);
 
 	if (what == MSG_INPUT_VALUE_UPDATED)
 		message->AddInt32("action", fMessageId);
@@ -286,7 +288,7 @@ STLInputWindow::MessageReceived(BMessage* message)
 					break;
 				}
 			}
-			fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+			fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED, message->what));
 			fOkButton->SetEnabled(IsValid());
 			break;
 		}

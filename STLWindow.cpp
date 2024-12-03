@@ -811,7 +811,7 @@ STLWindow::MessageReceived(BMessage *message)
 			fMeasureMode = !fMeasureMode;
 
 			if (fMeasureMode) {
-				fMeasureWindow = new STLInputWindow(B_TRANSLATE("Measure"), this, MSG_TOOLS_MEASURE_CLOSE, BUTTON_CLOSE);
+				fMeasureWindow = new STLInputWindow(B_TRANSLATE("Measure"), this, MSG_TOOLS_MEASURE_DROP, BUTTON_RESET | BUTTON_CLOSE);
 				fMeasureWindow->AddGroup("from", B_TRANSLATE("From:"), 3);
 				fMeasureWindow->AddFloatField("x1", "", 0.0);
 				fMeasureWindow->SetFieldEditable("x1", false);
@@ -847,7 +847,7 @@ STLWindow::MessageReceived(BMessage *message)
 			UpdateUI();
 			break;
 		}
-		case MSG_TOOLS_MEASURE_CLOSE:
+		case MSG_TOOLS_MEASURE_DROP:
 		{
 			fMeasureMode = false;
 			fStlView->SetMeasureMode(fMeasureMode);
@@ -1191,6 +1191,15 @@ STLWindow::MessageReceived(BMessage *message)
 
 					matrix = mz * my * mx;
 					fStlView->ShowPreview(glm::value_ptr(matrix));
+					break;
+				}
+				case MSG_TOOLS_MEASURE_DROP:
+				{
+					int32 extended = message->FindInt32("extended");
+					if (extended == MSG_INPUT_RESET) {
+						fStlView->SetMeasureMode(false);
+						fStlView->SetMeasureMode(fMeasureMode);
+					}
 					break;
 				}
 				default:
