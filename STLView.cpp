@@ -802,7 +802,12 @@ STLView::Render(void)
 		needUpdate = false;
 
 		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_CULL_FACE);
+
+		if (viewMode != MSG_VIEWMODE_WIREFRAME && !measureMode)
+			glEnable(GL_CULL_FACE);
+		else
+			glDisable(GL_CULL_FACE);
+
 		glCullFace(GL_BACK);
 
 		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
@@ -819,7 +824,7 @@ STLView::Render(void)
 
 		modelMatrix = glm::mat4(1.0f);
 
-		if (viewMode == MSG_VIEWMODE_WIREFRAME)
+		if (viewMode == MSG_VIEWMODE_WIREFRAME && !measureMode)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 		else
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -858,6 +863,7 @@ STLView::Render(void)
 		if (showAxes && showAxesCompass)
 			DrawAxis();
 
+		glDisable(GL_CULL_FACE);
 		glDisable(GL_LINE_SMOOTH);
 		glDisable(GL_POINT_SMOOTH);
 		glDisable(GL_BLEND);
