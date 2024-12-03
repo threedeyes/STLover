@@ -819,7 +819,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fMeasureWindow->AddFloatField("y1", "", 0.0);
 				fMeasureWindow->SetFieldEditable("y1", false);
 				fMeasureWindow->SetFieldBackgroundColor("y1", {164, 255, 164});
-				fMeasureWindow->AddFloatField("z1", "", 1.0);
+				fMeasureWindow->AddFloatField("z1", "", 0.0);
 				fMeasureWindow->SetFieldEditable("z1", false);
 				fMeasureWindow->SetFieldBackgroundColor("z1", {164, 255, 164});
 				fMeasureWindow->AddGroup("to", B_TRANSLATE("To:"), 3);
@@ -829,7 +829,7 @@ STLWindow::MessageReceived(BMessage *message)
 				fMeasureWindow->AddFloatField("y2", "", 0.0);
 				fMeasureWindow->SetFieldEditable("y2", false);
 				fMeasureWindow->SetFieldBackgroundColor("y2", {255, 164, 164});
-				fMeasureWindow->AddFloatField("z2", "", 1.0);
+				fMeasureWindow->AddFloatField("z2", "", 0.0);
 				fMeasureWindow->SetFieldEditable("z2", false);
 				fMeasureWindow->SetFieldBackgroundColor("z2", {255, 164, 164});
 				fMeasureWindow->AddFloatField("distance", B_TRANSLATE("Distance:"), 0.0);
