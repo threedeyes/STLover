@@ -92,10 +92,12 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 	minValueStr.SetToFormat("%g", minValue);
 	BString maxValueStr;
 	maxValueStr.SetToFormat("%g", maxValue);
+	BString valueStr;
+	valueStr.SetToFormat("%g", defaultValue);
 
 	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
 			{255, 255, 255, 255}, false, true, 0};
-	BSlider* slider = new BSlider(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
+	BSlider* slider = new BSlider(name, valueStr, new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
 			B_HORIZONTAL, B_TRIANGLE_THUMB);
 	slider->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	slider->SetLimitLabels(minValueStr.String(), maxValueStr.String());
@@ -185,11 +187,13 @@ STLInputWindow::Show()
 	BRect viewRect = stlView == nullptr ? fParentWindow->Frame() : stlView->ConvertToScreen(stlView->Bounds());
 	viewRect.InsetBy(20, 20);
 
-	MoveTo(viewRect.right - Bounds().Width(), viewRect.bottom - Bounds().Height());
+	BWindow::Show();
+
+	ResizeToPreferred();
+
+	MoveTo(viewRect.right - Frame().Width(), viewRect.bottom - Frame().Height());
 
 	fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
-
-	BWindow::Show();
 }
 
 bool
@@ -238,6 +242,17 @@ STLInputWindow::MessageReceived(BMessage* message)
 		{
 			if (IsValid())
 				fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+
+			for (const auto& field : fFields) {
+				if (field.type == SLIDER_FIELD) {
+					BSlider* slider = (BSlider*)field.control;
+					if (slider) {
+						BString label;
+						label.SetToFormat("%d", slider->Value());
+						slider->SetLabel(label);
+					}
+				}
+			}
 
 			fOkButton->SetEnabled(IsValid());
 			break;
