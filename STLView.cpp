@@ -803,12 +803,12 @@ STLView::Render(void)
 
 		glEnable(GL_DEPTH_TEST);
 
-		if (viewMode != MSG_VIEWMODE_WIREFRAME && !measureMode)
+		if (viewMode != MSG_VIEWMODE_WIREFRAME && !measureMode) {
 			glEnable(GL_CULL_FACE);
-		else
+			glCullFace(GL_BACK);
+		} else {
 			glDisable(GL_CULL_FACE);
-
-		glCullFace(GL_BACK);
+		}
 
 		glClearColor(0.12f, 0.12f, 0.2f, 1.0f);
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -841,7 +841,7 @@ STLView::Render(void)
 			modelMatrix = matrix;
 		} else {
 			if (measureMode)
-				DrawSTL({128, 128, 128}, 0.5);
+				DrawSTL({128, 128, 128}, 0.3);
 			else
 				DrawSTL();
 		}
