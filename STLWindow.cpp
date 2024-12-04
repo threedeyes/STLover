@@ -39,13 +39,13 @@ STLWindow::STLWindow()
 	fStlModified(false),
 	fStlLoading(false),
 	fShowStat(false),
-	fShowWireframe(false),
 	fShowBoundingBox(false),
 	fShowAxes(false),
 	fShowAxesPlane(true),
 	fShowAxesCompass(true),
 	fShowOXY(false),
 	fViewOrtho(false),
+	fShowMode(MSG_VIEWMODE_POINTS),
 	fMeasureMode(false),
 	fExactFlag(false),
 	fNearbyFlag(false),
@@ -104,10 +104,12 @@ STLWindow::STLWindow()
 	fMenuAxes->AddItem(fMenuItemShowAxesCompass);
 	fMenuAxes->SetTargetForItems(this);
 
-	fMenuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
-	fMenuView->AddItem(fMenuItemSolid);
+	fMenuItemPoints = new BMenuItem(B_TRANSLATE("Points"), new BMessage(MSG_VIEWMODE_POINTS));
+	fMenuView->AddItem(fMenuItemPoints);
 	fMenuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
 	fMenuView->AddItem(fMenuItemWireframe);
+	fMenuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
+	fMenuView->AddItem(fMenuItemSolid);
 	fMenuView->AddSeparatorItem();
 	fMenuItemOrthographicView = new BMenuItem(B_TRANSLATE("Orthographic projection"), new BMessage(MSG_VIEWMODE_ORTHO));
 	fMenuView->AddItem(fMenuItemOrthographicView);
@@ -204,7 +206,9 @@ STLWindow::STLWindow()
 	fViewToolBar->AddSeparator();
 	fViewToolBar->AddAction(MSG_VIEWMODE_RESETPOS, this, STLoverApplication::GetIcon("reset", TOOLBAR_ICON_SIZE), B_TRANSLATE("Reset view"));
 	fViewToolBar->AddSeparator();
-	fViewToolBar->AddAction(MSG_VIEWMODE_WIREFRAME_TOGGLE, this, STLoverApplication::GetIcon("wireframe", TOOLBAR_ICON_SIZE), B_TRANSLATE("Wireframe"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_POINTS, this, STLoverApplication::GetIcon("points", TOOLBAR_ICON_SIZE), B_TRANSLATE("Points"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_WIREFRAME, this, STLoverApplication::GetIcon("wireframe", TOOLBAR_ICON_SIZE), B_TRANSLATE("Wireframe"));
+	fViewToolBar->AddAction(MSG_VIEWMODE_SOLID, this, STLoverApplication::GetIcon("solid", TOOLBAR_ICON_SIZE), B_TRANSLATE("Solid"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_AXES, this, STLoverApplication::GetIcon("axes", TOOLBAR_ICON_SIZE), B_TRANSLATE("Show axes"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_OXY, this, STLoverApplication::GetIcon("plane", TOOLBAR_ICON_SIZE), B_TRANSLATE("Show plane OXY"));
 	fViewToolBar->AddAction(MSG_VIEWMODE_BOUNDING_BOX, this, STLoverApplication::GetIcon("bounding-box", TOOLBAR_ICON_SIZE), B_TRANSLATE("Bounding box"));
@@ -291,9 +295,9 @@ STLWindow::LoadSettings(void)
 		bool _fShowAxesPlane = true;
 		bool _fShowAxesCompass = true;
 		bool _showStat = false;
-		bool _fShowWireframe = false;
 		bool _fShowOXY = false;
 		bool _fOrthoProj = false;
+		uint32 _fShowMode = MSG_VIEWMODE_SOLID;
 		BRect _windowRect(100, 100, 100 + 720, 100 + 512);
 
 		file.ReadAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
@@ -303,7 +307,7 @@ STLWindow::LoadSettings(void)
 		file.ReadAttr("ShowOXY", B_BOOL_TYPE, 0, &_fShowOXY, sizeof(bool));
 		file.ReadAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &_fShowBoundingBox, sizeof(bool));
 		file.ReadAttr("ShowStat", B_BOOL_TYPE, 0, &_showStat, sizeof(bool));
-		file.ReadAttr("ShowWireframe", B_BOOL_TYPE, 0, &_fShowWireframe, sizeof(bool));
+		file.ReadAttr("ShowMode", B_UINT32_TYPE, 0, &_fShowMode, sizeof(uint32));
 		file.ReadAttr("OrthographicProjection", B_BOOL_TYPE, 0, &_fOrthoProj, sizeof(bool));
 		file.ReadAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.ReadAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
@@ -328,8 +332,8 @@ STLWindow::LoadSettings(void)
 		fShowOXY = _fShowOXY;
 		fStlView->ShowOXY(fShowOXY);
 
-		fShowWireframe = _fShowWireframe;
-		fStlView->SetViewMode(_fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
+		fShowMode = _fShowMode;
+		fStlView->SetViewMode(fShowMode);
 
 		fViewOrtho = _fOrthoProj;
 		fStlView->SetOrthographic(fViewOrtho);
@@ -365,7 +369,7 @@ STLWindow::SaveSettings(void)
 		file.WriteAttr("ShowOXY", B_BOOL_TYPE, 0, &fShowOXY, sizeof(bool));
 		file.WriteAttr("ShowBoundingBox", B_BOOL_TYPE, 0, &fShowBoundingBox, sizeof(bool));
 		file.WriteAttr("ShowStat", B_BOOL_TYPE, 0, &fShowStat, sizeof(bool));
-		file.WriteAttr("ShowWireframe", B_BOOL_TYPE, 0, &fShowWireframe, sizeof(bool));
+		file.WriteAttr("ShowMode", B_UINT32_TYPE, 0, &fShowMode, sizeof(uint32));
 		file.WriteAttr("OrthographicProjection", B_BOOL_TYPE, 0, &fViewOrtho, sizeof(bool));
 		file.WriteAttr("Exact", B_INT32_TYPE, 0, &fExactFlag, sizeof(int32));
 		file.WriteAttr("Nearby", B_INT32_TYPE, 0, &fNearbyFlag, sizeof(int32));
@@ -1216,20 +1220,14 @@ STLWindow::MessageReceived(BMessage *message)
 			UpdateUI();
 			break;
 		}
-		case MSG_VIEWMODE_SOLID:
+		case MSG_VIEWMODE_POINTS:
 		case MSG_VIEWMODE_WIREFRAME:
+		case MSG_VIEWMODE_SOLID:
 		{
-			fShowWireframe = (message->what == MSG_VIEWMODE_WIREFRAME);
-			fStlView->SetViewMode(fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
+			fShowMode = message->what;
+			fStlView->SetViewMode(fShowMode);
 			UpdateUI();
 			break;
-		}
-		case MSG_VIEWMODE_WIREFRAME_TOGGLE:
-		{
-			fShowWireframe = !fShowWireframe;
-			fStlView->SetViewMode(fShowWireframe ? MSG_VIEWMODE_WIREFRAME : MSG_VIEWMODE_SOLID);
-			UpdateUI();
-			break;	
 		}
 		case MSG_EASTER_EGG:
 		{
@@ -1261,13 +1259,16 @@ STLWindow::MessageReceived(BMessage *message)
 
 			BPopUpMenu* menu = new BPopUpMenu("PopUpMenu",false,false);
 
-			BMenuItem *_menuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
-			_menuItemSolid->SetMarked(!fShowWireframe);
+			BMenuItem *_menuItemPoints = new BMenuItem(B_TRANSLATE("Points"), new BMessage(MSG_VIEWMODE_POINTS));
+			_menuItemPoints->SetMarked(fShowMode == MSG_VIEWMODE_POINTS);
 			BMenuItem *_menuItemWireframe = new BMenuItem(B_TRANSLATE("Wireframe"), new BMessage(MSG_VIEWMODE_WIREFRAME));
-			_menuItemWireframe->SetMarked(fShowWireframe);
+			_menuItemWireframe->SetMarked(fShowMode == MSG_VIEWMODE_WIREFRAME);
+			BMenuItem *_menuItemSolid = new BMenuItem(B_TRANSLATE("Solid"), new BMessage(MSG_VIEWMODE_SOLID));
+			_menuItemSolid->SetMarked(fShowMode == MSG_VIEWMODE_SOLID);
 
-			menu->AddItem(_menuItemSolid);
+			menu->AddItem(_menuItemPoints);
 			menu->AddItem(_menuItemWireframe);
+			menu->AddItem(_menuItemSolid);
 			menu->AddSeparatorItem();
 
 			BMenuItem *_menuItemShowAxes = new BMenuItem(B_TRANSLATE("Axes"), new BMessage(MSG_VIEWMODE_AXES));
@@ -1328,8 +1329,9 @@ STLWindow::UpdateUIStates(bool show)
 	fMenuItemShowAxesPlane->SetEnabled(fShowAxes);
 	fMenuItemShowAxesCompass->SetEnabled(fShowAxes);
 	fMenuItemShowOXY->SetMarked(fShowOXY);
-	fMenuItemSolid->SetMarked(!fShowWireframe);
-	fMenuItemWireframe->SetMarked(fShowWireframe);
+	fMenuItemPoints->SetMarked(fShowMode == MSG_VIEWMODE_POINTS);
+	fMenuItemWireframe->SetMarked(fShowMode == MSG_VIEWMODE_WIREFRAME);
+	fMenuItemSolid->SetMarked(fShowMode == MSG_VIEWMODE_SOLID);
 	fMenuItemOrthographicView->SetMarked(fViewOrtho);
 	fMenuItemStat->SetEnabled(show);
 	fMenuItemStat->SetMarked(fShowStat);
@@ -1351,8 +1353,12 @@ STLWindow::UpdateUIStates(bool show)
 	fToolBar->SetActionPressed(MSG_TOOLS_MEASURE, fMeasureMode);
 	fToolBar->SetActionEnabled(MSG_TOOLS_MEASURE, show);
 
-	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_WIREFRAME_TOGGLE, show);
-	fViewToolBar->SetActionPressed(MSG_VIEWMODE_WIREFRAME_TOGGLE, fShowWireframe);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_POINTS, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_POINTS, fShowMode == MSG_VIEWMODE_POINTS);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_WIREFRAME, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_WIREFRAME, fShowMode == MSG_VIEWMODE_WIREFRAME);
+	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_SOLID, show);
+	fViewToolBar->SetActionPressed(MSG_VIEWMODE_SOLID, fShowMode == MSG_VIEWMODE_SOLID);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_AXES, show);
 	fViewToolBar->SetActionPressed(MSG_VIEWMODE_AXES, fShowAxes);
 	fViewToolBar->SetActionEnabled(MSG_VIEWMODE_OXY, show);

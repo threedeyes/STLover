@@ -94,8 +94,9 @@ class STLWindow : public BWindow {
 		BMenuItem *fMenuItemReload;
 		BMenuItem *fMenuItemClose;
 		BMenuItem *fMenuItemSave;
-		BMenuItem *fMenuItemSolid;
+		BMenuItem *fMenuItemPoints;
 		BMenuItem *fMenuItemWireframe;
+		BMenuItem *fMenuItemSolid;
 		BMenuItem *fMenuItemShowBox;
 		BMenuItem *fMenuItemShowAxes;
 		BMenuItem *fMenuItemShowAxesPlane;
@@ -127,7 +128,6 @@ class STLWindow : public BWindow {
 		bool fStlLoading;
 		bool fShowStat;
 		bool fShowBoundingBox;
-		bool fShowWireframe;
 		bool fShowAxes;
 		bool fShowAxesPlane;
 		bool fShowAxesCompass;
@@ -143,6 +143,7 @@ class STLWindow : public BWindow {
 		int32 fNormalValuesFlag;
 		int32 fReverseAllFlag;
 		int32 fIterationsValue;
+		uint32 fShowMode;
 
 		int fErrorTimeCounter;
 

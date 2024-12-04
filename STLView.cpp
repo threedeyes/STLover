@@ -784,7 +784,12 @@ STLView::DrawSTL(rgb_color color, float alpha)
 	glUniform3fv(viewPosLoc, 1, glm::value_ptr(viewPos));
 
 	glBindVertexArray(stlVAO);
-	glDrawArrays(GL_TRIANGLES, 0, stlVertexCount);
+
+    if (viewMode == MSG_VIEWMODE_POINTS && !measureMode)
+        glDrawArrays(GL_POINTS, 0, stlVertexCount);
+    else
+        glDrawArrays(GL_TRIANGLES, 0, stlVertexCount);
+
 	glBindVertexArray(0);
 
 	glUseProgram(0);
@@ -803,7 +808,7 @@ STLView::Render(void)
 
 		glEnable(GL_DEPTH_TEST);
 
-		if (viewMode != MSG_VIEWMODE_WIREFRAME && !measureMode) {
+		if (viewMode == MSG_VIEWMODE_SOLID && !measureMode) {
 			glEnable(GL_CULL_FACE);
 			glCullFace(GL_BACK);
 		} else {
@@ -824,10 +829,14 @@ STLView::Render(void)
 
 		modelMatrix = glm::mat4(1.0f);
 
-		if (viewMode == MSG_VIEWMODE_WIREFRAME && !measureMode)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		else
+		if (viewMode == MSG_VIEWMODE_SOLID || measureMode) {
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		} else if (viewMode == MSG_VIEWMODE_WIREFRAME && !measureMode) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		} else if (viewMode == MSG_VIEWMODE_POINTS && !measureMode) {
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+			glPointSize(2.0f);
+		}
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
