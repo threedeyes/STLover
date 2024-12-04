@@ -701,13 +701,6 @@ STLView::DrawMeasure(void)
 		glEnd();
 		glDisable(GL_LINE_STIPPLE);
 	}
-	if (lastMousePos3dValid && !measureStartPointValid && !isMeasureSkip) {
-		glColor3f(1.0f, 1.0f, 0.0f);
-		glPointSize(6.0f);
-		glBegin(GL_POINTS);
-		glVertex3fv(glm::value_ptr(lastMousePos3d));
-		glEnd();
-	}
 	if (measureStartPointValid) {
 		glColor3f(0.0f, 1.0f, 0.0f);
 		glPointSize(6.0f);
@@ -720,6 +713,13 @@ STLView::DrawMeasure(void)
 		glPointSize(6.0f);
 		glBegin(GL_POINTS);
 		glVertex3fv(glm::value_ptr(measureEndPoint));
+		glEnd();
+	}
+	if (lastMousePos3dValid && (lastMouseButtons == 0) && !isMeasureSkip) {
+		glColor3f(1.0f, 1.0f, 0.0f);
+		glPointSize(6.0f);
+		glBegin(GL_POINTS);
+		glVertex3fv(glm::value_ptr(lastMousePos3d));
 		glEnd();
 	}
 
