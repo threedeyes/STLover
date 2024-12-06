@@ -164,6 +164,8 @@ STLWindow::STLWindow()
 	fMenuBar->AddItem(fMenuTools);
 	fMenuTools->SetTargetForItems(this);
 
+	fMenuHelp->AddItem(new BMenuItem(B_TRANSLATE("Documentation"), new BMessage(MSG_HELP_WIKI)));
+	fMenuHelp->AddSeparatorItem();
 	fMenuHelp->AddItem(new BMenuItem(B_TRANSLATE("About"), new BMessage(B_ABOUT_REQUESTED)));
 	fMenuBar->AddItem(fMenuHelp);
 	fMenuHelp->SetTargetForItems(this);
@@ -1295,6 +1297,16 @@ STLWindow::MessageReceived(BMessage *message)
 			menu->SetTargetForItems(this);
 
 			menu->Go(fStlView->ConvertToScreen(point), true, false, true);
+			break;
+		}
+		case MSG_HELP_WIKI:
+		{
+			entry_ref ref;
+			if (get_ref_for_path("/bin/open", &ref))
+				break;
+
+			const char* args[] = { URL_HOMEPAGE_WIKI, NULL };
+			be_roster->Launch(&ref, 1, args);
 			break;
 		}
 		case MSG_APP_QUIT:

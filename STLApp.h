@@ -47,6 +47,9 @@
 #define MAIN_WIN_TITLE B_TRANSLATE_SYSTEM_NAME("STLover")
 #define APP_SETTINGS_FILENAME "STLover_settings"
 
+#define URL_HOMEPAGE					"https://github.com/threedeyes/STLover"
+#define URL_HOMEPAGE_WIKI				"https://github.com/threedeyes/STLover/wiki"
+
 #define MSG_FILE_OPEN					'OPEN'
 #define MSG_FILE_APPEND					'APND'
 #define MSG_FILE_SAVE					'SVFL'
@@ -113,6 +116,7 @@
 #define MSG_WINDOW_CLOSED				'CWIN'
 #define MSG_FILE_OPENED					'FOOK'
 #define MSG_FILE_OPEN_FAILED			'FOER'
+#define MSG_HELP_WIKI					'WIKI'
 
 #define FOV	30
 #define FPS_LIMIT 100
