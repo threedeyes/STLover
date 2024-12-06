@@ -685,8 +685,8 @@ STLWindow::MessageReceived(BMessage *message)
 		case B_ABOUT_REQUESTED:
 		{
 			BAboutWindow* wind = new BAboutWindow(MAIN_WIN_TITLE, APP_SIGNATURE);
-			wind->AddCopyright(2021, B_TRANSLATE("Gerasim Troeglazov (3dEyes**)"));
-			wind->AddCopyright(2021, B_TRANSLATE("Enrique M.G. (Lt-Henry)"));
+			wind->AddCopyright(2021, "Gerasim Troeglazov (3dEyes**)");
+			wind->AddCopyright(2021, "Enrique M.G. (Lt-Henry)");
 			wind->AddDescription(
 				"This program is free software; you can redistribute it and/or modify "
 				"it under the terms of the GNU General Public License as published by "
