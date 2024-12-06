@@ -1,4 +1,5 @@
-1	English	application/x-vnd.stlover	3052238959
+1	English	application/x-vnd.stlover	1408573110
+Documentation	STLoverMainWindow		Documentation
 Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
 Best fit	STLoverMainWindow		Best fit
 Remove facets that have 0 neighbors	STLoverRepairWindow		Remove facets that have 0 neighbors
@@ -15,10 +16,10 @@ Show axes	STLoverMainWindow		Show axes
 Repair	STLoverMainWindow		Repair
 ∆Y:	STLoverMainWindow		∆Y:
 Right view	STLoverMainWindow		Right view
+Length:	STLoverStatView		Length:
 Axis scaling…	STLoverMainWindow		Axis scaling…
 Autodesk DXF	STLoverMainWindow		Autodesk DXF
 Save changes to document '%filename%' ?	STLoverMainWindow		Save changes to document '%filename%' ?
-Length:	STLoverStatView		Length:
 Rotate…	STLoverMainWindow		Rotate…
 To top of OXY plane	STLoverMainWindow		To top of OXY plane
 Quit	STLoverMainWindow		Quit
@@ -28,10 +29,11 @@ Drop STL files here	STLoverMainWindow		Drop STL files here
 OK	STLoverRepairWindow		OK
 Scale factor:	STLoverMainWindow		Scale factor:
 ∆X:	STLoverMainWindow		∆X:
-Cancel	STLoverMainWindow		Cancel
 File	STLoverStatView		File
+Cancel	STLoverMainWindow		Cancel
 Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
 Scale…	STLoverMainWindow		Scale…
+Enrique M.G. (Lt-Henry)	STLoverMainWindow		Enrique M.G. (Lt-Henry)
 STL file	STLoverApplication		STL file
 Repair…	STLoverMainWindow		Repair…
 Edges fixed:	STLoverStatView		Edges fixed:
@@ -47,14 +49,15 @@ Custom axis scale	STLoverMainWindow		Custom axis scale
 OK	STLoverInputWindow		OK
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Max X:	STLoverStatView		Max X:
+Measure…	STLoverMainWindow		Measure…
 Move	STLoverMainWindow		Move
 Scale	STLoverMainWindow		Scale
 Repair	STLoverRepairWindow		Repair
 Edit title…	STLoverMainWindow		Edit title…
 Help	STLoverMainWindow		Help
 Save '%document%' as a '%format%' file as…	STLoverMainWindow		Save '%document%' as a '%format%' file as…
-Move to	STLoverMainWindow		Move to
 Open	STLoverMainWindow		Open
+Move to	STLoverMainWindow		Move to
 Loading…	STLoverMainWindow		Loading…
 A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
 X-axis:	STLoverMainWindow		X-axis:
@@ -66,36 +69,45 @@ Only check for perfectly matched edges	STLoverRepairWindow		Only check for perfe
 Min Z:	STLoverStatView		Min Z:
 STL (ASCII)	STLoverMainWindow		STL (ASCII)
 Scale X factor:	STLoverMainWindow		Scale X factor:
-About	STLoverMainWindow		About
-Bounding box	STLoverMainWindow		Bounding box
+Compass	STLoverMainWindow		Compass
 Max Y:	STLoverStatView		Max Y:
+Bounding box	STLoverMainWindow		Bounding box
+About	STLoverMainWindow		About
 File	STLoverMainWindow		File
 Zoom out	STLoverMainWindow		Zoom out
 Reverse the directions of all facets and normals	STLoverRepairWindow		Reverse the directions of all facets and normals
 Plane OXY	STLoverMainWindow		Plane OXY
+Points	STLoverMainWindow		Points
 Scale Y factor:	STLoverMainWindow		Scale Y factor:
 Width:	STLoverStatView		Width:
 Facets added:	STLoverStatView		Facets added:
+Measure	STLoverMainWindow		Measure
+Reset	STLoverInputWindow		Reset
 Degenerate facets:	STLoverStatView		Degenerate facets:
 Scale Z factor:	STLoverMainWindow		Scale Z factor:
+Plane	STLoverMainWindow		Plane
 Axes	STLoverMainWindow		Axes
 Number of iterations for nearby check	STLoverRepairWindow		Number of iterations for nearby check
 Mirror XY	STLoverMainWindow		Mirror XY
-Tools	STLoverMainWindow		Tools
 STL Type:	STLoverStatView		STL Type:
+Tools	STLoverMainWindow		Tools
+Distance:	STLoverMainWindow		Distance:
 Disconnected:	STLoverStatView		Disconnected:
 Title:	STLoverMainWindow		Title:
 Facets:	STLoverStatView		Facets:
+From:	STLoverMainWindow		From:
 To origin	STLoverMainWindow		To origin
+Orthographic projection	STLoverMainWindow		Orthographic projection
 Facets removed:	STLoverStatView		Facets removed:
 ASCII	STLoverMainWindow		ASCII
 Top view	STLoverMainWindow		Top view
 Save as…	STLoverMainWindow		Save as…
-To (0,0,0)	STLoverMainWindow		To (0,0,0)
 Max Z:	STLoverStatView		Max Z:
+To (0,0,0)	STLoverMainWindow		To (0,0,0)
 STLover	System name		STLover
 Wavefront OBJ	STLoverMainWindow		Wavefront OBJ
 Cancel	STLoverRepairWindow		Cancel
+Close	STLoverInputWindow		Close
 Show plane OXY	STLoverMainWindow		Show plane OXY
 Facets reversed:	STLoverStatView		Facets reversed:
 Reset	STLoverMainWindow		Reset
@@ -111,12 +123,13 @@ Save	STLoverMainWindow		Save
 Title:	STLoverStatView		Title:
 Y:	STLoverMainWindow		Y:
 Mirror XZ	STLoverMainWindow		Mirror XZ
+To:	STLoverMainWindow		To:
 Normals fixed:	STLoverStatView		Normals fixed:
 Backward edges:	STLoverStatView		Backward edges:
 To…	STLoverMainWindow		To…
 Object size	STLoverStatView		Object size
-STL (Binary)	STLoverMainWindow		STL (Binary)
 Name:	STLoverStatView		Name:
+STL (Binary)	STLoverMainWindow		STL (Binary)
 X:	STLoverMainWindow		X:
 Edit title	STLoverMainWindow		Edit title
 Open…	STLoverMainWindow		Open…
