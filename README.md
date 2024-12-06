@@ -1,7 +1,7 @@
 # STLover
 STLover - A powerful tool for viewing and manipulating 3D STL models for [Haiku](https://haiku-os.org)
 
-![MainWindow](/screenshots/mainwindow.png)
+![MainWindow](https://github.com/user-attachments/assets/6abd3ee4-a91b-4faa-a68e-bc4924a9784a)
 
 ## Dependencies
 [ADMesh](https://admesh.readthedocs.io/en/latest/) - C library for processing triangulated solid meshes
