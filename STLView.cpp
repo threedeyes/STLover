@@ -510,8 +510,8 @@ STLView::MouseMoved(BPoint p, uint32 transit, const BMessage *message)
 		needUpdate = true;
 	}
 	if (buttons & B_SECONDARY_MOUSE_BUTTON && lastMouseButtons != 0) {
-		xPan += ((lastMousePos.x - p.x) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
-		yPan -= ((lastMousePos.y - p.y) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.005;
+		xPan += ((lastMousePos.x - p.x) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.0025;
+		yPan -= ((lastMousePos.y - p.y) * (tanf(0.26179939) * (stlWindow->GetZDepth() + scaleFactor))) * 0.0025;
 		lastMousePos = p;
 		needUpdate = true;
 	}
