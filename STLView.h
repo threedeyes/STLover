@@ -25,6 +25,7 @@
 #include <Point.h>
 #include <Rect.h>
 #include <OS.h>
+#include <Cursor.h>
 
 #include <admesh/stl.h>
 #include <vector>
@@ -154,6 +155,11 @@ class STLView : public BGLView {
 		BPoint lastMousePos;
 		uint32 lastMouseButtons;
 		bigtime_t lastMouseClickTime;
+
+		BCursor *moveCursor;
+		BCursor *rotateCursor;
+		BCursor *crossCursor;
+		BBitmap *rotateCursorBitmap;
 
 		STLWindow *stlWindow;
 		stl_file* stlObject;

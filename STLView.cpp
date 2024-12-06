@@ -55,6 +55,10 @@ STLView::STLView(BRect frame, uint32 type)
 	measureEndPointValid(false)
 {
 	appIcon = STLoverApplication::GetIcon(NULL, 164);
+	moveCursor = new BCursor(B_CURSOR_ID_MOVE);
+	crossCursor = new BCursor(B_CURSOR_ID_CROSS_HAIR);
+	rotateCursorBitmap = STLoverApplication::GetIcon("rotate-cursor", 22);
+	rotateCursor = new BCursor(rotateCursorBitmap, BPoint(8, 8));
 	InitShaders();
 }
 
@@ -63,6 +67,10 @@ STLView::~STLView()
 	CleanupBuffers();
 	delete appIcon;
 	glDeleteProgram(shaderProgram);
+	delete moveCursor;
+	delete crossCursor;
+	delete rotateCursor;
+	delete rotateCursorBitmap;
 }
 
 void
@@ -533,6 +541,15 @@ STLView::MouseDown(BPoint p)
 	lastMouseClickTime = system_time();
 	lastMouseButtons = Window()->CurrentMessage()->FindInt32("buttons");
 	SetMouseEventMask(B_POINTER_EVENTS, B_NO_POINTER_HISTORY);
+
+	if (lastMouseButtons & B_PRIMARY_MOUSE_BUTTON) {
+		if (isMeasureSkip || !measureMode)
+			SetViewCursor(rotateCursor);
+	}
+	if (lastMouseButtons & B_SECONDARY_MOUSE_BUTTON) {
+		if (isMeasureSkip || !measureMode)
+			SetViewCursor(moveCursor);
+	}
 }
 
 void
@@ -543,6 +560,8 @@ STLView::MouseUp(BPoint p)
 		Window()->PostMessage(MSG_POPUP_MENU);
 	isMeasureSkip = false;
 	lastMouseButtons = 0;
+
+	SetViewCursor(measureMode ? crossCursor : B_CURSOR_SYSTEM_DEFAULT);
 }
 
 void
@@ -899,6 +918,7 @@ STLView::SetMeasureMode(bool enable)
 	measureStartPointValid = false;
 	measureEndPointValid = false;
 	needUpdate = true;
+	SetViewCursor(enable ? crossCursor : B_CURSOR_SYSTEM_DEFAULT);
 }
 
 bool
@@ -912,6 +932,8 @@ STLView::ScreenToPoint3d(BPoint screenPoint, glm::vec3& point3d)
 	glGetIntegerv(GL_VIEWPORT, viewport);
 	glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
 	glGetDoublev(GL_PROJECTION_MATRIX, projection);
+
+	screenPoint -= BPoint(1, 1);
 
 	winX = screenPoint.x;
 	winY = viewport[3] - screenPoint.y;
