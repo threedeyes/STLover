@@ -1,4 +1,4 @@
-1	Russian	application/x-vnd.stlover	3052238959
+1	Russian	application/x-vnd.stlover	1408573110
 ∆X:	STLoverMainWindow		Смещение по X:
 ∆Y:	STLoverMainWindow		Смещение по Y:
 ∆Z:	STLoverMainWindow		Смещение по Z:
@@ -14,17 +14,24 @@ Bounding box	STLoverMainWindow		Границы объекта
 By…	STLoverMainWindow		Относительно на…
 Cancel	STLoverMainWindow		Отмена
 Close	STLoverMainWindow		Закрыть
+Compass	STLoverMainWindow		Компас
 Custom axis scale	STLoverMainWindow		Масштабирование по осям
+Distance:	STLoverMainWindow		Расстояние:
+Documentation	STLoverMainWindow		Документация
 Don't save	STLoverMainWindow		Не сохранять
-Drop STL files here	STLoverMainWindow		Вы можете бросить STL файлы сюда
+Drop STL files here	STLoverMainWindow		Вы можете бросить STL-файлы сюда
 Edit title	STLoverMainWindow		Редактировать заголовок
 Edit title…	STLoverMainWindow		Редактировать заголовок…
+Enrique M.G. (Lt-Henry)	STLoverMainWindow		Enrique M.G. (Lt-Henry)
 File	STLoverMainWindow		Файл
+From:	STLoverMainWindow		От точки:
 Front view	STLoverMainWindow		Вид спереди
 Geomview OFF	STLoverMainWindow		Geomview OFF
 Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Герасим Троеглазов (3dEyes**)
 Help	STLoverMainWindow		Справка
 Loading…	STLoverMainWindow		Загрузка…
+Measure	STLoverMainWindow		Линейка
+Measure…	STLoverMainWindow		Линейка…
 Mirror	STLoverMainWindow		Отзеркалировать
 Mirror XY	STLoverMainWindow		Зеркалировать относительно плоскости XY
 Mirror XZ	STLoverMainWindow		Зеркалировать относительно плоскости XZ
@@ -35,7 +42,10 @@ Move to	STLoverMainWindow		Переместить в точку
 Move to top of OXY plane	STLoverMainWindow		Переместить в центр плоскости OXY
 Open	STLoverMainWindow		Открыть
 Open…	STLoverMainWindow		Открыть…
+Orthographic projection	STLoverMainWindow		Ортографическая проекция
+Plane	STLoverMainWindow		Плоскость
 Plane OXY	STLoverMainWindow		Плоскость OXY
+Points	STLoverMainWindow		Точки
 Quit	STLoverMainWindow		Выход
 Reload	STLoverMainWindow		Переоткрыть
 Repair	STLoverMainWindow		Восстановить
@@ -66,6 +76,7 @@ Title:	STLoverMainWindow		Заголовок:
 To (0,0,0)	STLoverMainWindow		В точку (0,0,0)
 To origin	STLoverMainWindow		В начало координат
 To top of OXY plane	STLoverMainWindow		В центр плоскости OXY
+To:	STLoverMainWindow		До точки:
 To…	STLoverMainWindow		В точку…
 Tools	STLoverMainWindow		Инструменты
 Top view	STLoverMainWindow		Вид сверху
@@ -82,8 +93,8 @@ Z-axis:	STLoverMainWindow		Ось Z:
 Z:	STLoverMainWindow		Z:
 Zoom in	STLoverMainWindow		Увеличить
 Zoom out	STLoverMainWindow		Уменьшить
-A file format native to the STereoLithography CAD software	STLoverApplication		A file format native to the STereoLithography CAD software
-STL file	STLoverApplication		STL файл
+A file format native to the STereoLithography CAD software	STLoverApplication		Родной стереолитографический формат файла для систем автоматизированного проектирования (САПР)
+STL file	STLoverApplication		STL-файл
 Add facets to fill holes	STLoverRepairWindow		Добавить грани для заполнения дыр
 Amount to increment tolerance after iteration	STLoverRepairWindow		Приращение допуска после каждой итерации
 Cancel	STLoverRepairWindow		Отмена
@@ -125,5 +136,7 @@ Title:	STLoverStatView		Заголовок:
 Volume:	STLoverStatView		Объём:
 Width:	STLoverStatView		Ширина:
 Cancel	STLoverInputWindow		Отмена
+Close	STLoverInputWindow		Закрыть
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Сброс
 STLover	System name		STLover
