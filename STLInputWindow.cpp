@@ -131,7 +131,7 @@ STLInputWindow::CreateLayout()
 		layoutBuilder.Add(new BStringView("label", field.label), 0, row);
 		if (field.type == GROUP_FIELD) {
 			BGroupView *group = (BGroupView*)field.control;
-			layoutBuilder.Add(group, 2, row, 3);
+			layoutBuilder.Add(group, 3, row, 2);
 			int32 groupSize = field.groupCount;
 			for (int32 j = 1; j <= groupSize; j++) {
 				field = fFields[i + j];
@@ -143,7 +143,7 @@ STLInputWindow::CreateLayout()
 			i += groupSize;
 		} else {
 			layoutBuilder.Add(new BStringView("label", field.label), 0, row);
-			layoutBuilder.Add(field.control, 2, row, 3);
+			layoutBuilder.Add(field.control, 3, row, 2);
 			ApplyFieldEditable(field.control, field.editable);
 			if (field.hasCustomBackgroundColor)
 				ApplyBackgroundColor(field.control, field.backgroundColor);
