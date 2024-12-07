@@ -966,9 +966,9 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Custom axis scale"), this, MSG_TOOLS_SCALE_SET_3);
 			input->AddFloatField("x", B_TRANSLATE("Scale X factor:"), 1.0);
-			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->SetFieldBackgroundColor("x", {255, 164, 164});
 			input->AddFloatField("y", B_TRANSLATE("Scale Y factor:"), 1.0);
-			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->SetFieldBackgroundColor("y", {164, 255, 164});
 			input->AddFloatField("z", B_TRANSLATE("Scale Z factor:"), 1.0);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
@@ -996,9 +996,9 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Rotate"), this, MSG_TOOLS_ROTATE_SET);
 			input->AddSliderField("x", B_TRANSLATE("X-axis:"), 0, -180, 180);
-			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->SetFieldBackgroundColor("x", {255, 164, 164});
 			input->AddSliderField("y", B_TRANSLATE("Y-axis:"), 0, -180, 180);
-			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->SetFieldBackgroundColor("y", {164, 255, 164});
 			input->AddSliderField("z", B_TRANSLATE("Z-axis:"), 0, -180, 180);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
@@ -1052,9 +1052,9 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move to"), this, MSG_TOOLS_MOVE_TO_SET);
 			input->AddFloatField("x", B_TRANSLATE("X:"), fStlObject->stats.min.x);
-			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->SetFieldBackgroundColor("x", {255, 164, 164});
 			input->AddFloatField("y", B_TRANSLATE("Y:"), fStlObject->stats.min.y);
-			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->SetFieldBackgroundColor("y", {164, 255, 164});
 			input->AddFloatField("z", B_TRANSLATE("Z:"), fStlObject->stats.min.z);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();
@@ -1080,9 +1080,9 @@ STLWindow::MessageReceived(BMessage *message)
 		{
 			STLInputWindow *input = new STLInputWindow(B_TRANSLATE("Move by"), this, MSG_TOOLS_MOVE_BY_SET);
 			input->AddFloatField("x", B_TRANSLATE("∆X:"), 0.0);
-			input->SetFieldBackgroundColor("x", {164, 255, 164});
+			input->SetFieldBackgroundColor("x", {255, 164, 164});
 			input->AddFloatField("y", B_TRANSLATE("∆Y:"), 0.0);
-			input->SetFieldBackgroundColor("y", {255, 164, 164});
+			input->SetFieldBackgroundColor("y", {164, 255, 164});
 			input->AddFloatField("z", B_TRANSLATE("∆Z:"), 0.0);
 			input->SetFieldBackgroundColor("z", {164, 164, 255});
 			input->Show();

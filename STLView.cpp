@@ -380,14 +380,14 @@ STLView::GenerateOXYGridBuffers()
 
 	auto addLine = [this](float x1, float y1, float x2, float y2) {
 		if (std::abs(x1) < 0.001f && std::abs(x2) < 0.001f && showAxes && showAxesPlane) {
-			oxyVertices.push_back({x1, y1, 0.0f, 1.0, 0, 0});
-			oxyVertices.push_back({x2, y2, 0.0f, 1.0, 0, 0});
+			oxyVertices.push_back({x1, y1, 0.0f, 0.0f, 1.0f, 0.0f});
+			oxyVertices.push_back({x2, y2, 0.0f, 0.0f, 1.0f, 0.0f});
 		} else if (std::abs(y1) < 0.001f && std::abs(y2) < 0.001f && showAxes && showAxesPlane) {
-			oxyVertices.push_back({x1, y1, 0.0f, 0, 1.0, 0});
-			oxyVertices.push_back({x2, y2, 0.0f, 0, 1.0, 0});
+			oxyVertices.push_back({x1, y1, 0.0f, 1.0f, 0.0f, 0.0f});
+			oxyVertices.push_back({x2, y2, 0.0f, 1.0f, 0.0f, 0.0f});
 		} else if (showOXY) {
-			oxyVertices.push_back({x1, y1, 0.0f, 0, 0, 1.0});
-			oxyVertices.push_back({x2, y2, 0.0f, 0, 0, 1.0});
+			oxyVertices.push_back({x1, y1, 0.0f, 0.0f, 0.0f, 1.0f});
+			oxyVertices.push_back({x2, y2, 0.0f, 0.0f, 0.0f, 1.0f});
 		}
 	};
 
@@ -662,9 +662,9 @@ STLView::DrawAxis()
 	glDisable(GL_DEPTH_TEST);
 
 	glBindVertexArray(axesVAO);
-	glColor3f(0.0f, 1.0f, 0.0f);
-	glDrawArrays(GL_LINES, 0, 2);
 	glColor3f(1.0f, 0.0f, 0.0f);
+	glDrawArrays(GL_LINES, 0, 2);
+	glColor3f(0.0f, 1.0f, 0.0f);
 	glDrawArrays(GL_LINES, 2, 2);
 	glColor3f(0.0f, 0.0f, 1.0f);
 	glDrawArrays(GL_LINES, 4, 2);
@@ -675,10 +675,10 @@ STLView::DrawAxis()
 	double eps = 0.035;
 
 	if (beta > eps * 2.0f|| alpha > eps * 2.0f)
-		DrawAxisLabel(1.2f, 0.0f, 0.0f, "X", 0.0f, 1.0f, 0.0f);
+		DrawAxisLabel(1.2f, 0.0f, 0.0f, "X", 1.0f, 0.0f, 0.0f);
 
 	if (std::abs(1.0 - beta) > eps || alpha > eps)
-		DrawAxisLabel(0.0f, 1.2f, 0.0f, "Y", 1.0f, 0.0f, 0.0f);
+		DrawAxisLabel(0.0f, 1.2f, 0.0f, "Y", 0.0f, 1.0f, 0.0f);
 
 	if (std::abs(1.0 - alpha) > eps)
 		DrawAxisLabel(0.0f, 0.0f, 1.2f, "Z", 0.0f, 0.0f, 1.0f);
