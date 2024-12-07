@@ -385,7 +385,7 @@ STLView::GenerateOXYGridBuffers()
 		} else if (std::abs(y1) < 0.001f && std::abs(y2) < 0.001f && showAxes && showAxesPlane) {
 			oxyVertices.push_back({x1, y1, 0.0f, 0, 1.0, 0});
 			oxyVertices.push_back({x2, y2, 0.0f, 0, 1.0, 0});
-		} else {
+		} else if (showOXY) {
 			oxyVertices.push_back({x1, y1, 0.0f, 0, 0, 1.0});
 			oxyVertices.push_back({x2, y2, 0.0f, 0, 0, 1.0});
 		}
@@ -882,8 +882,7 @@ STLView::Render(void)
 		if (measureMode)
 			DrawMeasure();
 
-		if (showOXY)
-			DrawOXY();
+		DrawOXY();
 
 		if (showBox)
 			DrawBox();
