@@ -46,7 +46,7 @@ STLInputWindow::~STLInputWindow()
 void
 STLInputWindow::AddTextField(const char* name, const char* label, const char* defaultValue)
 {
-	FieldInfo field = {TEXT_FIELD, name, label, defaultValue, nullptr, 0, 0,
+	FieldInfo field = {TEXT_FIELD, name, label, defaultValue, nullptr, nullptr, 0, 0,
 			{255, 255, 255, 255}, false, true, 0};
 	BTextControl* control = new BTextControl("", defaultValue, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
@@ -60,7 +60,7 @@ STLInputWindow::AddIntegerField(const char* name, const char* label, int default
 {
 	BString defaultValueStr;
 	defaultValueStr << defaultValue;
-	FieldInfo field = {INTEGER_FIELD, name, label, defaultValueStr, nullptr, (float)minValue, (float)maxValue,
+	FieldInfo field = {INTEGER_FIELD, name, label, defaultValueStr, nullptr, nullptr, (float)minValue, (float)maxValue,
 			{255, 255, 255, 255}, false, true, 0};
 	BSpinner* spinner = new BSpinner(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED));
 	spinner->SetRange(minValue, maxValue);
@@ -74,7 +74,7 @@ STLInputWindow::AddFloatField(const char* name, const char* label, float default
 {
 	BString defaultValueStr;
 	defaultValueStr.SetToFormat("%.2f", defaultValue);
-	FieldInfo field = {FLOAT_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
+	FieldInfo field = {FLOAT_FIELD, name, label, defaultValueStr, nullptr, nullptr, minValue, maxValue,
 			{255, 255, 255, 255}, false, true, 0};
 	BTextControl* control = new BTextControl("", defaultValueStr, NULL);
 	control->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
@@ -95,23 +95,29 @@ STLInputWindow::AddSliderField(const char* name, const char* label, float defaul
 	BString valueStr;
 	valueStr.SetToFormat("%g", defaultValue);
 
-	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, minValue, maxValue,
+	FieldInfo field = {SLIDER_FIELD, name, label, defaultValueStr, nullptr, nullptr, minValue, maxValue,
 			{255, 255, 255, 255}, false, true, 0};
-	BSlider* slider = new BSlider(name, valueStr, new BMessage(MSG_INPUT_VALUE_UPDATED), minValue, maxValue,
+	BSlider* slider = new BSlider(name, "", new BMessage(MSG_INPUT_VALUE_UPDATED), minValue * 100, maxValue * 100,
 			B_HORIZONTAL, B_TRIANGLE_THUMB);
 	slider->SetModificationMessage(new BMessage(MSG_INPUT_VALUE_UPDATED));
 	slider->SetLimitLabels(minValueStr.String(), maxValueStr.String());
 	slider->SetHashMarks(B_HASH_MARKS_TOP);
 	slider->SetHashMarkCount((maxValue - minValue) / 10);
-	slider->SetValue(defaultValue);
+	slider->SetValue(defaultValue * 100);
 	field.control = slider;
+
+	BTextControl* control = new BTextControl("", defaultValueStr, NULL);
+	control->SetModificationMessage(new BMessage(MSG_HELPER_VALUE_UPDATED));
+	control->SetAlignment(B_ALIGN_RIGHT, B_ALIGN_LEFT);
+	field.helper = control;
+
 	fFields.push_back(field);
 }
 
 void
 STLInputWindow::AddGroup(const char* name, const char* label, int32 count)
 {
-	FieldInfo field = {GROUP_FIELD, name, label, "", nullptr, 0, 0,	{255, 255, 255, 255}, false, false, count};
+	FieldInfo field = {GROUP_FIELD, name, label, "", nullptr, nullptr, 0, 0, {255, 255, 255, 255}, false, false, count};
 	BGroupView* group = new BGroupView(name, B_HORIZONTAL, 1);
 	field.control = group;
 	fFields.push_back(field);
@@ -131,22 +137,32 @@ STLInputWindow::CreateLayout()
 		layoutBuilder.Add(new BStringView("label", field.label), 0, row);
 		if (field.type == GROUP_FIELD) {
 			BGroupView *group = (BGroupView*)field.control;
-			layoutBuilder.Add(group, 3, row, 2);
+			layoutBuilder.Add(group, 4, row, 2);
 			int32 groupSize = field.groupCount;
 			for (int32 j = 1; j <= groupSize; j++) {
 				field = fFields[i + j];
 				group->AddChild(field.control);
 				ApplyFieldEditable(field.control, field.editable);
-				if (field.hasCustomBackgroundColor)
+				if (field.hasCustomBackgroundColor) {
 					ApplyBackgroundColor(field.control, field.backgroundColor);
+					if (field.helper)
+						ApplyBackgroundColor(field.helper, field.backgroundColor);
+				}
 			}
 			i += groupSize;
 		} else {
 			layoutBuilder.Add(new BStringView("label", field.label), 0, row);
-			layoutBuilder.Add(field.control, 3, row, 2);
+			if (field.helper) {
+				layoutBuilder.Add(field.helper, 3, row);
+				layoutBuilder.Add(field.control, 4, row, 2);
+			} else
+				layoutBuilder.Add(field.control, 4, row, 2);
 			ApplyFieldEditable(field.control, field.editable);
-			if (field.hasCustomBackgroundColor)
+			if (field.hasCustomBackgroundColor) {
 				ApplyBackgroundColor(field.control, field.backgroundColor);
+				if (field.helper)
+					ApplyBackgroundColor(field.helper, field.backgroundColor);
+			}
 		}
 		row++;
 	}
@@ -158,16 +174,16 @@ STLInputWindow::CreateLayout()
 	if (fButtons & BUTTON_RESET)
 		layoutBuilder.Add(resetButton, 0, row);
 
-	layoutBuilder.Add(BSpaceLayoutItem::CreateGlue(), 1, row, 2);
+	layoutBuilder.Add(BSpaceLayoutItem::CreateGlue(), 1, row, 3);
 
 	if (fButtons & BUTTON_CANCEL)
-		layoutBuilder.Add(cancelButton, 3, row);
+		layoutBuilder.Add(cancelButton, 4, row);
 
 	if (fButtons & BUTTON_OK) {
-		layoutBuilder.Add(fOkButton, 4, row);
+		layoutBuilder.Add(fOkButton, 5, row);
 		fOkButton->MakeDefault(true);
 	} else if (fButtons & BUTTON_CLOSE) {
-		layoutBuilder.Add(closeButton, 4, row);
+		layoutBuilder.Add(closeButton, 5, row);
 		closeButton->MakeDefault(true);
 	}
 
@@ -229,7 +245,7 @@ STLInputWindow::MakeMessage(uint32 what, uint32 extended)
 				message->AddInt32(field.name, ((BSpinner*)field.control)->Value());
 				break;
 			case SLIDER_FIELD:
-				message->AddFloat(field.name, ((BSlider*)field.control)->Value());
+				message->AddFloat(field.name, ((BSlider*)field.control)->Value() / 100.0);
 				break;
 		}
 	}
@@ -243,21 +259,40 @@ STLInputWindow::MessageReceived(BMessage* message)
 	switch (message->what) {
 		case MSG_INPUT_VALUE_UPDATED:
 		{
-			if (IsValid())
-				fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
-
 			for (const auto& field : fFields) {
 				if (field.type == SLIDER_FIELD) {
 					BSlider* slider = (BSlider*)field.control;
-					if (slider) {
-						BString label;
-						label.SetToFormat("%d", slider->Value());
-						slider->SetLabel(label);
+					BTextControl* helper = (BTextControl*)field.helper;
+					if (helper)
+						SetSliderFieldValue(field.name, slider->Value() / 100.0);
+				}
+			}
+
+			if (IsValid())
+				fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+
+			fOkButton->SetEnabled(IsValid());
+			break;
+		}
+		case MSG_HELPER_VALUE_UPDATED:
+		{
+			for (const auto& field : fFields) {
+				if (field.type == SLIDER_FIELD) {
+					BSlider* slider = (BSlider*)field.control;
+					BTextControl* helper = (BTextControl*)field.helper;
+					if (helper) {
+						if (IsFloat(helper->Text())) {
+							slider->SetValue(atof(helper->Text()) * 100);
+						}
 					}
 				}
 			}
 
+			if (IsValid())
+				fTargetMessenger.SendMessage(MakeMessage(MSG_INPUT_VALUE_UPDATED));
+
 			fOkButton->SetEnabled(IsValid());
+
 			break;
 		}
 		case MSG_INPUT_OK:
@@ -284,7 +319,7 @@ STLInputWindow::MessageReceived(BMessage* message)
 					((BSpinner*)field.control)->SetValue(atoi(field.defaultValue));
 					break;
 				case SLIDER_FIELD:
-					((BSlider*)field.control)->SetValue(atoi(field.defaultValue));
+					SetSliderFieldValue(field.name, atof(field.defaultValue));
 					break;
 				}
 			}
@@ -316,9 +351,8 @@ STLInputWindow::SetTextFieldValue(const char* name, const char* value)
 		FieldInfo* field = FindField(name);
 		if (field && field->type == TEXT_FIELD) {
 			BTextControl* control = dynamic_cast<BTextControl*>(field->control);
-			if (control) {
+			if (control)
 				control->SetText(value);
-			}
 		}
 		UnlockLooper();
 	}
@@ -331,9 +365,8 @@ STLInputWindow::SetIntegerFieldValue(const char* name, int value)
 		FieldInfo* field = FindField(name);
 		if (field && field->type == INTEGER_FIELD) {
 			BSpinner* spinner = dynamic_cast<BSpinner*>(field->control);
-			if (spinner) {
+			if (spinner)
 				spinner->SetValue(value);
-			}
 		}
 		UnlockLooper();
 	}
@@ -362,9 +395,19 @@ STLInputWindow::SetSliderFieldValue(const char* name, float value)
 	if (LockWithTimeout(1000) == B_OK) {
 		FieldInfo* field = FindField(name);
 		if (field && field->type == SLIDER_FIELD) {
-			BSlider* control = dynamic_cast<BSlider*>(field->control);
-			if (control) {
-				control->SetValue(value);
+			BSlider* slider = dynamic_cast<BSlider*>(field->control);
+			BTextControl* helper = dynamic_cast<BTextControl*>(field->helper);
+
+			if (slider) {
+				if (slider->Value() != value * 100)
+					slider->SetValue(value * 100);
+			}
+
+			if (helper) {
+				BString label;
+				label.SetToFormat("%.2f", value);
+				if (helper->Text() != label)
+					helper->SetText(label);
 			}
 		}
 		UnlockLooper();
@@ -380,6 +423,9 @@ STLInputWindow::SetFieldBackgroundColor(const char* name, rgb_color color)
 		field->hasCustomBackgroundColor = true;
 		if (field->control) {
 			ApplyBackgroundColor(field->control, color);
+		}
+		if (field->helper) {
+			ApplyBackgroundColor(field->helper, color);
 		}
 	}
 }

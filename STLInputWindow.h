@@ -59,6 +59,7 @@ struct FieldInfo {
 	BString label;
 	BString defaultValue;
 	BView* control;
+	BView* helper;
 	float minValue;
 	float maxValue;
 	rgb_color backgroundColor;
