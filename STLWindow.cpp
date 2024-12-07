@@ -32,7 +32,7 @@
 #define B_TRANSLATION_CONTEXT          "STLoverMainWindow"
 
 STLWindow::STLWindow()
-	: BWindow(BRect(100, 100, 100 + 720, 100 + 512), MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
+	: BWindow(BRect(100, 100, 100 + 800, 100 + 640), MAIN_WIN_TITLE, B_TITLED_WINDOW, 0),
 	fOpenFilePanel(NULL),
 	fSaveFilePanel(NULL),
 	fMeasureWindow(NULL),
@@ -41,11 +41,11 @@ STLWindow::STLWindow()
 	fShowStat(false),
 	fShowBoundingBox(false),
 	fShowAxes(false),
-	fShowAxesPlane(true),
+	fShowAxesPlane(false),
 	fShowAxesCompass(true),
 	fShowOXY(false),
 	fViewOrtho(false),
-	fShowMode(MSG_VIEWMODE_POINTS),
+	fShowMode(MSG_VIEWMODE_SOLID),
 	fMeasureMode(false),
 	fExactFlag(false),
 	fNearbyFlag(false),
@@ -294,13 +294,13 @@ STLWindow::LoadSettings(void)
 
 		bool _fShowBoundingBox = false;
 		bool _fShowAxes = false;
-		bool _fShowAxesPlane = true;
+		bool _fShowAxesPlane = false;
 		bool _fShowAxesCompass = true;
 		bool _showStat = false;
 		bool _fShowOXY = false;
 		bool _fOrthoProj = false;
 		uint32 _fShowMode = MSG_VIEWMODE_SOLID;
-		BRect _windowRect(100, 100, 100 + 720, 100 + 512);
+		BRect _windowRect(100, 100, 100 + 800, 100 + 640);
 
 		file.ReadAttr("WindowRect", B_RECT_TYPE, 0, &_windowRect, sizeof(BRect));
 		file.ReadAttr("ShowAxes", B_BOOL_TYPE, 0, &_fShowAxes, sizeof(bool));

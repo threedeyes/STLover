@@ -40,6 +40,7 @@ using namespace std;
 
 STLView::STLView(BRect frame, uint32 type)
 	: BGLView(frame, "STLView", B_FOLLOW_ALL_SIDES, B_WILL_DRAW, type),
+	viewMode(MSG_VIEWMODE_SOLID),
 	needUpdate(true),
 	showAxes(false),
 	showAxesPlane(true),
