@@ -1,4 +1,4 @@
-1	French	application/x-vnd.stlover	3052238959
+1	French	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X :
 ∆Y:	STLoverMainWindow		∆Y :
 ∆Z:	STLoverMainWindow		∆Z :
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Boîte englobante
 By…	STLoverMainWindow		De...
 Cancel	STLoverMainWindow		Annuler
 Close	STLoverMainWindow		Fermer
+Compass	STLoverMainWindow		Compas
 Custom axis scale	STLoverMainWindow		Échelle des axes personnalisée
+Distance:	STLoverMainWindow		Distance :
+Documentation	STLoverMainWindow		Documentation
 Don't save	STLoverMainWindow		Ne pas enregistrer
 Drop STL files here	STLoverMainWindow		Déposer les fichiers STL ici
 Edit title	STLoverMainWindow		Modifier le titre
 Edit title…	STLoverMainWindow		Modification du titre…
 File	STLoverMainWindow		Fichier
+From:	STLoverMainWindow		De :
 Front view	STLoverMainWindow		Vue de face
 Geomview OFF	STLoverMainWindow		Geomview OFF
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Aide
 Loading…	STLoverMainWindow		Chargement en cours...
+Measure	STLoverMainWindow		Mesure
+Measure…	STLoverMainWindow		Mesure…
 Mirror	STLoverMainWindow		Miroir
 Mirror XY	STLoverMainWindow		Miroir XY
 Mirror XZ	STLoverMainWindow		Miroir XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Déplacer vers
 Move to top of OXY plane	STLoverMainWindow		Déplacer au sommet du plan OXY
 Open	STLoverMainWindow		Ouvrir
 Open…	STLoverMainWindow		Ouvrir…
+Orthographic projection	STLoverMainWindow		Projection orthographique
+Plane	STLoverMainWindow		Plan
 Plane OXY	STLoverMainWindow		Plan OXY
+Points	STLoverMainWindow		Points
 Quit	STLoverMainWindow		Quitter
 Reload	STLoverMainWindow		Recharger
 Repair	STLoverMainWindow		Réparer
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Titre :
 To (0,0,0)	STLoverMainWindow		Vers (0,0,0)
 To origin	STLoverMainWindow		Vers l'origine
 To top of OXY plane	STLoverMainWindow		Vers le sommet du plan OXY
+To:	STLoverMainWindow		Vers :
 To…	STLoverMainWindow		Vers…
 Tools	STLoverMainWindow		Outils
 Top view	STLoverMainWindow		Vue de dessus
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Titre :
 Volume:	STLoverStatView		Volume :
 Width:	STLoverStatView		Largeur :
 Cancel	STLoverInputWindow		Annuler
+Close	STLoverInputWindow		Fermer
 OK	STLoverInputWindow		D’accord
+Reset	STLoverInputWindow		Réinitialiser
 STLover	System name		STLover

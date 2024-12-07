@@ -1,0 +1,140 @@
+1	Dutch	application/x-vnd.stlover	3197357624
+∆X:	STLoverMainWindow		∆X:
+∆Y:	STLoverMainWindow		∆Y:
+∆Z:	STLoverMainWindow		∆Z:
+About	STLoverMainWindow		Over
+ASCII	STLoverMainWindow		ASCII
+Autodesk DXF	STLoverMainWindow		Autodesk DXF
+Axes	STLoverMainWindow		Axes
+Axis scale	STLoverMainWindow		Axis schaal
+Axis scaling…	STLoverMainWindow		Axis schalen…
+Best fit	STLoverMainWindow		Best passend
+Binary	STLoverMainWindow		Uitvoerbaar bestand
+Bounding box	STLoverMainWindow		Begrenzingsvak
+By…	STLoverMainWindow		Door…
+Cancel	STLoverMainWindow		Annuleer
+Close	STLoverMainWindow		Sluiten
+Compass	STLoverMainWindow		Compass
+Custom axis scale	STLoverMainWindow		Aangepaste axis schaal
+Distance:	STLoverMainWindow		Afstand:
+Documentation	STLoverMainWindow		Documentatie
+Don't save	STLoverMainWindow		Niet opslaan
+Drop STL files here	STLoverMainWindow		Drop STL bestand hier
+Edit title	STLoverMainWindow		Bewerkt titel
+Edit title…	STLoverMainWindow		Bewerkt titel…
+File	STLoverMainWindow		Bestand
+From:	STLoverMainWindow		Van:
+Front view	STLoverMainWindow		Vooraanzicht
+Geomview OFF	STLoverMainWindow		Geomview UIT
+Help	STLoverMainWindow		Help
+Loading…	STLoverMainWindow		Laden…
+Measure	STLoverMainWindow		Meeteenheid
+Measure…	STLoverMainWindow		Meeteenheid…
+Mirror	STLoverMainWindow		Spiegel
+Mirror XY	STLoverMainWindow		Spiegel XY
+Mirror XZ	STLoverMainWindow		Spiegel XZ
+Mirror YZ	STLoverMainWindow		Spiegel YZ
+Move	STLoverMainWindow		Verplaats
+Move by	STLoverMainWindow		Verplaats langs
+Move to	STLoverMainWindow		Verplaats naar
+Move to top of OXY plane	STLoverMainWindow		Verplaatsnaar top van OXY plane
+Open	STLoverMainWindow		Open
+Open…	STLoverMainWindow		Open…
+Orthographic projection	STLoverMainWindow		Orthografische projectie
+Plane	STLoverMainWindow		Plane
+Plane OXY	STLoverMainWindow		Plane OXY
+Points	STLoverMainWindow		Punten
+Quit	STLoverMainWindow		Afsluiten
+Reload	STLoverMainWindow		Herladen
+Repair	STLoverMainWindow		Herstel
+Repair…	STLoverMainWindow		Herstel…
+Reset	STLoverMainWindow		Reset
+Reset view	STLoverMainWindow		Reset aanzicht
+Right view	STLoverMainWindow		Rechteraanzicht
+Rotate	STLoverMainWindow		Draaien
+Rotate…	STLoverMainWindow		Draaien…
+Save	STLoverMainWindow		Opslaan
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		Sla '%document%' als een '%format%' bestand als…
+Save as…	STLoverMainWindow		Opslaan als…
+Save changes to document '%filename%' ?	STLoverMainWindow		Aanpassingen in document opslaan als '%filename%' ?
+Scale	STLoverMainWindow		Schaal
+Scale factor:	STLoverMainWindow		Schaalfactor:
+Scale X factor:	STLoverMainWindow		Schaalfactor X:
+Scale Y factor:	STLoverMainWindow		Schaalfactor Y:
+Scale Z factor:	STLoverMainWindow		Schaalfactor Z:
+Scale…	STLoverMainWindow		Schalen…
+Show axes	STLoverMainWindow		Toon axes
+Show plane OXY	STLoverMainWindow		Toon plane OXY
+Solid	STLoverMainWindow		Stevig
+Statistics	STLoverMainWindow		Statistieken
+STL (ASCII)	STLoverMainWindow		STL (ASCII)
+STL (Binary)	STLoverMainWindow		STL (Binary)
+STL Title	STLoverMainWindow		STL Titel
+Title:	STLoverMainWindow		Titel:
+To (0,0,0)	STLoverMainWindow		Naar (0,0,0)
+To origin	STLoverMainWindow		Naar orgineel
+To top of OXY plane	STLoverMainWindow		Naar top van OXY plane
+To:	STLoverMainWindow		Naar:
+To…	STLoverMainWindow		Naar…
+Tools	STLoverMainWindow		Werktuigen
+Top view	STLoverMainWindow		Bovenaanzicht
+Unknown file format!	STLoverMainWindow		Onbekend bestandsformaat
+View	STLoverMainWindow		Zicht
+VRML	STLoverMainWindow		VRML
+Wavefront OBJ	STLoverMainWindow		Golffront OBJ
+Wireframe	STLoverMainWindow		Draadframe
+X-axis:	STLoverMainWindow		X-axis:
+X:	STLoverMainWindow		X:
+Y-axis:	STLoverMainWindow		Y-axis:
+Y:	STLoverMainWindow		Y:
+Z-axis:	STLoverMainWindow		Z-axis:
+Z:	STLoverMainWindow		Z:
+Zoom in	STLoverMainWindow		Inzoomen
+Zoom out	STLoverMainWindow		Uitzoomen
+A file format native to the STereoLithography CAD software	STLoverApplication		Een bestandsformaat voor STereoLithography CAD software
+STL file	STLoverApplication		STL bestand
+Add facets to fill holes	STLoverRepairWindow		Voeg facetten toe om gaten te vullen
+Amount to increment tolerance after iteration	STLoverRepairWindow		Hoeveelheid om de tolerantie na iteratie te verhogen
+Cancel	STLoverRepairWindow		Annuleer
+Check and fix direction of normals	STLoverRepairWindow		Controleer en repareer de richting van normalen
+Check and fix normal values	STLoverRepairWindow		Controleer en corrigeer normale waarden
+Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Vind en verbind nabijgelegen facetten. Corrigeer slechte facetten
+Initial tolerance to use for nearby check	STLoverRepairWindow		Initiële tolerantie voor gebruik bij controle in de buurt
+Number of iterations for nearby check	STLoverRepairWindow		Aantal iteraties voor controle in de buurt
+OK	STLoverRepairWindow		OK
+Only check for perfectly matched edges	STLoverRepairWindow		Controleer alleen op perfect op elkaar afgestemde randen
+Remove facets that have 0 neighbors	STLoverRepairWindow		Verwijder facetten die 0 buren hebben
+Repair	STLoverRepairWindow		Herstel
+Reverse the directions of all facets and normals	STLoverRepairWindow		Keer de richtingen van alle facetten en normalen om
+Backward edges:	STLoverStatView		Achterwaartse randen:
+Degenerate facets:	STLoverStatView		Ontaarde facetten:
+Disconnected:	STLoverStatView		Verbinding verbroken:
+Edges fixed:	STLoverStatView		Randen vast:
+Facet status	STLoverStatView		Facetstatus
+Facets added:	STLoverStatView		Facetten toegevoegd:
+Facets removed:	STLoverStatView		Facetten verwijderd:
+Facets reversed:	STLoverStatView		Facetten omgekeerd:
+Facets:	STLoverStatView		Facetten:
+File	STLoverStatView		Bestand
+Height:	STLoverStatView		Hoogte:
+Length:	STLoverStatView		Lengte:
+Max X:	STLoverStatView		Max X:
+Max Y:	STLoverStatView		Max Y:
+Max Z:	STLoverStatView		Max Z:
+Min X:	STLoverStatView		Min X:
+Min Y:	STLoverStatView		Min Y:
+Min Z:	STLoverStatView		Min Z:
+Name:	STLoverStatView		Naam:
+Normals fixed:	STLoverStatView		Normalen opgelost:
+Object size	STLoverStatView		Object grootte
+Parts:	STLoverStatView		Onderdelen:
+Processing	STLoverStatView		Verwerken
+STL Type:	STLoverStatView		STL Type:
+Title:	STLoverStatView		Titel:
+Volume:	STLoverStatView		Volume:
+Width:	STLoverStatView		Breedte:
+Cancel	STLoverInputWindow		Annuleer
+Close	STLoverInputWindow		Sluiten
+OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Reset
+STLover	System name		STLover

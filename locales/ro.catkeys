@@ -1,4 +1,4 @@
-1	Romanian	application/x-vnd.stlover	3052238959
+1	Romanian	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Căsuță de încadrare
 By…	STLoverMainWindow		De…
 Cancel	STLoverMainWindow		Anulează
 Close	STLoverMainWindow		Închide
+Compass	STLoverMainWindow		Busola
 Custom axis scale	STLoverMainWindow		Scală de axă personalizată
+Distance:	STLoverMainWindow		Distanța:
+Documentation	STLoverMainWindow		Documentația
 Don't save	STLoverMainWindow		Nu salva
 Drop STL files here	STLoverMainWindow		Plasați fișiere STL aici
 Edit title	STLoverMainWindow		Editează titlul
 Edit title…	STLoverMainWindow		Editează titlul…
 File	STLoverMainWindow		Fișier
+From:	STLoverMainWindow		De la:
 Front view	STLoverMainWindow		Vizualizare din față
 Geomview OFF	STLoverMainWindow		Geomview OPRIT
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Ajutor
 Loading…	STLoverMainWindow		Se încarcă…
+Measure	STLoverMainWindow		Măsură
+Measure…	STLoverMainWindow		Măsura…
 Mirror	STLoverMainWindow		Oglindă
 Mirror XY	STLoverMainWindow		Oglindă XY
 Mirror XZ	STLoverMainWindow		Oglindă XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Mută la
 Move to top of OXY plane	STLoverMainWindow		Mută deasupra planului OXY
 Open	STLoverMainWindow		Deschide
 Open…	STLoverMainWindow		Deschide…
+Orthographic projection	STLoverMainWindow		Proiecție ortografică
+Plane	STLoverMainWindow		Plan
 Plane OXY	STLoverMainWindow		Planul OXY
+Points	STLoverMainWindow		Puncte
 Quit	STLoverMainWindow		Ieșire
 Reload	STLoverMainWindow		Reîncarcă
 Repair	STLoverMainWindow		Repară
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Titlu:
 To (0,0,0)	STLoverMainWindow		La (0,0,0)
 To origin	STLoverMainWindow		La origine
 To top of OXY plane	STLoverMainWindow		La vârful planului OXY
+To:	STLoverMainWindow		Până la:
 To…	STLoverMainWindow		La…
 Tools	STLoverMainWindow		Unelte
 Top view	STLoverMainWindow		Vizualizare de top
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Titlu:
 Volume:	STLoverStatView		Volum:
 Width:	STLoverStatView		Lățime:
 Cancel	STLoverInputWindow		Anulează
+Close	STLoverInputWindow		Închide
 OK	STLoverInputWindow		Ok
+Reset	STLoverInputWindow		Resetează
 STLover	System name		STLover

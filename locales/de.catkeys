@@ -1,4 +1,4 @@
-1	German	application/x-vnd.stlover	3052238959
+1	German	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Begrenzungs-Box
 By…	STLoverMainWindow		Um …
 Cancel	STLoverMainWindow		Abbrechen
 Close	STLoverMainWindow		Schließen
+Compass	STLoverMainWindow		Kreuz
 Custom axis scale	STLoverMainWindow		Individueller Achsenmaßstab
+Distance:	STLoverMainWindow		Abstand:
+Documentation	STLoverMainWindow		Dokumentation
 Don't save	STLoverMainWindow		Nicht speichern
 Drop STL files here	STLoverMainWindow		STL Dateien hier fallen lassen
 Edit title	STLoverMainWindow		Titel bearbeiten
 Edit title…	STLoverMainWindow		Titel bearbeiten …
 File	STLoverMainWindow		Datei
+From:	STLoverMainWindow		Von:
 Front view	STLoverMainWindow		Ansicht vorn
 Geomview OFF	STLoverMainWindow		Geomview OFF
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Hilfe
 Loading…	STLoverMainWindow		Lädt …
+Measure	STLoverMainWindow		Messen
+Measure…	STLoverMainWindow		Messen…
 Mirror	STLoverMainWindow		Spiegeln
 Mirror XY	STLoverMainWindow		Spiegeln XY
 Mirror XZ	STLoverMainWindow		Spiegeln XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Verschieben nach
 Move to top of OXY plane	STLoverMainWindow		Auf die OXY Ebene setzen
 Open	STLoverMainWindow		Öffnen
 Open…	STLoverMainWindow		Öffnen …
+Orthographic projection	STLoverMainWindow		Orthographische Projektion
+Plane	STLoverMainWindow		Ebene
 Plane OXY	STLoverMainWindow		Ebene OXY
+Points	STLoverMainWindow		Punkte
 Quit	STLoverMainWindow		Beenden
 Reload	STLoverMainWindow		Neu laden
 Repair	STLoverMainWindow		Reparieren
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Titel:
 To (0,0,0)	STLoverMainWindow		Nach (0,0,0)
 To origin	STLoverMainWindow		Zum Ursprung
 To top of OXY plane	STLoverMainWindow		Auf OXY Ebene setzen
+To:	STLoverMainWindow		Nach:
 To…	STLoverMainWindow		Nach …
 Tools	STLoverMainWindow		Werkzeuge
 Top view	STLoverMainWindow		Ansicht oben
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Titel:
 Volume:	STLoverStatView		Volumen:
 Width:	STLoverStatView		Breite:
 Cancel	STLoverInputWindow		Abbrechen
+Close	STLoverInputWindow		Schließen
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Reset
 STLover	System name		STLover

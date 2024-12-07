@@ -1,4 +1,4 @@
-1	Catalan	application/x-vnd.stlover	3052238959
+1	Catalan	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Casella delimitadora
 By…	STLoverMainWindow		Per...
 Cancel	STLoverMainWindow		Cancel·la
 Close	STLoverMainWindow		Tanca
+Compass	STLoverMainWindow		Brúixola
 Custom axis scale	STLoverMainWindow		Escala d'eix personalitzada
+Distance:	STLoverMainWindow		Distància:
+Documentation	STLoverMainWindow		Documentació
 Don't save	STLoverMainWindow		No ho desis
 Drop STL files here	STLoverMainWindow		Deixeu anar fitxers STL aquí.
 Edit title	STLoverMainWindow		Edita'n el títol
 Edit title…	STLoverMainWindow		Edició del títol...
 File	STLoverMainWindow		Fitxer
+From:	STLoverMainWindow		De:
 Front view	STLoverMainWindow		Vista frontal
 Geomview OFF	STLoverMainWindow		Geomvista DESACTIVADA
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Ajuda
 Loading…	STLoverMainWindow		Es carrega...
+Measure	STLoverMainWindow		Mesura
+Measure…	STLoverMainWindow		Mesura...
 Mirror	STLoverMainWindow		Rèplica
 Mirror XY	STLoverMainWindow		Rèplica XY
 Mirror XZ	STLoverMainWindow		Rèplica XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Mou a...
 Move to top of OXY plane	STLoverMainWindow		Mou el pla OXY a dalt
 Open	STLoverMainWindow		Obre
 Open…	STLoverMainWindow		Obre...
+Orthographic projection	STLoverMainWindow		Projecció ortogràfica
+Plane	STLoverMainWindow		Pla
 Plane OXY	STLoverMainWindow		Pla OXY
+Points	STLoverMainWindow		Punts
 Quit	STLoverMainWindow		Surt
 Reload	STLoverMainWindow		Torna-ho a carregar
 Repair	STLoverMainWindow		Repara-ho
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Títol:
 To (0,0,0)	STLoverMainWindow		A (0,0,0)
 To origin	STLoverMainWindow		A l'origen
 To top of OXY plane	STLoverMainWindow		A dalt del pla OXY
+To:	STLoverMainWindow		A:
 To…	STLoverMainWindow		A...
 Tools	STLoverMainWindow		Eines
 Top view	STLoverMainWindow		Vista superior
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Títol:
 Volume:	STLoverStatView		Volum:
 Width:	STLoverStatView		Amplada:
 Cancel	STLoverInputWindow		Cancel·la
+Close	STLoverInputWindow		Tanca
 OK	STLoverInputWindow		D'acord
+Reset	STLoverInputWindow		Restableix
 STLover	System name		Amant d'STL

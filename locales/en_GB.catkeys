@@ -1,4 +1,4 @@
-1	English (British)	application/x-vnd.stlover	3052238959
+1	English (British)	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Bounding box
 By…	STLoverMainWindow		By…
 Cancel	STLoverMainWindow		Cancel
 Close	STLoverMainWindow		Close
+Compass	STLoverMainWindow		Compass
 Custom axis scale	STLoverMainWindow		Custom axis scale
+Distance:	STLoverMainWindow		Distance:
+Documentation	STLoverMainWindow		Documentation
 Don't save	STLoverMainWindow		Don't save
 Drop STL files here	STLoverMainWindow		Drop STL files here
 Edit title	STLoverMainWindow		Edit title
 Edit title…	STLoverMainWindow		Edit title…
 File	STLoverMainWindow		File
+From:	STLoverMainWindow		From:
 Front view	STLoverMainWindow		Front view
 Geomview OFF	STLoverMainWindow		Geomview OFF
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Help
 Loading…	STLoverMainWindow		Loading…
+Measure	STLoverMainWindow		Measure
+Measure…	STLoverMainWindow		Measure…
 Mirror	STLoverMainWindow		Mirror
 Mirror XY	STLoverMainWindow		Mirror XY
 Mirror XZ	STLoverMainWindow		Mirror XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Move to
 Move to top of OXY plane	STLoverMainWindow		Move to top of OXY plane
 Open	STLoverMainWindow		Open
 Open…	STLoverMainWindow		Open…
+Orthographic projection	STLoverMainWindow		Orthographic projection
+Plane	STLoverMainWindow		Plane
 Plane OXY	STLoverMainWindow		Plane OXY
+Points	STLoverMainWindow		Points
 Quit	STLoverMainWindow		Quit
 Reload	STLoverMainWindow		Reload
 Repair	STLoverMainWindow		Repair
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Title:
 To (0,0,0)	STLoverMainWindow		To (0,0,0)
 To origin	STLoverMainWindow		To origin
 To top of OXY plane	STLoverMainWindow		To top of OXY plane
+To:	STLoverMainWindow		To:
 To…	STLoverMainWindow		To…
 Tools	STLoverMainWindow		Tools
 Top view	STLoverMainWindow		Top view
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Title:
 Volume:	STLoverStatView		Volume:
 Width:	STLoverStatView		Width:
 Cancel	STLoverInputWindow		Cancel
+Close	STLoverInputWindow		Close
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Reset
 STLover	System name		STLover

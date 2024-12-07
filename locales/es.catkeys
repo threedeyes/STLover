@@ -1,4 +1,4 @@
-1	Spanish	application/x-vnd.stlover	3052238959
+1	Spanish	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Caja delimitadora
 By…	STLoverMainWindow		Por…
 Cancel	STLoverMainWindow		Cancelar
 Close	STLoverMainWindow		Cerrar
+Compass	STLoverMainWindow		Brújula
 Custom axis scale	STLoverMainWindow		Escala personalizada de ejes
+Distance:	STLoverMainWindow		Distancia:
+Documentation	STLoverMainWindow		Documentación
 Don't save	STLoverMainWindow		No guardar
 Drop STL files here	STLoverMainWindow		Suelte aquí los archivos STL
 Edit title	STLoverMainWindow		Editar título
 Edit title…	STLoverMainWindow		Editar título…
 File	STLoverMainWindow		Archivo
+From:	STLoverMainWindow		Desde:
 Front view	STLoverMainWindow		Vista frontal
 Geomview OFF	STLoverMainWindow		Geomview APAGADO
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Ayuda
 Loading…	STLoverMainWindow		Cargando…
+Measure	STLoverMainWindow		Medida
+Measure…	STLoverMainWindow		Medida…
 Mirror	STLoverMainWindow		Reflejar
 Mirror XY	STLoverMainWindow		Reflejar XY
 Mirror XZ	STLoverMainWindow		Reflejar XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Mover a
 Move to top of OXY plane	STLoverMainWindow		Mover encima en el plano OXY
 Open	STLoverMainWindow		Abrir
 Open…	STLoverMainWindow		Abrir…
+Orthographic projection	STLoverMainWindow		Proyección ortográfica
+Plane	STLoverMainWindow		Plano
 Plane OXY	STLoverMainWindow		Plano OXY
+Points	STLoverMainWindow		Puntos
 Quit	STLoverMainWindow		Salir
 Reload	STLoverMainWindow		Recargar
 Repair	STLoverMainWindow		Reparar
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Título:
 To (0,0,0)	STLoverMainWindow		A (0,0,0)
 To origin	STLoverMainWindow		Al origen
 To top of OXY plane	STLoverMainWindow		A encima en el plano OXY
+To:	STLoverMainWindow		Hacia:
 To…	STLoverMainWindow		A…
 Tools	STLoverMainWindow		Herramientas
 Top view	STLoverMainWindow		Vista superior
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Título:
 Volume:	STLoverStatView		Volumen:
 Width:	STLoverStatView		Ancho:
 Cancel	STLoverInputWindow		Cancelar
+Close	STLoverInputWindow		Cerrar
 OK	STLoverInputWindow		Aceptar
+Reset	STLoverInputWindow		Reiniciar
 STLover	System name		STLover

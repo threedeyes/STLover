@@ -1,4 +1,4 @@
-1	English	application/x-vnd.stlover	1408573110
+1	English	application/x-vnd.stlover	3197357624
 Documentation	STLoverMainWindow		Documentation
 Find and connect nearby facets. Correct bad facets	STLoverRepairWindow		Find and connect nearby facets. Correct bad facets
 Best fit	STLoverMainWindow		Best fit
@@ -29,11 +29,10 @@ Drop STL files here	STLoverMainWindow		Drop STL files here
 OK	STLoverRepairWindow		OK
 Scale factor:	STLoverMainWindow		Scale factor:
 ∆X:	STLoverMainWindow		∆X:
-File	STLoverStatView		File
 Cancel	STLoverMainWindow		Cancel
+File	STLoverStatView		File
 Check and fix direction of normals	STLoverRepairWindow		Check and fix direction of normals
 Scale…	STLoverMainWindow		Scale…
-Enrique M.G. (Lt-Henry)	STLoverMainWindow		Enrique M.G. (Lt-Henry)
 STL file	STLoverApplication		STL file
 Repair…	STLoverMainWindow		Repair…
 Edges fixed:	STLoverStatView		Edges fixed:
@@ -47,7 +46,6 @@ Close	STLoverMainWindow		Close
 Statistics	STLoverMainWindow		Statistics
 Custom axis scale	STLoverMainWindow		Custom axis scale
 OK	STLoverInputWindow		OK
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Max X:	STLoverStatView		Max X:
 Measure…	STLoverMainWindow		Measure…
 Move	STLoverMainWindow		Move

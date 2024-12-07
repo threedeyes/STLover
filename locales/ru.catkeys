@@ -1,4 +1,4 @@
-1	Russian	application/x-vnd.stlover	1408573110
+1	Russian	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		Смещение по X:
 ∆Y:	STLoverMainWindow		Смещение по Y:
 ∆Z:	STLoverMainWindow		Смещение по Z:
@@ -19,15 +19,13 @@ Custom axis scale	STLoverMainWindow		Масштабирование по ося�
 Distance:	STLoverMainWindow		Расстояние:
 Documentation	STLoverMainWindow		Документация
 Don't save	STLoverMainWindow		Не сохранять
-Drop STL files here	STLoverMainWindow		Вы можете бросить STL-файлы сюда
+Drop STL files here	STLoverMainWindow		Перетащите STL-файлы сюда
 Edit title	STLoverMainWindow		Редактировать заголовок
 Edit title…	STLoverMainWindow		Редактировать заголовок…
-Enrique M.G. (Lt-Henry)	STLoverMainWindow		Enrique M.G. (Lt-Henry)
 File	STLoverMainWindow		Файл
 From:	STLoverMainWindow		От точки:
 Front view	STLoverMainWindow		Вид спереди
 Geomview OFF	STLoverMainWindow		Geomview OFF
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Герасим Троеглазов (3dEyes**)
 Help	STLoverMainWindow		Справка
 Loading…	STLoverMainWindow		Загрузка…
 Measure	STLoverMainWindow		Линейка

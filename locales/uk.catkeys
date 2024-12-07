@@ -1,4 +1,4 @@
-1	Ukrainian	application/x-vnd.stlover	3052238959
+1	Ukrainian	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		Зсув по X:
 ∆Y:	STLoverMainWindow		Зсув по Y:
 ∆Z:	STLoverMainWindow		Зсув по Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Межі об'єкта
 By…	STLoverMainWindow		Відносно…
 Cancel	STLoverMainWindow		Скасувати
 Close	STLoverMainWindow		Закрити
+Compass	STLoverMainWindow		Компас
 Custom axis scale	STLoverMainWindow		Масштабування по осях
+Distance:	STLoverMainWindow		Відстань:
+Documentation	STLoverMainWindow		Документація
 Don't save	STLoverMainWindow		Не зберігати
 Drop STL files here	STLoverMainWindow		Перемістіть STL файли сюди
 Edit title	STLoverMainWindow		Редагувати заголовок
 Edit title…	STLoverMainWindow		Редагувати заголовок…
 File	STLoverMainWindow		Файл
+From:	STLoverMainWindow		Від:
 Front view	STLoverMainWindow		Вигляд спереду
 Geomview OFF	STLoverMainWindow		Geomview OFF
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Герасим Троєглазов (3dEyes**)
 Help	STLoverMainWindow		Довідка
 Loading…	STLoverMainWindow		Завантаження…
+Measure	STLoverMainWindow		Виміряти
+Measure…	STLoverMainWindow		Виміряти…
 Mirror	STLoverMainWindow		Віддзеркалити
 Mirror XY	STLoverMainWindow		Віддзеркалити по площині XY
 Mirror XZ	STLoverMainWindow		Віддзеркалити по площині XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Перемістити в точку
 Move to top of OXY plane	STLoverMainWindow		Перемістити в центр площини OXY
 Open	STLoverMainWindow		Відкрити
 Open…	STLoverMainWindow		Відкрити…
+Orthographic projection	STLoverMainWindow		Ортографічна проєкція
+Plane	STLoverMainWindow		Площина
 Plane OXY	STLoverMainWindow		Площина OXY
+Points	STLoverMainWindow		Точки
 Quit	STLoverMainWindow		Вихід
 Reload	STLoverMainWindow		Перезавантажити
 Repair	STLoverMainWindow		Відновити
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Заголовок:
 To (0,0,0)	STLoverMainWindow		В точку (0,0,0)
 To origin	STLoverMainWindow		На початок координат
 To top of OXY plane	STLoverMainWindow		В центр площини OXY
+To:	STLoverMainWindow		До:
 To…	STLoverMainWindow		В точку…
 Tools	STLoverMainWindow		Інструменти
 Top view	STLoverMainWindow		Вигляд зверху
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Заголовок:
 Volume:	STLoverStatView		Об'єм:
 Width:	STLoverStatView		Ширина:
 Cancel	STLoverInputWindow		Скасувати
+Close	STLoverInputWindow		Закрити
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Скинути
 STLover	System name		STLover
