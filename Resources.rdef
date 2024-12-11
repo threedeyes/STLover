@@ -6,7 +6,7 @@ resource app_version {
 	major  = 1,
 	middle = 0,
 	minor  = 0,
-	variety = 0,
+	variety = B_APPV_FINAL,
 	internal = 0,
 	short_info = "STLover",
 	long_info = "A powerful tool for viewing and manipulating 3D STL models"
