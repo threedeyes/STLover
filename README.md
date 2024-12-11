@@ -1,5 +1,8 @@
 # STLover
-STLover - A powerful tool for viewing and manipulating 3D STL models for [Haiku](https://haiku-os.org)
+
+![application](https://github.com/user-attachments/assets/c3c5ab3d-027d-4826-bf29-4ed24d008e42) A Simple and Powerful STL 3D Model Viewer for [Haiku](https://haiku-os.org)
+
+STLover is an intuitive 3D model viewer designed specifically for Haiku, for working with STL (stereolithography) files. It focuses on ease of use while providing powerful tools for visualization, analysis, and basic editing of 3D models. The application is suitable for a wide range of users: engineers, designers, 3D printing enthusiasts, and anyone who needs an effective tool for working with STL files.
 
 ![MainWindow](screenshots/mainwindow.png)
 
