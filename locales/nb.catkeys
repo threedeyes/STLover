@@ -1,4 +1,4 @@
-1	Norwegian	application/x-vnd.stlover	3052238959
+1	Norwegian	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Begrensningsboks
 By…	STLoverMainWindow		Av…
 Cancel	STLoverMainWindow		Avbryt
 Close	STLoverMainWindow		Lukk
+Compass	STLoverMainWindow		Kompass
 Custom axis scale	STLoverMainWindow		Egendefinert akseskala
+Distance:	STLoverMainWindow		Avstand:
+Documentation	STLoverMainWindow		Dokumentasjon
 Don't save	STLoverMainWindow		Ikke lagre
 Drop STL files here	STLoverMainWindow		Slipp STL-filer her
 Edit title	STLoverMainWindow		Rediger tittel
 Edit title…	STLoverMainWindow		Rediger tittel…
 File	STLoverMainWindow		Fil
+From:	STLoverMainWindow		Fra:
 Front view	STLoverMainWindow		Forfra
 Geomview OFF	STLoverMainWindow		Geomview AV
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Hjelp
 Loading…	STLoverMainWindow		Laster…
+Measure	STLoverMainWindow		Mål
+Measure…	STLoverMainWindow		Mål…
 Mirror	STLoverMainWindow		Speilvend
 Mirror XY	STLoverMainWindow		Speilvend XY
 Mirror XZ	STLoverMainWindow		Speilvend XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Flytt til
 Move to top of OXY plane	STLoverMainWindow		Flytt til toppen av OXY-planet
 Open	STLoverMainWindow		Åpne
 Open…	STLoverMainWindow		Åpne…
+Orthographic projection	STLoverMainWindow		Ortografisk projeksjon
+Plane	STLoverMainWindow		Plan
 Plane OXY	STLoverMainWindow		OXY-plan
+Points	STLoverMainWindow		Punkter
 Quit	STLoverMainWindow		Avslutt
 Reload	STLoverMainWindow		Last på nytt
 Repair	STLoverMainWindow		Reparer
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Tittel:
 To (0,0,0)	STLoverMainWindow		Til (0,0,0)
 To origin	STLoverMainWindow		Til opprinnelsespunktet
 To top of OXY plane	STLoverMainWindow		Til toppen av OXY-planet
+To:	STLoverMainWindow		Til:
 To…	STLoverMainWindow		Til…
 Tools	STLoverMainWindow		Verktøy
 Top view	STLoverMainWindow		Toppvisning
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Tittel:
 Volume:	STLoverStatView		Volum:
 Width:	STLoverStatView		Bredde:
 Cancel	STLoverInputWindow		Avbryt
+Close	STLoverInputWindow		Lukk
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Tilbakestill
 STLover	System name		STLover

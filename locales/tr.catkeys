@@ -1,4 +1,4 @@
-1	Turkish	application/x-vnd.stlover	3052238959
+1	Turkish	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Zıplayan kutu
 By…	STLoverMainWindow		Şunun tarafından…
 Cancel	STLoverMainWindow		İptal
 Close	STLoverMainWindow		Kapat
+Compass	STLoverMainWindow		Compass
 Custom axis scale	STLoverMainWindow		Özel eksen ölçeği
+Distance:	STLoverMainWindow		Distance:
+Documentation	STLoverMainWindow		Documentation
 Don't save	STLoverMainWindow		Kaydetme
 Drop STL files here	STLoverMainWindow		STL dosyalarını buraya bırakın
 Edit title	STLoverMainWindow		Başlığı düzenle
 Edit title…	STLoverMainWindow		Başlığı düzenle…
 File	STLoverMainWindow		Dosya
+From:	STLoverMainWindow		From:
 Front view	STLoverMainWindow		Önden görüntü
 Geomview OFF	STLoverMainWindow		Geometrik görüntü KAPALI
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Yardım
 Loading…	STLoverMainWindow		Yükleniyor…
+Measure	STLoverMainWindow		Measure
+Measure…	STLoverMainWindow		Measure…
 Mirror	STLoverMainWindow		Yansı
 Mirror XY	STLoverMainWindow		XY yansısı
 Mirror XZ	STLoverMainWindow		XZ yansısı
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Şuraya taşı
 Move to top of OXY plane	STLoverMainWindow		OXY düzleminin en üstüne taşı
 Open	STLoverMainWindow		Aç
 Open…	STLoverMainWindow		Aç…
+Orthographic projection	STLoverMainWindow		Orthographic projection
+Plane	STLoverMainWindow		Plane
 Plane OXY	STLoverMainWindow		OXY düzlemi
+Points	STLoverMainWindow		Points
 Quit	STLoverMainWindow		Çık
 Reload	STLoverMainWindow		Yeniden yükle
 Repair	STLoverMainWindow		Onar
@@ -46,9 +54,9 @@ Right view	STLoverMainWindow		Sağdan görüntü
 Rotate	STLoverMainWindow		Döndür
 Rotate…	STLoverMainWindow		Döndür…
 Save	STLoverMainWindow		Kaydet
-Save '%document%' as a '%format%' file as…	STLoverMainWindow		'%document%' belgesini '%format%' dosya biçiminde farklı kaydet…
+Save '%document%' as a '%format%' file as…	STLoverMainWindow		“%document%” belgesini “%format%” dosya biçiminde farklı kaydet…
 Save as…	STLoverMainWindow		Farklı kaydet…
-Save changes to document '%filename%' ?	STLoverMainWindow		'%filename%' belgesine yapılan değişiklikler kaydedilsin mi?
+Save changes to document '%filename%' ?	STLoverMainWindow		“%filename%” belgesine yapılan değişiklikler kaydedilsin mi?
 Scale	STLoverMainWindow		Ölçek
 Scale factor:	STLoverMainWindow		Ölçek çarpanı:
 Scale X factor:	STLoverMainWindow		X ölçeği çarpanı:
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Başlık:
 To (0,0,0)	STLoverMainWindow		Şuraya: (0,0,0)
 To origin	STLoverMainWindow		Kökene
 To top of OXY plane	STLoverMainWindow		OXY düzleminin en üstüne
+To:	STLoverMainWindow		To:
 To…	STLoverMainWindow		Şuraya…
 Tools	STLoverMainWindow		Araçlar
 Top view	STLoverMainWindow		Yukarıdan görüntü
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Başlık:
 Volume:	STLoverStatView		Hacim:
 Width:	STLoverStatView		Genişlik:
 Cancel	STLoverInputWindow		İptal
+Close	STLoverInputWindow		Close
 OK	STLoverInputWindow		Tamam
+Reset	STLoverInputWindow		Reset
 STLover	System name		STLover

@@ -1,4 +1,4 @@
-1	Portuguese	application/x-vnd.stlover	3052238959
+1	Portuguese	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Caixa delimitadora
 By…	STLoverMainWindow		Por...
 Cancel	STLoverMainWindow		Cancelar
 Close	STLoverMainWindow		Fechar
+Compass	STLoverMainWindow		Compass
 Custom axis scale	STLoverMainWindow		Escala de eixo personalizada
+Distance:	STLoverMainWindow		Distance:
+Documentation	STLoverMainWindow		Documentation
 Don't save	STLoverMainWindow		Não guardar
 Drop STL files here	STLoverMainWindow		Solte os arquivos STL aqui
 Edit title	STLoverMainWindow		Editar título
 Edit title…	STLoverMainWindow		Editar título…
 File	STLoverMainWindow		Ficheiro
+From:	STLoverMainWindow		From:
 Front view	STLoverMainWindow		Vista frontal
 Geomview OFF	STLoverMainWindow		Geomview DESLIGADO
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Ajuda
 Loading…	STLoverMainWindow		A carregar…
+Measure	STLoverMainWindow		Measure
+Measure…	STLoverMainWindow		Measure…
 Mirror	STLoverMainWindow		Espelho
 Mirror XY	STLoverMainWindow		Espelho XY
 Mirror XZ	STLoverMainWindow		Espelho XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Move para
 Move to top of OXY plane	STLoverMainWindow		Mover para o topo do plano OXY
 Open	STLoverMainWindow		Abrir
 Open…	STLoverMainWindow		Abrir…
+Orthographic projection	STLoverMainWindow		Orthographic projection
+Plane	STLoverMainWindow		Plane
 Plane OXY	STLoverMainWindow		Plano OXY
+Points	STLoverMainWindow		Points
 Quit	STLoverMainWindow		Sair
 Reload	STLoverMainWindow		Recarregar
 Repair	STLoverMainWindow		Reparar
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Título:
 To (0,0,0)	STLoverMainWindow		Para (0,0,0)
 To origin	STLoverMainWindow		Para a origem
 To top of OXY plane	STLoverMainWindow		Para a parte superior do plano OXY
+To:	STLoverMainWindow		To:
 To…	STLoverMainWindow		Para…
 Tools	STLoverMainWindow		Ferramentas
 Top view	STLoverMainWindow		Vista do topo
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Título:
 Volume:	STLoverStatView		Volume:
 Width:	STLoverStatView		Largura:
 Cancel	STLoverInputWindow		Cancelar
+Close	STLoverInputWindow		Close
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Reset
 STLover	System name		STLover

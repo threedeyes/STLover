@@ -1,4 +1,4 @@
-1	Swedish	application/x-vnd.stlover	3052238959
+1	Swedish	application/x-vnd.stlover	3197357624
 ∆X:	STLoverMainWindow		∆X:
 ∆Y:	STLoverMainWindow		∆Y:
 ∆Z:	STLoverMainWindow		∆Z:
@@ -14,17 +14,22 @@ Bounding box	STLoverMainWindow		Begränsande låda
 By…	STLoverMainWindow		Av…
 Cancel	STLoverMainWindow		Avbryt
 Close	STLoverMainWindow		Stäng
+Compass	STLoverMainWindow		Kompass
 Custom axis scale	STLoverMainWindow		Anpassad axelskala
+Distance:	STLoverMainWindow		Avstånd:
+Documentation	STLoverMainWindow		Dokumentation
 Don't save	STLoverMainWindow		Spara inte
 Drop STL files here	STLoverMainWindow		Släpp STL-filer här
 Edit title	STLoverMainWindow		Redigera titel
 Edit title…	STLoverMainWindow		Redigera titel...
 File	STLoverMainWindow		Fil
+From:	STLoverMainWindow		Från:
 Front view	STLoverMainWindow		Frontvy
 Geomview OFF	STLoverMainWindow		Geomview AV
-Gerasim Troeglazov (3dEyes**)	STLoverMainWindow		Gerasim Troeglazov (3dEyes**)
 Help	STLoverMainWindow		Hjälp
 Loading…	STLoverMainWindow		Laddar…
+Measure	STLoverMainWindow		Mäta
+Measure…	STLoverMainWindow		Mäta…
 Mirror	STLoverMainWindow		Spegel
 Mirror XY	STLoverMainWindow		Spegel XY
 Mirror XZ	STLoverMainWindow		Spegel XZ
@@ -35,7 +40,10 @@ Move to	STLoverMainWindow		Flytta till
 Move to top of OXY plane	STLoverMainWindow		Flytta till toppen av OXY-planet
 Open	STLoverMainWindow		Öppna
 Open…	STLoverMainWindow		Öppna…
+Orthographic projection	STLoverMainWindow		Ortografisk projektion
+Plane	STLoverMainWindow		Plan
 Plane OXY	STLoverMainWindow		Plan OXY
+Points	STLoverMainWindow		Poäng
 Quit	STLoverMainWindow		Avsluta
 Reload	STLoverMainWindow		Ladda om
 Repair	STLoverMainWindow		Laga
@@ -66,6 +74,7 @@ Title:	STLoverMainWindow		Titel:
 To (0,0,0)	STLoverMainWindow		Till (0,0,0)
 To origin	STLoverMainWindow		Till ursprung
 To top of OXY plane	STLoverMainWindow		Till toppen av OXY-planet
+To:	STLoverMainWindow		Till:
 To…	STLoverMainWindow		Till…
 Tools	STLoverMainWindow		Verktyg
 Top view	STLoverMainWindow		Toppvy
@@ -125,5 +134,7 @@ Title:	STLoverStatView		Titel:
 Volume:	STLoverStatView		Volym:
 Width:	STLoverStatView		Bredd:
 Cancel	STLoverInputWindow		Avbryt
+Close	STLoverInputWindow		Stäng
 OK	STLoverInputWindow		OK
+Reset	STLoverInputWindow		Återställa
 STLover	System name		STLover
