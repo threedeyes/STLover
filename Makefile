@@ -8,7 +8,7 @@ SYSTEM_INCLUDE_PATHS = /system/develop/headers/private/interface
 LOCALES = ca de en en_AU en_GB es es_419 fr fur it nb nl pt ro ru sv tr uk
 OPTIMIZE := FULL
 #SYMBOLS := TRUE
-COMPILER_FLAGS = -msse -msse2 -mavx2
+COMPILER_FLAGS = -mmmx -msse -msse2
 #DEBUGGER := TRUE
 DEVEL_DIRECTORY := \
 	$(shell findpaths -r "makefile_engine" B_FIND_PATH_DEVELOP_DIRECTORY)
