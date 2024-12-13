@@ -21,4 +21,4 @@ make bindcatalogs
 STLover is also available from [HaikuDepot](https://depot.haiku-os.org/stlover).
 
 ## Adding translations
-If you want to help out by adding more translations, please do so at [Polyglot](https://i18n.kacperkasper.pl/projects/45).
+If you want to help out by adding more translations, please do so at [Polyglot](https://i18n.kacperkasper.pl/projects/33).
