@@ -60,7 +60,6 @@ STLView::STLView(BRect frame, uint32 type)
 	crossCursor = new BCursor(B_CURSOR_ID_CROSS_HAIR);
 	rotateCursorBitmap = STLoverApplication::GetIcon("rotate-cursor", 22);
 	rotateCursor = new BCursor(rotateCursorBitmap, BPoint(8, 8));
-	InitShaders();
 }
 
 STLView::~STLView()
@@ -151,10 +150,14 @@ STLView::InitShaders()
 	)";
 
 	shaderProgram = CreateShaderProgram(vertexShaderSource, fragmentShaderSource);
-	lineShaderProgram = CreateShaderProgram(lineVertexShaderSource, lineFragmentShaderSource);
+	if (shaderProgram == 0) {
+		std::cerr << "Failed to create shader program: shaderProgram" << std::endl;
+		return;
+	}
 
-	if (shaderProgram == 0 || lineShaderProgram == 0) {
-		std::cerr << "Failed to create shader program" << std::endl;
+	lineShaderProgram = CreateShaderProgram(lineVertexShaderSource, lineFragmentShaderSource);
+	if (lineShaderProgram == 0) {
+		std::cerr << "Failed to create shader program: lineShaderProgram" << std::endl;
 		return;
 	}
 
@@ -437,6 +440,7 @@ STLView::AttachedToWindow(void)
 	LockGL();
 	BGLView::AttachedToWindow();
 	boundRect = Bounds();
+	InitShaders();
 	glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
 	SetupProjection();
 	UnlockGL();
